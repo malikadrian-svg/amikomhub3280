@@ -59,9 +59,20 @@
                 <h2 class="text-3xl font-extrabold mb-2">Event Terdekat</h2>
                 <p class="text-slate-500 font-medium">Jangan sampai ketinggalan acara seru minggu ini!</p>
             </div>
-            <div class="flex gap-2">
-                <button class="p-3 border rounded-xl hover:bg-white hover:shadow-md transition">Semua Kategori</button>
-            </div>
+        </div>
+
+        <!-- Blok Navigasi Filter Kategori -->
+        <div class="mb-8 flex gap-4 justify-center flex-wrap">
+            <!-- Rujukan awal navigasi bebas bawaan -->
+            <a href="/" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded text-black transition">Semua Kategori</a>
+
+            <!-- Melakukan iterasi nama Tab Kategori dinamis saat jumlah data bertambah -->
+            @foreach($categories as $cat)
+            <a href="/?category={{ $cat->slug }}"
+                class="px-4 py-2 bg-indigo-100 hover:bg-indigo-200 text-indigo-700 rounded shadow-sm transition">
+                {{ $cat->name }}
+            </a>
+            @endforeach
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
