@@ -21,7 +21,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('events', AdminEventController::class)->except(['show']);
     Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions.index');
-    Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
+    Route::resource('categories', CategoryController::class)->except(['show']);
     Route::resource('partners', PartnerController::class)->except(['show']);
 });
 

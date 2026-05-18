@@ -19,9 +19,9 @@
                     class="px-8 py-4 bg-indigo-600 text-white rounded-2xl font-bold text-lg shadow-xl shadow-indigo-200 hover:scale-105 transition-transform">
                     Mulai Jelajah
                 </a>
-                <a href="#"
+                <a href="#categories"
                     class="px-8 py-4 border-2 border-slate-200 rounded-2xl font-bold text-lg hover:border-indigo-600 hover:text-indigo-600 transition">
-                    Cara Pesan
+                    Lihat Kategori
                 </a>
             </div>
         </div>
@@ -49,6 +49,40 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- Soal 4: Section Kategori Platform -->
+    <!-- ============================================ -->
+    <section id="categories" class="max-w-7xl mx-auto px-6 py-20">
+        <div class="text-center mb-12">
+            <span class="inline-block px-4 py-1.5 bg-indigo-100 text-indigo-700 rounded-full text-sm font-bold uppercase tracking-wider mb-4">Kategori</span>
+            <h2 class="text-3xl md:text-4xl font-extrabold mb-3">Jelajahi Berdasarkan Kategori</h2>
+            <p class="text-slate-500 font-medium max-w-xl mx-auto">Temukan event yang sesuai minatmu dari berbagai kategori yang tersedia di AmikomEventHub.</p>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            @foreach($categories as $cat)
+            <a href="/?category={{ $cat->slug }}"
+                class="group relative bg-white rounded-2xl border border-slate-100 p-6 text-center shadow-sm hover:shadow-xl hover:border-indigo-200 hover:-translate-y-1 transition-all duration-300 overflow-hidden">
+                <!-- Decorative gradient -->
+                <div class="absolute inset-0 bg-gradient-to-br from-indigo-50 to-purple-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                
+                <div class="relative z-10">
+                    <div class="w-14 h-14 mx-auto bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-indigo-600 group-hover:text-white group-hover:scale-110 transition-all duration-300">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-bold text-slate-900 text-sm mb-1 group-hover:text-indigo-600 transition-colors">{{ $cat->name }}</h3>
+                    @if(isset($cat->events_count))
+                    <span class="inline-block px-2.5 py-0.5 bg-slate-100 text-slate-500 rounded-full text-xs font-semibold group-hover:bg-indigo-100 group-hover:text-indigo-600 transition-colors">{{ $cat->events_count }} Event</span>
+                    @endif
+                </div>
+            </a>
+            @endforeach
         </div>
     </section>
 
@@ -104,5 +138,43 @@
             </div>
             @endforeach
         </div>
+
+        @if($events->isEmpty())
+        <div class="text-center py-16">
+            <div class="w-20 h-20 bg-slate-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <svg class="w-10 h-10 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+            </div>
+            <p class="text-lg font-bold text-slate-700 mb-1">Belum ada event mendatang</p>
+            <p class="text-sm text-slate-400">Nantikan event seru berikutnya dari AmikomEventHub!</p>
+        </div>
+        @endif
     </section>
+
+    <!-- ============================================ -->
+    <!-- Soal 4: Section Partner Kami -->
+    <!-- ============================================ -->
+    @if($partners->isNotEmpty())
+    <section id="partners" class="max-w-7xl mx-auto px-6 py-20">
+        <div class="text-center mb-12">
+            <span class="inline-block px-4 py-1.5 bg-indigo-100 text-indigo-700 rounded-full text-sm font-bold uppercase tracking-wider mb-4">Kolaborasi</span>
+            <h2 class="text-3xl md:text-4xl font-extrabold mb-3">Partner & Pendukung Kami</h2>
+            <p class="text-slate-500 font-medium max-w-xl mx-auto">Terima kasih kepada para partner yang telah mendukung ekosistem AmikomEventHub.</p>
+        </div>
+
+        <div class="bg-white rounded-3xl border border-slate-100 shadow-sm p-8 md:p-12">
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+                @foreach($partners as $partner)
+                <div class="group flex flex-col items-center justify-center p-6 rounded-2xl hover:bg-indigo-50 hover:shadow-md transition-all duration-300 cursor-default">
+                    <div class="w-20 h-20 rounded-2xl overflow-hidden border-2 border-slate-100 bg-slate-50 flex items-center justify-center mb-4 group-hover:border-indigo-200 group-hover:scale-110 transition-all duration-300 shadow-sm">
+                        <img src="{{ $partner->logo_url }}" alt="{{ $partner->name }}" class="w-full h-full object-cover" onerror="this.parentElement.innerHTML='<span class=\'text-2xl font-black text-indigo-300\'>{{ strtoupper(substr($partner->name, 0, 2)) }}</span>'">
+                    </div>
+                    <p class="text-sm font-bold text-slate-700 text-center group-hover:text-indigo-600 transition-colors leading-tight">{{ $partner->name }}</p>
+                </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
+    @endif
 @endsection
