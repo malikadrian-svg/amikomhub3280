@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
 @section('content')
-    <main class="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 lg:grid-cols-3 gap-12">
+    <main class="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 lg:grid-cols-3 gap-12 animate-fade-in-up">
         <!-- Left: Poster -->
         <div class="lg:col-span-1">
             <div class="sticky top-32">
                 <img src="{{ asset('assets/concert.png') }}" alt="Concert Poster"
-                    class="w-full rounded-[2.5rem] shadow-2xl border-8 border-white">
+                    class="w-full aspect-[4/3] object-cover rounded-[2.5rem] shadow-2xl border-8 border-white">
                 <div class="mt-8 p-6 bg-white rounded-3xl border border-slate-100 shadow-sm">
                     <h4 class="font-bold mb-4">Penyelenggara</h4>
                     <div class="flex items-center gap-4">
@@ -28,7 +28,7 @@
                 <span
                     class="px-4 py-1.5 bg-indigo-100 text-indigo-700 rounded-full text-sm font-bold uppercase tracking-wider">Music
                     Festival</span>
-                <h1 class="text-4xl md:text-5xl font-black leading-tight">Jazz Night 2024: A Celebration of Rhythm &
+                <h1 class="text-4xl md:text-5xl font-extrabold leading-tight">Jazz Night 2024: A Celebration of Rhythm &
                     Melody</h1>
                 <div class="flex flex-wrap gap-6 text-slate-500 font-medium">
                     <div class="flex items-center gap-2">
@@ -70,7 +70,7 @@
                 <div class="relative z-10 flex flex-col md:flex-row justify-between items-center gap-8">
                     <div>
                         <p class="text-indigo-200 font-bold uppercase tracking-widest text-sm mb-2">Harga Tiket</p>
-                        <h2 class="text-5xl font-black">Rp 150.000 <span class="text-lg font-medium text-indigo-200">/
+                        <h2 class="text-4xl md:text-5xl font-extrabold">Rp 150.000 <span class="text-lg font-medium text-indigo-200">/
                                 orang</span></h2>
                         <p class="mt-4 text-indigo-100 flex items-center gap-2">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -82,7 +82,7 @@
                     </div>
                     <div>
                         <a href="{{ url('/checkout/1') }}"
-                            class="inline-block px-10 py-5 bg-white text-indigo-600 rounded-2xl font-black text-xl hover:scale-105 transition-transform shadow-xl">
+                            class="inline-block px-10 py-5 bg-white text-indigo-600 rounded-2xl font-extrabold text-xl hover:scale-105 transition-transform shadow-xl hover:shadow-indigo-400">
                             Pesan Sekarang
                         </a>
                     </div>

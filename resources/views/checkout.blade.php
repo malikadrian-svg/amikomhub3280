@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <main class="max-w-3xl mx-auto px-6 py-20">
+    <main class="max-w-3xl mx-auto px-6 py-20 animate-fade-in-up">
         <div class="mb-12">
             <a href="{{ url('/event/1') }}" class="text-indigo-600 font-bold flex items-center gap-2 mb-6">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -18,7 +18,7 @@
             <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-sm">
                 <h3 class="text-xl font-bold mb-6 border-b pb-4">Pesanan Anda</h3>
                 <div class="flex gap-6 items-start">
-                    <img src="{{ asset('assets/concert.png') }}" alt="Event" class="w-24 h-24 rounded-2xl object-cover">
+                    <img src="{{ asset('assets/concert.png') }}" alt="Event" class="w-32 aspect-video rounded-2xl object-cover shadow-sm border border-slate-100">
                     <div>
                         <h4 class="font-extrabold text-lg">Jazz Night 2024: A Celebration</h4>
                         <p class="text-slate-500">16 Nov 2024 • The Blue Note Lounge</p>
@@ -73,7 +73,7 @@
                     </div>
 
                     <button type="button" onclick="showMidtrans()"
-                        class="w-full py-5 bg-indigo-600 text-white rounded-2xl font-black text-xl shadow-xl shadow-indigo-200 hover:bg-indigo-700 active:scale-95 transition-all">
+                        class="w-full py-5 bg-indigo-600 text-white rounded-2xl font-extrabold text-xl shadow-xl shadow-indigo-200 hover:bg-indigo-700 active:scale-95 transition-all hover:shadow-indigo-400">
                         Bayar Sekarang
                     </button>
                     <p class="text-center text-xs text-slate-400">Dengan menekan tombol di atas, Anda menyetujui Syarat
