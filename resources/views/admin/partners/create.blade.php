@@ -2,7 +2,6 @@
 
 @section('content')
 <div class="max-w-4xl mx-auto">
-    <!-- Header -->
     <div class="flex items-center gap-4 mb-8">
         <a href="{{ route('admin.partners.index') }}" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-indigo-600 transition-all shadow-sm hover:shadow">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -15,7 +14,6 @@
         </div>
     </div>
 
-    <!-- Validation Errors -->
     @if($errors->any())
         <div class="bg-rose-50 text-rose-700 p-4 rounded-xl mb-6 border border-rose-200 shadow-sm">
             <div class="flex items-center gap-2 mb-2">
@@ -32,13 +30,11 @@
         </div>
     @endif
 
-    <!-- Form Card -->
     <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
         <form action="{{ route('admin.partners.store') }}" method="POST">
             @csrf
             
             <div class="p-8 space-y-6">
-                <!-- Nama Partner -->
                 <div>
                     <label class="block text-sm font-semibold text-slate-700 mb-2">Nama Partner <span class="text-red-500">*</span></label>
                     <input type="text" name="name" value="{{ old('name') }}" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 block p-3.5 transition-all placeholder-slate-400 font-medium @error('name') border-red-400 bg-red-50 @enderror" placeholder="Contoh: Amikom University" required>
@@ -47,7 +43,6 @@
                     @enderror
                 </div>
 
-                <!-- Logo URL -->
                 <div>
                     <label class="block text-sm font-semibold text-slate-700 mb-2">Logo URL <span class="text-red-500">*</span></label>
                     <input type="url" name="logo_url" id="logo_url_input" value="{{ old('logo_url') }}" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 block p-3.5 transition-all placeholder-slate-400 font-medium @error('logo_url') border-red-400 bg-red-50 @enderror" placeholder="https://placehold.co/200x200" required>
@@ -56,7 +51,6 @@
                     @enderror
                     <p class="text-xs text-slate-400 mt-1.5">Masukkan URL valid yang mengarah ke gambar logo.</p>
 
-                    <!-- Logo Preview -->
                     <div id="logo-preview-container" class="mt-4 {{ old('logo_url') ? '' : 'hidden' }}">
                         <p class="text-xs font-semibold text-slate-500 mb-2 uppercase tracking-wide">Preview Logo:</p>
                         <div class="w-20 h-20 rounded-xl border-2 border-dashed border-slate-200 overflow-hidden bg-slate-50 flex items-center justify-center">
@@ -66,7 +60,6 @@
                 </div>
             </div>
 
-            <!-- Footer Action -->
             <div class="p-6 bg-slate-50 border-t border-slate-200 flex justify-end gap-3 rounded-b-2xl">
                 <a href="{{ route('admin.partners.index') }}" class="px-6 py-2.5 rounded-xl font-semibold text-slate-600 hover:bg-slate-200 transition-colors">Batal</a>
                 <button type="submit" class="px-6 py-2.5 rounded-xl font-semibold bg-indigo-600 text-white hover:bg-indigo-700 transition-all shadow-sm hover:shadow-md flex items-center gap-2">
@@ -79,7 +72,6 @@
 </div>
 
 <script>
-    // Live logo preview
     const logoInput = document.getElementById('logo_url_input');
     const logoPreview = document.getElementById('logo-preview');
     const previewContainer = document.getElementById('logo-preview-container');

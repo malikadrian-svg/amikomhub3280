@@ -3,7 +3,6 @@
 @section('content')
     <div class="bg-indigo-600 text-white min-h-screen flex items-center justify-center p-6 -mt-4">
         <div class="max-w-md w-full">
-            <!-- Success Banner -->
             <div class="text-center mb-8">
                 <div
                     class="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4 border-4 border-white">
@@ -15,19 +14,15 @@
                 <p class="text-indigo-100 mt-2">Tiket Anda telah terbit dan siap digunakan.</p>
             </div>
 
-            <!-- Ticket Card -->
             <div class="bg-white text-slate-900 rounded-[2.5rem] overflow-hidden shadow-2xl relative">
-                <!-- Ticket Header -->
                 <div class="p-8 bg-indigo-50 border-b-4 border-dashed border-indigo-100 text-center relative">
                     <p class="text-indigo-600 font-bold uppercase tracking-widest text-xs mb-2">E-Ticket Resmi</p>
                     <h2 class="text-2xl font-black leading-tight">Jazz Night 2024: A Celebration</h2>
 
-                    <!-- Ticket Side Cuts -->
                     <div class="absolute -left-4 -bottom-4 w-8 h-8 bg-indigo-600 rounded-full"></div>
                     <div class="absolute -right-4 -bottom-4 w-8 h-8 bg-indigo-600 rounded-full"></div>
                 </div>
 
-                <!-- Ticket Body -->
                 <div class="p-8 space-y-8">
                     <div class="grid grid-cols-2 gap-6">
                         <div>
@@ -50,10 +45,8 @@
 
                     <div class="bg-slate-100 p-6 rounded-3xl flex flex-col items-center">
                         <p class="text-slate-400 text-xs font-bold uppercase mb-4">Scan QR untuk Check-in</p>
-                        <!-- Mock QR Code -->
                         <div class="w-48 h-48 bg-white p-4 rounded-xl shadow-inner flex items-center justify-center">
                             <div class="w-full h-full border-4 border-slate-900 flex flex-wrap p-1">
-                                <!-- Just some boxes for mock QR -->
                                 <div class="w-1/4 h-1/4 bg-slate-900"></div>
                                 <div class="w-1/4 h-1/4 bg-white"></div>
                                 <div class="w-1/4 h-1/4 bg-slate-900"></div>

@@ -16,7 +16,6 @@ class CategoryController extends Controller
     {
         $query = Category::withCount('events');
 
-        // Soal 3: Fitur pencarian berdasarkan nama kategori
         if ($request->filled('search')) {
             $query->where('name', 'LIKE', '%' . $request->search . '%');
         }

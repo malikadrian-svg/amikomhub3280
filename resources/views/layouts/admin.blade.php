@@ -17,7 +17,6 @@
 
 <body class="bg-slate-50 text-slate-900 flex min-h-screen">
 
-    <!-- Sidebar -->
     <aside class="w-64 bg-indigo-900 text-indigo-100 flex flex-col p-6 space-y-8 sticky top-0 h-screen">
         <div class="flex items-center gap-3">
             <div
@@ -88,7 +87,6 @@
         </div>
     </aside>
 
-    <!-- Main Content -->
     <main class="flex-1 p-10 overflow-y-auto">
         @yield('content')
     </main>
