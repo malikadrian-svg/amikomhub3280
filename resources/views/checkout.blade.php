@@ -14,7 +14,6 @@
         </div>
 
         <div class="grid grid-cols-1 gap-8">
-            <!-- Summary Card -->
             <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-sm">
                 <h3 class="text-xl font-bold mb-6 border-b pb-4">Pesanan Anda</h3>
                 <div class="flex gap-6 items-start">
@@ -41,7 +40,6 @@
                 </div>
             </div>
 
-            <!-- Form Card -->
             <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-sm">
                 <h3 class="text-xl font-bold mb-6 italic text-indigo-600 underline underline-offset-8">📦 Data Pemesan
                     (Tanpa Login)</h3>
@@ -84,7 +82,6 @@
         </div>
     </main>
 
-    <!-- Overlay Midtrans Simulation -->
     <div id="midtrans-overlay"
         class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-6">
         <div class="bg-white w-full max-w-sm rounded-[2rem] overflow-hidden shadow-2xl animate-bounce-in">

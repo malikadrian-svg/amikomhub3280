@@ -42,7 +42,6 @@
 
 <body class="bg-slate-50 text-slate-900">
 
-    <!-- Navigation -->
     <nav
         class="glass sticky top-8 z-50 mx-4 lg:mx-auto mt-4 px-6 py-4 max-w-7xl rounded-2xl border border-white/20 shadow-lg flex justify-between items-center">
         <div class="flex items-center gap-2">
@@ -63,10 +62,8 @@
         </div> -->
     </nav>
 
-    {{-- Konten utama halaman akan ditampilkan di sini --}}
     @yield('content')
 
-    <!-- Footer -->
     <footer class="bg-indigo-900 text-indigo-100 py-20 px-6 mt-20">
         <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
             <div class="space-y-4 col-span-2">

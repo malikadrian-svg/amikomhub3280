@@ -2,7 +2,6 @@
 
 @section('content')
 <div class="max-w-7xl mx-auto">
-    <!-- Header Section -->
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
             <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Manajemen Kategori</h2>
@@ -17,7 +16,6 @@
         </button>
     </div>
 
-    <!-- Flash Message -->
     @if(session('success'))
         <div class="bg-emerald-50 text-emerald-700 p-4 rounded-xl mb-6 border border-emerald-200 flex items-center gap-3 shadow-sm" id="flash-success">
             <svg class="w-5 h-5 text-emerald-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -27,7 +25,6 @@
         </div>
     @endif
 
-    <!-- Validation Errors -->
     @if($errors->any())
         <div class="bg-rose-50 text-rose-700 p-4 rounded-xl mb-6 border border-rose-200 shadow-sm">
             <div class="flex items-center gap-2 mb-2">
@@ -44,9 +41,7 @@
         </div>
     @endif
 
-    <!-- Table Card -->
     <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-        <!-- Search Bar -->
         <div class="px-6 py-4 bg-slate-50/80 border-b border-slate-200">
             <form method="GET" action="{{ route('admin.categories.index') }}" class="flex gap-3 items-center">
                 <div class="relative flex-1">
@@ -73,7 +68,6 @@
             @endif
         </div>
 
-        <!-- Table -->
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
                 <thead>
@@ -118,14 +112,12 @@
                         </td>
                         <td class="p-5">
                             <div class="flex justify-end gap-2">
-                                <!-- Edit Button -->
                                 <button onclick="openEditModal({{ $category->id }}, '{{ addslashes($category->name) }}')"
                                     class="inline-flex items-center justify-center w-9 h-9 rounded-xl text-slate-500 hover:text-blue-600 hover:bg-blue-50 transition-colors" title="Edit Kategori">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                     </svg>
                                 </button>
-                                <!-- Delete Button -->
                                 <form action="{{ route('admin.categories.destroy', $category->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Anda yakin ingin menghapus kategori \'{{ addslashes($category->name) }}\' secara permanen?');">
                                     @csrf
                                     @method('DELETE')
@@ -164,16 +156,12 @@
             </table>
         </div>
 
-        <!-- Table Footer -->
         <div class="px-6 py-3 bg-slate-50/60 border-t border-slate-200">
             <p class="text-xs text-slate-400 font-medium">Total: {{ $categories->count() }} kategori terdaftar</p>
         </div>
     </div>
 </div>
 
-{{-- ============================================ --}}
-{{-- Modal Tambah Kategori Baru --}}
-{{-- ============================================ --}}
 <div id="modal-tambah" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-6" onclick="if(event.target===this) this.classList.add('hidden')">
     <div class="bg-white w-full max-w-md rounded-2xl overflow-hidden shadow-2xl transform transition-all">
         <form action="{{ route('admin.categories.store') }}" method="POST">
@@ -214,9 +202,6 @@
     </div>
 </div>
 
-{{-- ============================================ --}}
-{{-- Modal Edit Kategori --}}
-{{-- ============================================ --}}
 <div id="modal-edit" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-6" onclick="if(event.target===this) this.classList.add('hidden')">
     <div class="bg-white w-full max-w-md rounded-2xl overflow-hidden shadow-2xl transform transition-all">
         <form id="form-edit" method="POST">
@@ -265,7 +250,6 @@
         document.getElementById('modal-edit').classList.remove('hidden');
     }
 
-    // Auto-hide flash message setelah 4 detik
     const flash = document.getElementById('flash-success');
     if (flash) {
         setTimeout(() => {
@@ -275,7 +259,6 @@
         }, 4000);
     }
 
-    // Auto-open modal tambah jika ada validation error dari store
     @if($errors->any() && old('_method') === null)
         document.getElementById('modal-tambah').classList.remove('hidden');
     @endif

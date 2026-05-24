@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-    <!-- Hero Section -->
     <section class="max-w-7xl mx-auto px-6 py-20 flex flex-col md:flex-row items-center gap-12 animate-fade-in-up">
         <div class="flex-1 space-y-8">
             <span
@@ -57,9 +56,7 @@
 
     <hr class="border-t border-slate-100 max-w-7xl mx-auto">
 
-    <!-- ============================================ -->
-    <!-- Soal 4: Section Kategori Platform -->
-    <!-- ============================================ -->
+   
     <section id="categories" class="max-w-7xl mx-auto px-6 py-24">
         <div class="text-center mb-16 animate-fade-in-up">
             <span class="inline-block px-4 py-1.5 bg-indigo-100 text-indigo-700 rounded-full text-sm font-bold uppercase tracking-wider mb-4">Kategori</span>
@@ -80,7 +77,6 @@
             @endphp
             <a href="/?category={{ $cat->slug }}#events"
                 class="group relative bg-white rounded-3xl border border-slate-100 p-8 text-center shadow-sm hover:shadow-xl hover:border-indigo-200 hover:-translate-y-1 transition-all duration-300 overflow-hidden">
-                <!-- Decorative gradient -->
                 <div class="absolute inset-0 bg-gradient-to-br from-indigo-50 to-purple-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 
                 <div class="relative z-10">
@@ -101,7 +97,6 @@
 
     <hr class="border-t border-slate-100 max-w-7xl mx-auto">
 
-    <!-- Events Grid -->
     <section id="events" class="max-w-7xl mx-auto px-6 py-24">
         <div class="text-center mb-16 animate-fade-in-up">
             <span class="inline-block px-4 py-1.5 bg-indigo-100 text-indigo-700 rounded-full text-sm font-bold uppercase tracking-wider mb-4">🔥 Event Terbaru</span>
@@ -109,15 +104,12 @@
             <p class="text-slate-500 font-medium max-w-xl mx-auto">Pilih event terdekat dan segera amankan tiketmu sebelum kehabisan.</p>
         </div>
 
-        <!-- Blok Navigasi Filter Kategori -->
         <div class="mb-12 flex gap-3 justify-center flex-wrap">
-            <!-- Rujukan awal navigasi bebas bawaan -->
             <a href="/#events" 
                 class="px-6 py-3 rounded-full font-bold text-sm transition-all duration-300 {{ request('category') == null ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-200 scale-105' : 'bg-white border-2 border-slate-200 text-slate-500 hover:border-indigo-400 hover:text-indigo-600 hover:shadow-md' }}">
                 Semua Kategori
             </a>
 
-            <!-- Melakukan iterasi nama Tab Kategori dinamis saat jumlah data bertambah -->
             @foreach($categories as $cat)
             <a href="/?category={{ $cat->slug }}#events"
                 class="px-6 py-3 rounded-full font-bold text-sm transition-all duration-300 {{ request('category') == $cat->slug ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-200 scale-105' : 'bg-white border-2 border-slate-200 text-slate-500 hover:border-indigo-400 hover:text-indigo-600 hover:shadow-md' }}">
@@ -126,7 +118,6 @@
             @endforeach
         </div>
 
-        <!-- Zona Menampilkan Grid List Event -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             @foreach($events as $event)
             <div class="group flex flex-col bg-white rounded-[2rem] border border-slate-200 shadow-sm hover:shadow-2xl hover:border-indigo-100 transition-all duration-300 overflow-hidden">
@@ -184,9 +175,6 @@
         @endif
     </section>
 
-    <!-- ============================================ -->
-    <!-- Soal 4: Section Partner Kami -->
-    <!-- ============================================ -->
     @if($partners->isNotEmpty())
     <hr class="border-t border-slate-100 max-w-7xl mx-auto">
     <section id="partners" class="max-w-7xl mx-auto px-6 py-24">

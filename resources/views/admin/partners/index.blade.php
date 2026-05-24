@@ -2,7 +2,6 @@
 
 @section('content')
 <div class="max-w-7xl mx-auto">
-    <!-- Header Section -->
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
             <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Manajemen Partner</h2>
@@ -16,7 +15,6 @@
         </a>
     </div>
 
-    <!-- Flash Message -->
     @if(session('success'))
         <div class="bg-emerald-50 text-emerald-700 p-4 rounded-xl mb-6 border border-emerald-200 flex items-center gap-3 shadow-sm" id="flash-success">
             <svg class="w-5 h-5 text-emerald-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -26,9 +24,7 @@
         </div>
     @endif
 
-    <!-- Table Card -->
     <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-        <!-- Search Bar -->
         <div class="px-6 py-4 bg-slate-50/80 border-b border-slate-200">
             <form method="GET" action="{{ route('admin.partners.index') }}" class="flex gap-3 items-center">
                 <div class="relative flex-1">
@@ -55,7 +51,6 @@
             @endif
         </div>
 
-        <!-- Table -->
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
                 <thead>
@@ -129,7 +124,6 @@
             </table>
         </div>
 
-        <!-- Table Footer -->
         <div class="px-6 py-3 bg-slate-50/60 border-t border-slate-200">
             <p class="text-xs text-slate-400 font-medium">Total: {{ $partners->count() }} partner terdaftar</p>
         </div>
@@ -137,7 +131,6 @@
 </div>
 
 <script>
-    // Auto-hide flash message setelah 4 detik
     const flash = document.getElementById('flash-success');
     if (flash) {
         setTimeout(() => {

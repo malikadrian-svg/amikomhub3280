@@ -15,7 +15,6 @@ class PartnerController extends Controller
     {
         $query = Partner::query();
 
-        // Soal 3: Fitur pencarian berdasarkan nama partner
         if ($request->filled('search')) {
             $query->where('name', 'LIKE', '%' . $request->search . '%');
         }

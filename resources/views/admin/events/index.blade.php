@@ -2,7 +2,6 @@
 
 @section('content')
 <div class="max-w-7xl mx-auto">
-    <!-- Header Section -->
     <div class="flex justify-between items-center mb-8">
         <div>
             <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Manajemen Event</h2>
@@ -25,7 +24,6 @@
         </div>
     @endif
 
-    <!-- Table Section -->
     <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">

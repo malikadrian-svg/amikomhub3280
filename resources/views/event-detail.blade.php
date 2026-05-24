@@ -2,7 +2,6 @@
 
 @section('content')
     <main class="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 lg:grid-cols-3 gap-12 animate-fade-in-up">
-        <!-- Left: Poster -->
         <div class="lg:col-span-1">
             <div class="sticky top-32">
                 <img src="{{ asset('assets/concert.png') }}" alt="Concert Poster"
@@ -22,7 +21,6 @@
             </div>
         </div>
 
-        <!-- Right: Details -->
         <div class="lg:col-span-2 space-y-12">
             <div class="space-y-4">
                 <span
@@ -87,7 +85,6 @@
                         </a>
                     </div>
                 </div>
-                <!-- Decoration -->
                 <div class="absolute -right-20 -bottom-20 w-64 h-64 bg-white opacity-10 rounded-full"></div>
                 <div class="absolute -left-10 -top-10 w-32 h-32 bg-indigo-400 opacity-20 rounded-full"></div>
             </div>

@@ -2,7 +2,6 @@
 
 @section('content')
 <div class="max-w-4xl mx-auto">
-    <!-- Header -->
     <div class="flex items-center gap-4 mb-8">
         <a href="{{ route('admin.categories.index') }}" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-indigo-600 transition-all shadow-sm hover:shadow">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -15,13 +14,11 @@
         </div>
     </div>
 
-    <!-- Form Card -->
     <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
         <form action="{{ route('admin.categories.store') }}" method="POST">
             @csrf
             
             <div class="p-8 space-y-6">
-                <!-- Nama Kategori -->
                 <div>
                     <label class="block text-sm font-semibold text-slate-700 mb-2">Nama Kategori <span class="text-red-500">*</span></label>
                     <input type="text" name="name" value="{{ old('name') }}" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 block p-3.5 transition-all placeholder-slate-400 font-medium @error('name') border-red-400 bg-red-50 @enderror" placeholder="Contoh: Olahraga" required>
@@ -32,7 +29,6 @@
                 </div>
             </div>
 
-            <!-- Footer Action -->
             <div class="p-6 bg-slate-50 border-t border-slate-200 flex justify-end gap-3 rounded-b-2xl">
                 <a href="{{ route('admin.categories.index') }}" class="px-6 py-2.5 rounded-xl font-semibold text-slate-600 hover:bg-slate-200 transition-colors">Batal</a>
                 <button type="submit" class="px-6 py-2.5 rounded-xl font-semibold bg-indigo-600 text-white hover:bg-indigo-700 transition-all shadow-sm hover:shadow-md flex items-center gap-2">

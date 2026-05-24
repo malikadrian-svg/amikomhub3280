@@ -123,7 +123,6 @@
                             Rp 0
                         </td>
                     </tr>
-                    <!-- More rows... -->
                 </tbody>
             </table>
         </div>
