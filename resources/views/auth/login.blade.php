@@ -19,7 +19,7 @@
                 <p class="text-slate-500 mt-2 text-sm">Silakan login ke akun Anda</p>
             </div>
 
-            <form class="space-y-6" action="{{ url('/login') }}" method="POST">
+            <form class="space-y-6" action="{{ route('login.post') }}" method="POST">
                 @csrf
                 
                 <div>
