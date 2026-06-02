@@ -1,16 +1,18 @@
 <?php
 namespace Database\Seeders;
 use Illuminate\Database\Seeder;
+use App\Models\User;
+
 class DatabaseSeeder extends Seeder
 {
  public function run(): void
  {
  // 1. Akun Admin Utama
- \App\Models\User::create([
+ User::create([
  'name' => 'Admin Amikom',
  'email' => 'admin@amikom.ac.id',
  'password' => bcrypt('password'),
- 'role' => 'admin',
+ 'role' => 'admin'
  ]);
  // 2. Insert Kategori Event
  $catSeminar = \App\Models\Category::create([
