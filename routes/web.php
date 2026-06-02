@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\EventController as AdminEventController;
 use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\PartnerController;
+use App\Http\Controllers\Admin\AuthController;
 
 // Rute User Area
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -16,12 +17,19 @@ Route::get('/event/{id}', [EventController::class, 'show'])->name('events.show')
 Route::get('/checkout/{id}', [EventController::class, 'checkout'])->name('checkout');
 Route::get('/my-ticket/{id}', [TicketController::class, 'show'])->name('ticket');
 
-// Rute Admin Area
-Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
-    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-    Route::resource('events', AdminEventController::class)->except(['show']);
-    Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions.index');
-    Route::resource('categories', CategoryController::class)->except(['show']);
-    Route::resource('partners', PartnerController::class)->except(['show']);
-});
+// Grouping untuk URL berawalan /admin
+Route::prefix('admin')->group(function () {
+    // Rute Login bebas akses
+    Route::get('login', [AuthController::class, 'showLogin'])->name('login');
+    Route::post('login', [AuthController::class, 'login'])->name('login.post');
+    Route::post('logout', [AuthController::class, 'logout'])->name('admin.logout');
 
+    // Mengamankan Route Administrasi di balik tembok (Middleware)
+    Route::middleware(['auth', 'admin'])->name('admin.')->group(function () {
+        Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        Route::resource('events', AdminEventController::class)->except(['show']);
+        Route::get('transactions', [TransactionController::class, 'index'])->name('transactions.index');
+        Route::resource('categories', CategoryController::class)->except(['show']);
+        Route::resource('partners', PartnerController::class)->except(['show']);
+    });
+});
