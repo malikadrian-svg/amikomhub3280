@@ -39,7 +39,14 @@
                     @forelse($events as $event)
                     <tr class="hover:bg-slate-50 transition-colors group">
                         <td class="p-5">
-                            <p class="font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">{{ $event->title }}</p>
+                            <div class="flex items-center gap-4">
+                                <img src="{{ ($event->poster_path && Storage::disk('public')->exists($event->poster_path))
+                                     ? asset('storage/' . $event->poster_path)
+                                     : 'https://placehold.co/16x20' }}" class="w-16 h-20 rounded-xl object-cover shadow-sm">
+                                <div>
+                                    <p class="font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">{{ $event->title }}</p>
+                                </div>
+                            </div>
                         </td>
                         <td class="p-5">
                             <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700 border border-indigo-100/60">

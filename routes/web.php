@@ -13,7 +13,7 @@ use App\Http\Controllers\Admin\AuthController;
 
 // Rute User Area
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/event/{id}', [EventController::class, 'show'])->name('events.show');
+Route::get('/events/{event}', [EventController::class, 'show'])->name('events.show');
 Route::get('/checkout/{id}', [EventController::class, 'checkout'])->name('checkout');
 Route::get('/my-ticket/{id}', [TicketController::class, 'show'])->name('ticket');
 

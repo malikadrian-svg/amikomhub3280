@@ -14,8 +14,24 @@
         </div>
     </div>
 
+    @if($errors->any())
+        <div class="bg-rose-50 text-rose-700 p-4 rounded-xl mb-6 border border-rose-200 shadow-sm">
+            <div class="flex items-center gap-2 mb-2">
+                <svg class="w-5 h-5 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span class="font-semibold">Terjadi kesalahan:</span>
+            </div>
+            <ul class="list-disc list-inside text-sm space-y-1 ml-7">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-        <form action="{{ route('admin.events.update', $event->id) }}" method="POST">
+        <form action="{{ route('admin.events.update', $event->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             
@@ -55,8 +71,11 @@
                         <label class="block text-sm font-semibold text-slate-700 mb-2">Rencana Harga Masuk (Rp) <span class="text-red-500">*</span></label>
                         <div class="relative">
                             <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 text-sm font-bold">Rp</span>
-                            <input type="number" name="price" value="{{ $event->price }}" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 block p-3.5 pl-11 transition-all font-medium" required>
+                            <input type="number" name="price" value="{{ old('price', $event->price) }}" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 block p-3.5 pl-11 transition-all font-medium @error('price') border-red-400 bg-red-50 @enderror" required>
                         </div>
+                        @error('price')
+                            <p class="text-xs text-red-500 mt-1.5 font-medium">{{ $message }}</p>
+                        @enderror
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-slate-700 mb-2">Kapasitas Stok Kuota <span class="text-red-500">*</span></label>
@@ -72,6 +91,17 @@
                         </span>
                         <input type="text" name="location" value="{{ $event->location }}" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 block p-3.5 pl-11 transition-all font-medium" required>
                     </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">Poster Event (Opsional)</label>
+                    @if($event->poster_path && Storage::disk('public')->exists($event->poster_path))
+                        <div class="mb-3">
+                            <p class="text-xs text-slate-500 mb-1">Poster Saat Ini:</p>
+                            <img src="{{ asset('storage/' . $event->poster_path) }}" class="w-32 rounded-xl object-cover border border-slate-200">
+                        </div>
+                    @endif
+                    <input type="file" name="poster" accept="image/*" class="w-full border border-slate-200 bg-slate-50 text-slate-900 text-sm rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 block p-2.5 transition-all font-medium">
                 </div>
             </div>
 

@@ -122,7 +122,10 @@
             @foreach($events as $event)
             <div class="group flex flex-col bg-white rounded-[2rem] border border-slate-200 shadow-sm hover:shadow-2xl hover:border-indigo-100 transition-all duration-300 overflow-hidden">
                 <div class="relative overflow-hidden aspect-video">
-                    <img src="https://placehold.co/600x340/e2e8f0/475569?text={{ urlencode($event->title) }}" alt="{{ $event->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                    <img src="{{ ($event->poster_path && Storage::disk('public')->exists($event->poster_path))
+                         ? asset('storage/' . $event->poster_path)
+                         : 'https://placehold.co/200x600' }}" alt="{{ $event->title }}"
+                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                     <div class="absolute top-4 left-4 px-3 py-1.5 bg-white/95 backdrop-blur rounded-lg text-xs font-extrabold uppercase tracking-widest text-indigo-600 shadow-sm">
                         {{ $event->category->name }}
                     </div>
@@ -155,7 +158,7 @@
                             <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-1">Mulai Dari</p>
                             <span class="text-xl font-black text-indigo-600">Rp {{ number_format($event->price, 0, ',', '.') }}</span>
                         </div>
-                        <a href="{{url('event/' . $event->id)}}" class="px-6 py-3 bg-indigo-50 text-indigo-600 rounded-xl font-bold hover:bg-indigo-600 hover:text-white hover:shadow-lg hover:shadow-indigo-200 transition-all">Detail</a>
+                        <a href="{{ route('events.show', $event->id) }}" class="px-5 py-2 bg-indigo-50 text-indigo-600 rounded-xl font-bold hover:bg-indigo-600 hover:text-white transition">Lihat Detail</a>
                     </div>
                 </div>
             </div>
