@@ -9,9 +9,13 @@ class EventController extends Controller
     /**
      * Menampilkan halaman detail event.
      */
-    public function show($id)
+    public function show(\App\Models\Event $event)
     {
-        return view('event-detail');
+        // Mengambil daftar kategori untuk keperluan menu footer
+        $categories = \App\Models\Category::all();
+
+        // Me-render view dengan membawa data kategori dan data spesifik acara tersebut
+        return view('event-detail', compact('categories', 'event'));
     }
 
     /**
