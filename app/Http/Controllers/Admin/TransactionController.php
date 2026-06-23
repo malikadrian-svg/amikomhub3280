@@ -3,15 +3,16 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 
 class TransactionController extends Controller
 {
-    /**
-     * Menampilkan halaman laporan transaksi admin.
-     */
     public function index()
     {
-        return view('admin.transactions');
+        // Mengambil transaksi terbaru dengan pembatasan 20 baris/halaman
+        $transactions = Transaction::with('event')->latest()->paginate(20);
+
+        return view('admin.transactions.index', compact('transactions'));
     }
 }
