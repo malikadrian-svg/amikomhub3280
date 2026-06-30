@@ -18,6 +18,8 @@ Route::get('/events/{event}', [EventController::class, 'show'])->name('events.sh
 Route::get('/checkout/{event}', [CheckoutController::class, 'create'])->name('checkout.create');
 Route::post('/checkout/{event}', [CheckoutController::class, 'store'])->name('checkout.store');
 Route::get('/my-ticket/{id}', [TicketController::class, 'show'])->name('ticket');
+Route::get('/payment/{order_id}', [CheckoutController::class, 'payment'])->name('checkout.payment');
+Route::get('/success/{order_id}', [CheckoutController::class, 'success'])->name('checkout.success');
 
 // Grouping untuk URL berawalan /admin
 Route::prefix('admin')->group(function () {
