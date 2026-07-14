@@ -1,28 +1,28 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="max-w-4xl mx-auto">
-    <div class="flex items-center gap-4 mb-8">
-        <a href="{{ route('admin.partners.index') }}" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-indigo-600 transition-all shadow-sm hover:shadow">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+<div style="max-width: 800px; margin: 0 auto;">
+    <div style="display: flex; align-items: center; gap: var(--space-4); margin-bottom: var(--space-8);">
+        <a href="{{ route('admin.partners.index') }}" class="btn" style="width: 48px; height: 48px; padding: 0; display: flex; align-items: center; justify-content: center; background-color: var(--ink-0); color: var(--ink-950);">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" viewBox="0 0 24 24">
+                <path d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
             </svg>
         </a>
         <div>
-            <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight">Form Edit Partner</h2>
-            <p class="text-sm text-slate-500 mt-1">Ubah rincian informasi partner di bawah ini.</p>
+            <h2 class="h2" style="margin-bottom: var(--space-1);">FORM EDIT PARTNER</h2>
+            <p class="body" style="color: var(--ink-400);">Ubah rincian informasi partner di bawah ini.</p>
         </div>
     </div>
 
     @if($errors->any())
-        <div class="bg-rose-50 text-rose-700 p-4 rounded-xl mb-6 border border-rose-200 shadow-sm">
-            <div class="flex items-center gap-2 mb-2">
-                <svg class="w-5 h-5 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        <div style="background-color: var(--feedback-error); color: var(--ink-0); padding: var(--space-6); border: 4px solid var(--ink-950); margin-bottom: var(--space-8); box-shadow: 4px 4px 0 var(--ink-950);">
+            <div style="display: flex; align-items: center; gap: var(--space-2); margin-bottom: var(--space-2);">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" viewBox="0 0 24 24">
+                    <path d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
-                <span class="font-semibold">Terjadi kesalahan:</span>
+                <span class="body-lg" style="font-weight: 700;">TERJADI KESALAHAN:</span>
             </div>
-            <ul class="list-disc list-inside text-sm space-y-1 ml-7">
+            <ul style="list-style-type: square; margin-left: var(--space-6); font-weight: 500;">
                 @foreach($errors->all() as $error)
                     <li>{{ $error }}</li>
                 @endforeach
@@ -30,50 +30,52 @@
         </div>
     @endif
 
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+    <div class="card" style="padding: 0; overflow: hidden;">
         <form action="{{ route('admin.partners.update', $partner->id) }}" method="POST">
             @csrf
             @method('PUT')
             
-            <div class="p-8 space-y-6">
-                <div class="flex items-center gap-4 p-4 bg-slate-50 rounded-xl border border-slate-200">
-                    <img src="{{ $partner->logo_url }}" alt="{{ $partner->name }}" class="w-16 h-16 object-cover rounded-xl border border-slate-200 bg-white" onerror="this.src='https://placehold.co/200x200?text=N/A'">
+            <div style="padding: var(--space-8); display: flex; flex-direction: column; gap: var(--space-6);">
+                <div style="display: flex; align-items: center; gap: var(--space-4); padding: var(--space-4); background-color: var(--amber-500); border: 4px solid var(--ink-950); box-shadow: 4px 4px 0 var(--ink-950);">
+                    <div style="width: 64px; height: 64px; border: 2px solid var(--ink-950); background-color: var(--ink-0); display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                        <img src="{{ $partner->logo_url }}" alt="{{ $partner->name }}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='https://placehold.co/200x200?text=N/A'">
+                    </div>
                     <div>
-                        <p class="font-bold text-slate-900">{{ $partner->name }}</p>
-                        <p class="text-xs text-slate-400 mt-0.5">Ditambahkan: {{ $partner->created_at ? $partner->created_at->format('d M Y, H:i') : '-' }}</p>
+                        <p class="body-lg" style="font-weight: 700; margin: 0; text-transform: uppercase;">{{ $partner->name }}</p>
+                        <p class="caption" style="color: var(--ink-950); margin: 0; font-weight: 700;">Ditambahkan: {{ $partner->created_at ? $partner->created_at->format('d M Y, H:i') : '-' }}</p>
                     </div>
                 </div>
 
-                <div>
-                    <label class="block text-sm font-semibold text-slate-700 mb-2">Nama Partner <span class="text-red-500">*</span></label>
-                    <input type="text" name="name" value="{{ old('name', $partner->name) }}" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 block p-3.5 transition-all placeholder-slate-400 font-medium @error('name') border-red-400 bg-red-50 @enderror" placeholder="Contoh: Amikom University" required>
+                <div class="form-group">
+                    <label class="label">NAMA PARTNER <span style="color: var(--feedback-error);">*</span></label>
+                    <input type="text" name="name" value="{{ old('name', $partner->name) }}" class="input @error('name') border-red-500 @enderror" placeholder="Contoh: Amikom University" required>
                     @error('name')
-                        <p class="text-xs text-red-500 mt-1.5 font-medium">{{ $message }}</p>
+                        <p class="caption" style="color: var(--feedback-error); margin-top: var(--space-1); font-weight: 700;">{{ $message }}</p>
                     @enderror
                 </div>
 
-                <div>
-                    <label class="block text-sm font-semibold text-slate-700 mb-2">Logo URL <span class="text-red-500">*</span></label>
-                    <input type="url" name="logo_url" id="logo_url_input" value="{{ old('logo_url', $partner->logo_url) }}" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 block p-3.5 transition-all placeholder-slate-400 font-medium @error('logo_url') border-red-400 bg-red-50 @enderror" placeholder="https://placehold.co/200x200" required>
+                <div class="form-group">
+                    <label class="label">LOGO URL <span style="color: var(--feedback-error);">*</span></label>
+                    <input type="url" name="logo_url" id="logo_url_input" value="{{ old('logo_url', $partner->logo_url) }}" class="input @error('logo_url') border-red-500 @enderror" placeholder="https://placehold.co/200x200" required>
                     @error('logo_url')
-                        <p class="text-xs text-red-500 mt-1.5 font-medium">{{ $message }}</p>
+                        <p class="caption" style="color: var(--feedback-error); margin-top: var(--space-1); font-weight: 700;">{{ $message }}</p>
                     @enderror
-                    <p class="text-xs text-slate-400 mt-1.5">Masukkan URL valid yang mengarah ke gambar logo.</p>
+                    <p class="caption" style="color: var(--ink-400); margin-top: var(--space-2); font-weight: 700;">Masukkan URL valid yang mengarah ke gambar logo.</p>
 
-                    <div id="logo-preview-container" class="mt-4">
-                        <p class="text-xs font-semibold text-slate-500 mb-2 uppercase tracking-wide">Preview Logo Baru:</p>
-                        <div class="w-20 h-20 rounded-xl border-2 border-dashed border-slate-200 overflow-hidden bg-slate-50 flex items-center justify-center">
-                            <img id="logo-preview" src="{{ old('logo_url', $partner->logo_url) }}" alt="Preview" class="w-full h-full object-cover" onerror="this.style.display='none'" onload="this.style.display='block'">
+                    <div id="logo-preview-container" style="margin-top: var(--space-4);">
+                        <p class="caption" style="margin-bottom: var(--space-2); font-weight: 700;">PREVIEW LOGO BARU:</p>
+                        <div style="width: 80px; height: 80px; border: 2px dashed var(--ink-950); background-color: var(--ink-0); display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                            <img id="logo-preview" src="{{ old('logo_url', $partner->logo_url) }}" alt="Preview" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'" onload="this.style.display='block'">
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="p-6 bg-slate-50 border-t border-slate-200 flex justify-end gap-3 rounded-b-2xl">
-                <a href="{{ route('admin.partners.index') }}" class="px-6 py-2.5 rounded-xl font-semibold text-slate-600 hover:bg-slate-200 transition-colors">Batal</a>
-                <button type="submit" class="px-6 py-2.5 rounded-xl font-semibold bg-indigo-600 text-white hover:bg-indigo-700 transition-all shadow-sm hover:shadow-md flex items-center gap-2">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                    Simpan Perubahan
+            <div style="padding: var(--space-6) var(--space-8); border-top: 4px solid var(--ink-950); display: flex; justify-content: flex-end; gap: var(--space-4); background-color: var(--amber-500);">
+                <a href="{{ route('admin.partners.index') }}" class="btn" style="background-color: var(--ink-0); color: var(--ink-950);">BATAL</a>
+                <button type="submit" class="btn btn-primary" style="display: flex; align-items: center; gap: var(--space-2);">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>
+                    SIMPAN PERUBAHAN
                 </button>
             </div>
         </form>

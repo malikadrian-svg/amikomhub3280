@@ -1,98 +1,96 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="max-w-7xl mx-auto">
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+<div style="max-width: 1000px; margin: 0 auto;">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-8); flex-wrap: wrap; gap: var(--space-4);">
         <div>
-            <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Manajemen Partner</h2>
-            <p class="text-slate-500 mt-1 text-sm">Kelola daftar pihak partner dengan mudah.</p>
+            <h2 class="h2" style="margin-bottom: var(--space-2);">MANAJEMEN PARTNER</h2>
+            <p class="body" style="color: var(--ink-400);">Kelola daftar pihak partner dengan mudah.</p>
         </div>
-        <a href="{{ route('admin.partners.create') }}" class="group flex items-center gap-2 bg-indigo-600 text-white px-5 py-2.5 rounded-xl font-semibold hover:bg-indigo-700 transition-all shadow-sm hover:shadow-md">
-            <svg class="w-5 h-5 transition-transform group-hover:rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+        <a href="{{ route('admin.partners.create') }}" class="btn btn-primary" style="display: flex; align-items: center; gap: var(--space-2);">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" viewBox="0 0 24 24">
+                <path d="M12 4v16m8-8H4"></path>
             </svg>
-            Tambah Partner
+            TAMBAH PARTNER
         </a>
     </div>
 
     @if(session('success'))
-        <div class="bg-emerald-50 text-emerald-700 p-4 rounded-xl mb-6 border border-emerald-200 flex items-center gap-3 shadow-sm" id="flash-success">
-            <svg class="w-5 h-5 text-emerald-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        <div id="flash-success" style="background-color: var(--feedback-success); color: var(--ink-0); padding: var(--space-4); border: 2px solid var(--ink-950); margin-bottom: var(--space-6); display: flex; align-items: center; gap: var(--space-3); box-shadow: 4px 4px 0 var(--ink-950);">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" viewBox="0 0 24 24">
+                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            <span class="font-medium">{{ session('success') }}</span>
+            <span style="font-weight: 700;">{{ session('success') }}</span>
         </div>
     @endif
 
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-        <div class="px-6 py-4 bg-slate-50/80 border-b border-slate-200">
-            <form method="GET" action="{{ route('admin.partners.index') }}" class="flex gap-3 items-center">
-                <div class="relative flex-1">
-                    <svg class="w-5 h-5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+    <div class="card" style="padding: 0; overflow: hidden;">
+        <div style="padding: var(--space-6); border-bottom: 4px solid var(--ink-950); background-color: var(--amber-500);">
+            <form method="GET" action="{{ route('admin.partners.index') }}" style="display: flex; gap: var(--space-4); flex-wrap: wrap; align-items: center;">
+                <div style="flex: 1; min-width: 250px; position: relative;">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" viewBox="0 0 24 24" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--ink-400);">
+                        <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                     </svg>
-                    <input type="text" name="search" value="{{ request('search') }}"
-                        placeholder="Cari nama partner..."
-                        class="w-full pl-11 pr-4 py-2.5 rounded-xl border border-slate-200 bg-white focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition text-sm font-medium placeholder-slate-400">
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="CARI NAMA PARTNER..." class="input" style="padding-left: 48px;">
                 </div>
-                <button type="submit"
-                    class="px-5 py-2.5 bg-indigo-600 text-white rounded-xl font-semibold hover:bg-indigo-700 transition-all text-sm shadow-sm">
-                    Cari
+                <button type="submit" class="btn btn-primary" style="background-color: var(--ink-950); color: var(--ink-0);">
+                    CARI
                 </button>
                 @if(request('search'))
-                    <a href="{{ route('admin.partners.index') }}"
-                        class="px-4 py-2.5 border border-slate-200 text-slate-600 rounded-xl font-semibold hover:bg-slate-100 transition-all text-sm">
-                        Reset
+                    <a href="{{ route('admin.partners.index') }}" class="btn" style="background-color: var(--ink-0); color: var(--ink-950);">
+                        RESET
                     </a>
                 @endif
             </form>
             @if(request('search'))
-                <p class="text-xs text-slate-500 mt-2">Menampilkan hasil pencarian untuk: <span class="font-semibold text-indigo-600">"{{ request('search') }}"</span> — {{ $partners->count() }} data ditemukan</p>
+                <p class="caption" style="margin-top: var(--space-4); font-weight: 700; color: var(--ink-950);">MENAMPILKAN HASIL UNTUK: <span style="background-color: var(--ink-0); padding: 2px 8px; border: 2px solid var(--ink-950);">{{ request('search') }}</span> — {{ $partners->count() }} DATA</p>
             @endif
         </div>
 
-        <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
+        <div style="overflow-x: auto;">
+            <table class="table" style="margin: 0; border: none; box-shadow: none;">
                 <thead>
-                    <tr class="bg-slate-50/80 border-b border-slate-200">
-                        <th class="p-5 font-semibold text-slate-600 text-sm tracking-wide w-16">No</th>
-                        <th class="p-5 font-semibold text-slate-600 text-sm tracking-wide">Logo</th>
-                        <th class="p-5 font-semibold text-slate-600 text-sm tracking-wide">Nama Partner</th>
-                        <th class="p-5 font-semibold text-slate-600 text-sm tracking-wide">Tanggal Ditambahkan</th>
-                        <th class="p-5 font-semibold text-slate-600 text-sm tracking-wide text-right">Aksi</th>
+                    <tr>
+                        <th style="border-left: none; width: 64px; text-align: center;">NO</th>
+                        <th style="width: 80px; text-align: center;">LOGO</th>
+                        <th>NAMA PARTNER</th>
+                        <th>TANGGAL DITAMBAHKAN</th>
+                        <th style="border-right: none; text-align: right;">AKSI</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-100">
+                <tbody>
                     @forelse($partners as $index => $partner)
-                    <tr class="hover:bg-slate-50/80 transition-colors group">
-                        <td class="p-5 font-bold text-slate-400">{{ $index + 1 }}</td>
-                        <td class="p-5">
-                            <img src="{{ $partner->logo_url }}" alt="{{ $partner->name }}" class="w-12 h-12 object-cover rounded-xl border border-slate-200 bg-slate-50">
+                    <tr>
+                        <td style="border-left: none; font-weight: 700; color: var(--ink-400); text-align: center;">{{ $index + 1 }}</td>
+                        <td style="text-align: center;">
+                            <div style="width: 48px; height: 48px; border: 2px solid var(--ink-700); box-shadow: 2px 2px 0 var(--ink-950); background-color: var(--ink-900); overflow: hidden; display: inline-block;">
+                                <img src="{{ $partner->logo_url }}" alt="{{ $partner->name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                            </div>
                         </td>
-                        <td class="p-5">
-                            <p class="font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">{{ $partner->name }}</p>
+                        <td>
+                            <p class="body" style="font-weight: 700; margin: 0; text-transform: uppercase;">{{ $partner->name }}</p>
                         </td>
-                        <td class="p-5">
-                            <div class="flex items-center text-slate-600 text-sm font-medium">
-                                <svg class="w-4 h-4 mr-2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        <td>
+                            <div style="display: flex; align-items: center; gap: var(--space-2); color: var(--ink-200); font-weight: 500; font-size: 14px;">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" viewBox="0 0 24 24">
+                                    <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                                 </svg>
                                 {{ $partner->created_at ? $partner->created_at->format('d M Y') : '-' }}
                             </div>
                         </td>
-                        <td class="p-5">
-                            <div class="flex justify-end gap-2">
-                                <a href="{{ route('admin.partners.edit', $partner->id) }}" class="inline-flex items-center justify-center w-9 h-9 rounded-xl text-slate-500 hover:text-blue-600 hover:bg-blue-50 transition-colors" title="Edit Data">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                        <td style="border-right: none; text-align: right;">
+                            <div style="display: flex; justify-content: flex-end; gap: var(--space-2);">
+                                <a href="{{ route('admin.partners.edit', $partner->id) }}" class="btn" style="padding: var(--space-2); background-color: var(--ink-800); color: var(--ink-0); border: 2px solid var(--ink-700);">
+                                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" viewBox="0 0 24 24">
+                                        <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                     </svg>
                                 </a>
-                                <form action="{{ route('admin.partners.destroy', $partner->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Anda yakin ingin menghapus data partner \'{{ addslashes($partner->name) }}\' secara permanen?');">
+                                <form action="{{ route('admin.partners.destroy', $partner->id) }}" method="POST" style="display: inline-block;" onsubmit="return confirm('Anda yakin ingin menghapus data partner \'{{ addslashes($partner->name) }}\' secara permanen?');">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="inline-flex items-center justify-center w-9 h-9 rounded-xl text-slate-500 hover:text-red-600 hover:bg-red-50 transition-colors" title="Hapus Data">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                    <button type="submit" class="btn" style="padding: var(--space-2); background-color: transparent; border: 2px solid var(--error-border); color: var(--error-border);">
+                                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" viewBox="0 0 24 24">
+                                            <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                                         </svg>
                                     </button>
                                 </form>
@@ -101,15 +99,15 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="5" class="p-12 text-center text-slate-500">
-                            <div class="flex flex-col items-center justify-center">
-                                <div class="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center mb-4">
-                                    <svg class="w-8 h-8 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        <td colspan="5" style="text-align: center; padding: var(--space-10); border: none;">
+                            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                                <div style="width: 80px; height: 80px; border: 4px solid var(--ink-700); background-color: var(--ink-950); display: flex; align-items: center; justify-content: center; margin-bottom: var(--space-4); box-shadow: 4px 4px 0 var(--ink-950);">
+                                    <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" viewBox="0 0 24 24" style="color: var(--ink-400);">
+                                        <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                     </svg>
                                 </div>
-                                <p class="text-base font-semibold text-slate-700 mb-1">Belum ada partner</p>
-                                <p class="text-sm text-slate-400">
+                                <p class="h4" style="margin-bottom: var(--space-2);">BELUM ADA PARTNER</p>
+                                <p class="body" style="color: var(--ink-400);">
                                     @if(request('search'))
                                         Tidak ditemukan partner dengan kata kunci "{{ request('search') }}".
                                     @else
@@ -124,8 +122,8 @@
             </table>
         </div>
 
-        <div class="px-6 py-3 bg-slate-50/60 border-t border-slate-200">
-            <p class="text-xs text-slate-400 font-medium">Total: {{ $partners->count() }} partner terdaftar</p>
+        <div style="padding: var(--space-4) var(--space-6); border-top: var(--border-width-default) solid var(--ink-700); background-color: var(--ink-900);">
+            <p class="caption" style="font-weight: 700; color: var(--ink-200);">TOTAL: {{ $partners->count() }} PARTNER</p>
         </div>
     </div>
 </div>

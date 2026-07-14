@@ -1,81 +1,78 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="bg-indigo-600 text-white min-h-screen flex items-center justify-center p-6 -mt-4">
-        <div class="max-w-md w-full">
-            <div class="text-center mb-8">
-                <div
-                    class="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4 border-4 border-white">
-                    <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+    <div style="background-color: var(--ink-950); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: var(--space-6); margin-top: -20px;">
+        <div style="width: 100%; max-width: 480px;">
+            <div style="text-align: center; margin-bottom: var(--space-8);">
+                <div style="width: 80px; height: 80px; background-color: var(--feedback-success); color: var(--ink-0); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto var(--space-4) auto; border: 4px solid var(--ink-0);">
+                    <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square" viewBox="0 0 24 24">
+                        <path d="M5 13l4 4L19 7"></path>
                     </svg>
                 </div>
-                <h1 class="text-3xl font-black">Pembayaran Berhasil!</h1>
-                <p class="text-indigo-100 mt-2">Tiket Anda telah terbit dan siap digunakan.</p>
+                <h1 class="display" style="color: var(--ink-0);">PEMBAYARAN BERHASIL!</h1>
+                <p class="body-lg" style="color: var(--ink-400); margin-top: var(--space-2);">Tiket Anda telah terbit dan siap digunakan.</p>
             </div>
 
-            <div class="bg-white text-slate-900 rounded-[2.5rem] overflow-hidden shadow-2xl relative">
-                <div class="p-8 bg-indigo-50 border-b-4 border-dashed border-indigo-100 text-center relative">
-                    <p class="text-indigo-600 font-bold uppercase tracking-widest text-xs mb-2">E-Ticket Resmi</p>
-                    <h2 class="text-2xl font-black leading-tight">Jazz Night 2024: A Celebration</h2>
+            <div class="card" style="padding: 0; overflow: hidden; position: relative;">
+                <div style="padding: var(--space-8); background-color: var(--amber-500); border-bottom: 4px dashed var(--ink-950); text-align: center; position: relative;">
+                    <p class="caption" style="color: var(--ink-950); margin-bottom: var(--space-2);">E-TICKET RESMI</p>
+                    <h2 class="h2" style="color: var(--ink-950); margin: 0;">Jazz Night 2024: A Celebration</h2>
 
-                    <div class="absolute -left-4 -bottom-4 w-8 h-8 bg-indigo-600 rounded-full"></div>
-                    <div class="absolute -right-4 -bottom-4 w-8 h-8 bg-indigo-600 rounded-full"></div>
+                    <div style="position: absolute; left: -16px; bottom: -16px; width: 32px; height: 32px; background-color: var(--ink-950); border-radius: 50%; border: 4px solid var(--ink-950);"></div>
+                    <div style="position: absolute; right: -16px; bottom: -16px; width: 32px; height: 32px; background-color: var(--ink-950); border-radius: 50%; border: 4px solid var(--ink-950);"></div>
                 </div>
 
-                <div class="p-8 space-y-8">
-                    <div class="grid grid-cols-2 gap-6">
+                <div style="padding: var(--space-8); display: flex; flex-direction: column; gap: var(--space-8);">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-6);">
                         <div>
-                            <p class="text-slate-400 text-xs font-bold uppercase mb-1">Nama Pembeli</p>
-                            <p class="font-bold text-lg">Donni Prabowo</p>
+                            <p class="caption" style="color: var(--ink-400); margin-bottom: var(--space-1);">NAMA PEMBELI</p>
+                            <p class="body" style="font-weight: 700; color: var(--ink-0); margin: 0;">Donni Prabowo</p>
                         </div>
                         <div>
-                            <p class="text-slate-400 text-xs font-bold uppercase mb-1">Tanggal & Waktu</p>
-                            <p class="font-bold text-lg">16 Nov, 19:30</p>
+                            <p class="caption" style="color: var(--ink-400); margin-bottom: var(--space-1);">TANGGAL & WAKTU</p>
+                            <p class="body" style="font-weight: 700; color: var(--ink-0); margin: 0;">16 Nov, 19:30</p>
                         </div>
                         <div>
-                            <p class="text-slate-400 text-xs font-bold uppercase mb-1">Order ID</p>
-                            <p class="font-bold">TRX-99210</p>
+                            <p class="caption" style="color: var(--ink-400); margin-bottom: var(--space-1);">ORDER ID</p>
+                            <p class="body" style="font-weight: 700; color: var(--ink-0); margin: 0;">TRX-99210</p>
                         </div>
                         <div>
-                            <p class="text-slate-400 text-xs font-bold uppercase mb-1">Lokasi</p>
-                            <p class="font-bold">Blue Note Lounge</p>
+                            <p class="caption" style="color: var(--ink-400); margin-bottom: var(--space-1);">LOKASI</p>
+                            <p class="body" style="font-weight: 700; color: var(--ink-0); margin: 0;">Blue Note Lounge</p>
                         </div>
                     </div>
 
-                    <div class="bg-slate-100 p-6 rounded-3xl flex flex-col items-center">
-                        <p class="text-slate-400 text-xs font-bold uppercase mb-4">Scan QR untuk Check-in</p>
-                        <div class="w-48 h-48 bg-white p-4 rounded-xl shadow-inner flex items-center justify-center">
-                            <div class="w-full h-full border-4 border-slate-900 flex flex-wrap p-1">
-                                <div class="w-1/4 h-1/4 bg-slate-900"></div>
-                                <div class="w-1/4 h-1/4 bg-white"></div>
-                                <div class="w-1/4 h-1/4 bg-slate-900"></div>
-                                <div class="w-1/4 h-1/4 bg-white"></div>
-                                <div class="w-1/4 h-1/4 bg-white"></div>
-                                <div class="w-1/4 h-1/4 bg-slate-900"></div>
-                                <div class="w-1/4 h-1/4 bg-white"></div>
-                                <div class="w-1/4 h-1/4 bg-slate-900"></div>
-                                <div class="w-1/4 h-1/4 bg-slate-900"></div>
-                                <div class="w-1/4 h-1/4 bg-white"></div>
-                                <div class="w-1/4 h-1/4 bg-slate-900"></div>
-                                <div class="w-1/4 h-1/4 bg-white"></div>
-                                <div class="w-1/4 h-1/4 bg-white"></div>
-                                <div class="w-1/4 h-1/4 bg-slate-900"></div>
-                                <div class="w-1/4 h-1/4 bg-white"></div>
-                                <div class="w-1/4 h-1/4 bg-slate-900"></div>
+                    <div style="background-color: var(--ink-700); padding: var(--space-6); border: 2px solid var(--ink-700); display: flex; flex-direction: column; align-items: center;">
+                        <p class="caption" style="color: var(--ink-400); margin-bottom: var(--space-4);">SCAN QR UNTUK CHECK-IN</p>
+                        <div style="width: 192px; height: 192px; background-color: var(--ink-0); padding: var(--space-4); box-shadow: inset 4px 4px 0 rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center;">
+                            <div style="width: 100%; height: 100%; border: 4px solid var(--ink-950); display: flex; flex-wrap: wrap; padding: 4px;">
+                                <div style="width: 25%; height: 25%; background-color: var(--ink-950);"></div>
+                                <div style="width: 25%; height: 25%; background-color: var(--ink-0);"></div>
+                                <div style="width: 25%; height: 25%; background-color: var(--ink-950);"></div>
+                                <div style="width: 25%; height: 25%; background-color: var(--ink-0);"></div>
+                                <div style="width: 25%; height: 25%; background-color: var(--ink-0);"></div>
+                                <div style="width: 25%; height: 25%; background-color: var(--ink-950);"></div>
+                                <div style="width: 25%; height: 25%; background-color: var(--ink-0);"></div>
+                                <div style="width: 25%; height: 25%; background-color: var(--ink-950);"></div>
+                                <div style="width: 25%; height: 25%; background-color: var(--ink-950);"></div>
+                                <div style="width: 25%; height: 25%; background-color: var(--ink-0);"></div>
+                                <div style="width: 25%; height: 25%; background-color: var(--ink-950);"></div>
+                                <div style="width: 25%; height: 25%; background-color: var(--ink-0);"></div>
+                                <div style="width: 25%; height: 25%; background-color: var(--ink-0);"></div>
+                                <div style="width: 25%; height: 25%; background-color: var(--ink-950);"></div>
+                                <div style="width: 25%; height: 25%; background-color: var(--ink-0);"></div>
+                                <div style="width: 25%; height: 25%; background-color: var(--ink-950);"></div>
                             </div>
                         </div>
-                        <p class="mt-4 font-mono font-bold text-slate-800">TKT-001293848</p>
+                        <p style="margin-top: var(--space-4); font-family: monospace; font-weight: 700; color: var(--ink-0); font-size: 16px;">TKT-001293848</p>
                     </div>
                 </div>
 
-                <div class="px-8 pb-8">
-                    <button onclick="window.print()"
-                        class="w-full py-4 bg-indigo-600 text-white rounded-2xl font-bold shadow-lg hover:bg-indigo-700 transition">
-                        Cetak / Simpan PDF
+                <div style="padding: 0 var(--space-8) var(--space-8) var(--space-8);">
+                    <button onclick="window.print()" class="btn btn-primary w-100" style="padding: var(--space-4); font-size: 16px;">
+                        CETAK / SIMPAN PDF
                     </button>
-                    <a href="{{ url('/') }}"
-                        class="block text-center mt-4 text-slate-500 font-bold hover:text-indigo-600">Kembali ke Beranda</a>
+                    <a href="{{ url('/') }}" style="display: block; text-align: center; margin-top: var(--space-4); color: var(--ink-400); font-weight: 700; text-decoration: none;">KEMBALI KE BERANDA</a>
                 </div>
             </div>
         </div>

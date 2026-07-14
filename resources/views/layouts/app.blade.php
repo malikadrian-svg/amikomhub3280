@@ -5,95 +5,94 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AmikomEventHub - Temukan Event Seru!</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
+    <!-- Ganti Tailwind dengan Neo-Brutalism CSS -->
+    <link rel="stylesheet" href="{{ asset('css/neo-brutalism.css') }}">
     <style>
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            scroll-behavior: smooth;
+        /* Utility classes khusus untuk spacing layout jika diperlukan di tingkat atas */
+        .page-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--space-4);
         }
-
-        .glass {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(10px);
+        .footer-section {
+            background-color: var(--ink-950);
+            border-top: 2px solid var(--ink-700);
+            padding: var(--space-8) var(--space-4);
+            margin-top: var(--space-12);
         }
-
-        /* Animations */
-        @keyframes blob {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(30px, -50px) scale(1.1); }
-            66% { transform: translate(-20px, 20px) scale(0.9); }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: var(--space-6);
+            max-width: 1200px;
+            margin: 0 auto;
         }
-        .animate-blob { animation: blob 7s infinite; }
-        .animation-delay-2000 { animation-delay: 2s; }
-        .animation-delay-4000 { animation-delay: 4s; }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+        .footer-bottom {
+            border-top: 1px solid var(--ink-700);
+            padding-top: var(--space-4);
+            margin-top: var(--space-6);
+            text-align: center;
         }
-        .animate-fade-in-up {
-            animation: fadeInUp 0.8s ease-out forwards;
-            opacity: 0;
-        }
+        .d-flex { display: flex; }
+        .align-center { align-items: center; }
+        .gap-2 { gap: var(--space-2); }
+        .gap-3 { gap: var(--space-3); }
+        .gap-4 { gap: var(--space-4); }
+        .justify-between { justify-content: space-between; }
+        .mt-4 { margin-top: var(--space-4); }
+        .mb-2 { margin-bottom: var(--space-2); }
+        .mb-4 { margin-bottom: var(--space-4); }
+        .text-center { text-align: center; }
+        .list-unstyled { list-style: none; padding: 0; margin: 0; }
+        .list-unstyled li { margin-bottom: var(--space-2); }
+        .list-unstyled a { color: var(--ink-200); text-decoration: none; font-family: 'IBM Plex Mono', monospace; font-size: 13px; }
+        .list-unstyled a:hover { color: var(--ink-0); text-decoration: underline; }
     </style>
 </head>
 
-<body class="bg-slate-50 text-slate-900">
+<body>
 
-    <nav
-        class="glass sticky top-8 z-50 mx-4 lg:mx-auto mt-4 px-6 py-4 max-w-7xl rounded-2xl border border-white/20 shadow-lg flex justify-between items-center">
-        <div class="flex items-center gap-2">
-            <div
-                class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white font-bold text-xl">
-                AH</div>
-            <span class="text-xl font-bold tracking-tight">AmikomEventHub</span>
+    <nav class="navbar" style="position: sticky; top: 0; z-index: 50;">
+        <div class="d-flex align-center gap-2">
+            <div style="width: 32px; height: 32px; background-color: var(--amber-500); color: var(--ink-950); display: flex; align-items: center; justify-content: center; font-family: 'Space Grotesk', sans-serif; font-weight: 700;">AH</div>
+            <span class="h3" style="margin:0; letter-spacing: 0.02em;">AMIKOMEVENTHUB</span>
         </div>
-        <div class="hidden md:flex gap-8 font-medium">
-            <a href="{{ url('/') }}" class="text-slate-600 hover:text-indigo-600 transition {{ request()->is('/') ? 'text-indigo-600 font-bold' : '' }}">Home</a>
-            <a href="{{ url('/#events') }}" class="text-slate-600 hover:text-indigo-600 transition">Event</a>
-            <a href="{{ url('/#categories') }}" class="text-slate-600 hover:text-indigo-600 transition">Kategori</a>
+        <div class="nav-links">
+            <a href="{{ url('/') }}" class="sidebar-item {{ request()->is('/') ? 'active' : '' }}" style="border-left: none; border-bottom: 2px solid {{ request()->is('/') ? 'var(--amber-500)' : 'transparent' }}; padding: var(--space-3) var(--space-2);">Home</a>
+            <a href="{{ url('/#events') }}" class="sidebar-item" style="border-left: none; border-bottom: 2px solid transparent; padding: var(--space-3) var(--space-2);">Event</a>
+            <a href="{{ url('/#categories') }}" class="sidebar-item" style="border-left: none; border-bottom: 2px solid transparent; padding: var(--space-3) var(--space-2);">Kategori</a>
         </div>
-        <!-- <div class="flex gap-3">
-            <button class="px-5 py-2.5 rounded-xl font-semibold hover:bg-slate-200 transition">Login</button>
-            <button
-                class="px-5 py-2.5 bg-indigo-600 text-white rounded-xl font-semibold shadow-lg shadow-indigo-200 hover:bg-indigo-700 transition">Daftar</button>
-        </div> -->
     </nav>
 
     @yield('content')
 
-    <footer class="bg-indigo-900 text-indigo-100 py-20 px-6 mt-20">
-        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
-            <div class="space-y-4 col-span-2">
-                <div class="flex items-center gap-2">
-                    <div
-                        class="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-indigo-900 font-bold text-xl">
-                        AH</div>
-                    <span class="text-2xl font-bold text-white">AmikomEventHub</span>
+    <footer class="footer-section">
+        <div class="footer-grid">
+            <div>
+                <div class="d-flex align-center gap-2 mb-4">
+                    <div style="width: 32px; height: 32px; background-color: var(--ink-0); color: var(--ink-950); display: flex; align-items: center; justify-content: center; font-family: 'Space Grotesk', sans-serif; font-weight: 700;">AH</div>
+                    <span class="h3" style="margin:0; letter-spacing: 0.02em;">AMIKOMEVENTHUB</span>
                 </div>
-                <p class="max-w-xs text-indigo-300">Platform reservasi tiket event online terbaik untuk mahasiswa dan
-                    penyelenggara profesional.</p>
+                <p class="body" style="color: var(--ink-200); max-width: 300px;">Platform reservasi tiket event online bergaya brutalist. Pemesanan cepat, tegas, tanpa kompromi.</p>
             </div>
             <div>
-                <h4 class="text-white font-bold mb-6">Navigasi</h4>
-                <ul class="space-y-4">
-                    <li><a href="#" class="hover:text-white transition">Home</a></li>
-                    <li><a href="#" class="hover:text-white transition">Semua Event</a></li>
-                    <li><a href="#" class="hover:text-white transition">Cara Bayar</a></li>
+                <h4 class="h5" style="margin-bottom: var(--space-3); color: var(--ink-400);">NAVIGASI</h4>
+                <ul class="list-unstyled">
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Semua Event</a></li>
+                    <li><a href="#">Cara Bayar</a></li>
                 </ul>
             </div>
             <div>
-                <h4 class="text-white font-bold mb-6">Hubungi Kami</h4>
-                <ul class="space-y-4">
-                    <li>support@eventtiket.com</li>
-                    <li>+62 812 3456 7890</li>
+                <h4 class="h5" style="margin-bottom: var(--space-3); color: var(--ink-400);">HUBUNGI KAMI</h4>
+                <ul class="list-unstyled">
+                    <li><a href="mailto:support@eventtiket.com">support@eventtiket.com</a></li>
+                    <li><a href="tel:+6281234567890">+62 812 3456 7890</a></li>
                 </ul>
             </div>
         </div>
-        <div class="max-w-7xl mx-auto pt-12 mt-12 border-t border-indigo-800 text-center text-indigo-400 text-sm">
-            &copy; 2024 AmikomEventHub. Built with Laravel & Tailwind CSS.
+        <div class="footer-bottom">
+            <p class="caption" style="color: var(--ink-400);">&copy; 2024 AMIKOMEVENTHUB. BUILT WITH NEO-BRUTALISM.</p>
         </div>
     </footer>
 

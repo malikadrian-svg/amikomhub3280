@@ -1,130 +1,156 @@
 @extends('layouts.app')
 
 @section('content')
-    <main class="max-w-3xl mx-auto px-6 py-20 animate-fade-in-up">
-        <div class="mb-12">
-            <a href="{{ url('/event/1') }}" class="text-indigo-600 font-bold flex items-center gap-2 mb-6">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+    <main style="max-width: 900px; margin: 0 auto; padding: var(--space-8) var(--space-4);">
+        <div style="margin-bottom: var(--space-6);">
+            <a href="{{ url('/event/1') }}" class="btn-text" style="display: inline-flex; align-items: center; gap: var(--space-2); margin-bottom: var(--space-4);">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" viewBox="0 0 24 24">
+                    <path d="M15 19l-7-7 7-7"></path>
                 </svg>
-                Kembali ke Event
+                KEMBALI KE EVENT
             </a>
-            <h1 class="text-4xl font-extrabold">Checkout</h1>
-            <p class="text-slate-500 mt-2">Lengkapi data Anda untuk mendapatkan tiket.</p>
+            <h1 class="display" style="margin-bottom: var(--space-2);">SELESAIKAN PESANAN</h1>
+            <p class="body-lg" style="color: var(--ink-400);">Hanya selangkah lagi untuk mendapatkan tiketmu.</p>
         </div>
 
-        <div class="grid grid-cols-1 gap-8">
-            <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-sm">
-                <h3 class="text-xl font-bold mb-6 border-b pb-4">Pesanan Anda</h3>
-                <div class="flex gap-6 items-start">
-                    <img src="{{ asset('assets/concert.png') }}" alt="Event" class="w-32 aspect-video rounded-2xl object-cover shadow-sm border border-slate-100">
+        <div style="display: grid; grid-template-columns: 1fr; gap: var(--space-6);">
+            
+            <!-- Form Data Pemesan -->
+            <div class="card" style="padding: 0; overflow: hidden;">
+                <div style="padding: var(--space-4) var(--space-6); border-bottom: 4px solid var(--ink-950); background-color: var(--ink-900); display: flex; align-items: center; gap: var(--space-3);">
+                    <div style="width: 32px; height: 32px; background-color: var(--amber-500); border: 2px solid var(--ink-950); display: flex; align-items: center; justify-content: center; box-shadow: 2px 2px 0 var(--ink-950);">
+                        <svg width="16" height="16" fill="none" stroke="var(--ink-950)" stroke-width="2.5" stroke-linecap="square" viewBox="0 0 24 24">
+                            <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                        </svg>
+                    </div>
                     <div>
-                        <h4 class="font-extrabold text-lg">Jazz Night 2024: A Celebration</h4>
-                        <p class="text-slate-500">16 Nov 2024 • The Blue Note Lounge</p>
-                        <p class="text-indigo-600 font-bold mt-2">1 x Rp 150.000</p>
+                        <h3 class="h3" style="margin: 0; font-size: 18px;">DATA PEMESAN</h3>
+                        <p class="caption" style="color: var(--ink-400); margin: 0;">Isi detail di bawah ini tanpa perlu login.</p>
                     </div>
                 </div>
-                <div class="mt-8 pt-6 border-t space-y-3">
-                    <div class="flex justify-between text-slate-500">
-                        <span>Harga Tiket</span>
-                        <span>Rp 150.000</span>
+                
+                <form class="space-y-6" style="padding: var(--space-6);">
+                    <div class="form-group">
+                        <label class="label">NAMA LENGKAP</label>
+                        <input type="text" placeholder="Sesuai kartu identitas" class="form-control" required>
                     </div>
-                    <div class="flex justify-between text-slate-500">
-                        <span>Biaya Layanan</span>
-                        <span>Rp 5.000</span>
-                    </div>
-                    <div class="flex justify-between text-2xl font-black mt-4 pt-4 border-t">
-                        <span>Total Bayar</span>
-                        <span class="text-indigo-600">Rp 155.000</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-sm">
-                <h3 class="text-xl font-bold mb-6 italic text-indigo-600 underline underline-offset-8">📦 Data Pemesan
-                    (Tanpa Login)</h3>
-                <form class="space-y-6">
-                    <div>
-                        <label class="block text-sm font-bold text-slate-700 mb-2 uppercase tracking-wide">Nama
-                            Lengkap</label>
-                        <input type="text" placeholder="Masukkan nama sesuai identitas"
-                            class="w-full px-5 py-4 bg-white border-2 border-slate-100 rounded-2xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-600 outline-none transition font-medium"
-                            required>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label class="block text-sm font-bold text-slate-700 mb-2 uppercase tracking-wide">Email
-                                Aktif</label>
-                            <input type="email" placeholder="contoh@gmail.com"
-                                class="w-full px-5 py-4 bg-white border-2 border-slate-100 rounded-2xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-600 outline-none transition font-medium"
-                                required>
-                            <p class="text-[10px] text-slate-400 mt-2 font-bold uppercase tracking-tighter">*E-Ticket
-                                akan dikirim ke email ini</p>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--space-4);">
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label class="label">EMAIL AKTIF</label>
+                            <input type="email" placeholder="email@anda.com" class="form-control" required>
+                            <p class="caption" style="color: var(--amber-500); margin-top: var(--space-1); display: flex; align-items: center; gap: 4px;">
+                                <svg width="12" height="12" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
+                                E-TICKET DIKIRIM KE SINI
+                            </p>
                         </div>
-                        <div>
-                            <label class="block text-sm font-bold text-slate-700 mb-2 uppercase tracking-wide">No.
-                                WhatsApp</label>
-                            <input type="tel" placeholder="08xxxxxxx"
-                                class="w-full px-5 py-4 bg-white border-2 border-slate-100 rounded-2xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-600 outline-none transition font-medium"
-                                required>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label class="label">NO. WHATSAPP</label>
+                            <input type="tel" placeholder="08xxxxxxxxxxx" class="form-control" required>
                         </div>
                     </div>
 
-                    <button type="button" onclick="showMidtrans()"
-                        class="w-full py-5 bg-indigo-600 text-white rounded-2xl font-extrabold text-xl shadow-xl shadow-indigo-200 hover:bg-indigo-700 active:scale-95 transition-all hover:shadow-indigo-400">
-                        Bayar Sekarang
-                    </button>
-                    <p class="text-center text-xs text-slate-400">Dengan menekan tombol di atas, Anda menyetujui Syarat
-                        & Ketentuan kami.</p>
+                    <div style="margin-top: var(--space-6); padding-top: var(--space-6); border-top: var(--border-width-default) solid var(--ink-700);">
+                        <button type="button" onclick="showMidtrans()" class="btn btn-primary" style="width: 100%; height: 56px; font-size: 16px;">
+                            LANJUT PEMBAYARAN
+                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" viewBox="0 0 24 24" style="margin-left: var(--space-2);">
+                                <path d="M5 12h14M12 5l7 7-7 7"></path>
+                            </svg>
+                        </button>
+                        <p class="caption" style="text-align: center; color: var(--ink-400); margin-top: var(--space-3); display: flex; align-items: center; justify-content: center; gap: 6px;">
+                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" viewBox="0 0 24 24"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                            PEMBAYARAN DIJAMIN AMAN & TERENKRIPSI
+                        </p>
+                    </div>
                 </form>
+            </div>
+            
+            <!-- Ringkasan Pesanan -->
+            <div class="card" style="padding: 0; overflow: hidden; margin-top: var(--space-4);">
+                <div style="padding: var(--space-4) var(--space-6); border-bottom: 4px solid var(--ink-950); background-color: var(--ink-900);">
+                    <h3 class="h3" style="margin: 0; font-size: 18px;">RINGKASAN PESANAN</h3>
+                </div>
+                <div style="padding: var(--space-6);">
+                    <div style="display: flex; gap: var(--space-4); align-items: flex-start; margin-bottom: var(--space-6);">
+                        <div style="width: 100px; height: 100px; border: 2px solid var(--ink-950); box-shadow: 2px 2px 0 var(--ink-950); background-color: var(--ink-800); flex-shrink: 0;">
+                            <img src="{{ asset('assets/concert.png') }}" alt="Event" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <div>
+                            <span class="badge" style="margin-bottom: var(--space-2);">TIKET EVENT</span>
+                            <h4 class="h4" style="margin-bottom: var(--space-1);">Film Festival Mahasiswa</h4>
+                            <div style="display: flex; flex-direction: column; gap: var(--space-1); margin-top: var(--space-2);">
+                                <div style="display: flex; align-items: center; gap: var(--space-2); color: var(--ink-200);">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" viewBox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                    <span class="body-sm" style="font-weight: 700;">05 October 2026, 09:00 WIB</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: var(--space-2); color: var(--ink-200);">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" viewBox="0 0 24 24"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                                    <span class="body-sm" style="font-weight: 700;">Auditorium Amikom</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="border-top: 1px dashed var(--ink-700); padding-top: var(--space-4); display: flex; flex-direction: column; gap: var(--space-2);">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span class="body" style="color: var(--ink-200);">Harga Tiket (1x)</span>
+                            <span class="body" style="font-weight: 700;">Rp 15.000</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span class="body" style="color: var(--ink-200);">Biaya Layanan</span>
+                            <span class="body" style="font-weight: 700;">Rp 5.000</span>
+                        </div>
+                    </div>
+                </div>
+                <div style="padding: var(--space-4) var(--space-6); background-color: var(--ink-950); border-top: 4px solid var(--ink-950); display: flex; justify-content: space-between; align-items: center;">
+                    <span class="h4" style="margin: 0; color: var(--ink-0);">TOTAL</span>
+                    <span class="h3" style="margin: 0; color: var(--amber-500);">Rp 20.000</span>
+                </div>
             </div>
 
         </div>
     </main>
 
-    <div id="midtrans-overlay"
-        class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-6">
-        <div class="bg-white w-full max-w-sm rounded-[2rem] overflow-hidden shadow-2xl animate-bounce-in">
-            <div class="bg-slate-50 p-6 flex justify-between items-center border-b">
-                <img src="https://midtrans.com/assets/img/logo-dark.png" alt="Midtrans Logo" class="h-6">
-                <button onclick="hideMidtrans()" class="p-2 hover:bg-slate-200 rounded-full">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l18 18">
-                        </path>
+    <!-- Overlay Midtrans Dummy -->
+    <div id="midtrans-overlay" class="modal-backdrop" style="display: none;">
+        <div class="modal" style="padding: 0; overflow: hidden; background-color: var(--ink-900);">
+            <div style="background-color: var(--amber-500); padding: var(--space-4) var(--space-6); display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid var(--ink-950);">
+                <div style="display: flex; align-items: center; gap: var(--space-2); color: var(--ink-950);">
+                    <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M21 4H3a1 1 0 00-1 1v14a1 1 0 001 1h18a1 1 0 001-1V5a1 1 0 00-1-1zm-1 14H4V6h16v12z"/><path d="M5 9h14v2H5zM5 13h8v2H5z"/></svg>
+                    <span class="h4" style="margin: 0;">PEMBAYARAN</span>
+                </div>
+                <button onclick="hideMidtrans()" class="btn" style="padding: var(--space-1); background-color: transparent; color: var(--ink-950); border: none;">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" viewBox="0 0 24 24">
+                        <path d="M6 18L18 6M6 6l18 18"></path>
                     </svg>
                 </button>
             </div>
-            <div class="p-8 text-center">
-                <p class="text-slate-500 font-medium">Total Tagihan</p>
-                <h2 class="text-3xl font-black text-indigo-700 my-2">Rp 155.000</h2>
-                <p class="text-xs text-slate-400">Order ID #TRX-99210</p>
+            
+            <div style="padding: var(--space-6); text-align: center;">
+                <p class="label" style="color: var(--ink-400); margin-bottom: var(--space-1);">TOTAL TAGIHAN</p>
+                <h2 class="display" style="font-size: 36px; color: var(--amber-500); margin-bottom: var(--space-2);">Rp 20.000</h2>
+                <p class="caption" style="color: var(--ink-400);">ORDER ID: #TRX-99210</p>
 
-                <div class="mt-8 space-y-4">
-                    <button onclick="window.location.href='{{ url('/my-ticket/1') }}'"
-                        class="w-full py-4 border-2 border-indigo-100 rounded-2xl flex justify-between items-center px-6 hover:border-indigo-600 transition group">
-                        <span class="font-bold group-hover:text-indigo-600">GoPay / QRIS</span>
-                        <span class="text-indigo-400">→</span>
+                <div style="margin-top: var(--space-6); display: flex; flex-direction: column; gap: var(--space-3);">
+                    <button onclick="window.location.href='{{ url('/my-ticket/1') }}'" class="btn" style="width: 100%; height: 56px; justify-content: space-between; background-color: var(--ink-950); color: var(--ink-0); border-color: var(--ink-700);">
+                        <span>GOPAY / QRIS</span>
+                        <span>→</span>
                     </button>
-                    <button
-                        class="w-full py-4 border-2 border-indigo-100 rounded-2xl flex justify-between items-center px-6 hover:border-indigo-600 transition group opacity-50 cursor-not-allowed">
-                        <span class="font-bold">Virtual Account (BNI, BRI)</span>
-                        <span class="text-indigo-400">→</span>
+                    <button class="btn" disabled style="width: 100%; height: 56px; justify-content: space-between;">
+                        <span>VIRTUAL ACCOUNT (BNI, BRI)</span>
+                        <span>→</span>
                     </button>
-                    <button
-                        class="w-full py-4 border-2 border-indigo-100 rounded-2xl flex justify-between items-center px-6 hover:border-indigo-600 transition group opacity-50 cursor-not-allowed">
-                        <span class="font-bold">Kartu Debit/Kredit</span>
-                        <span class="text-indigo-400">→</span>
+                    <button class="btn" disabled style="width: 100%; height: 56px; justify-content: space-between;">
+                        <span>KARTU DEBIT/KREDIT</span>
+                        <span>→</span>
                     </button>
                 </div>
 
-                <div
-                    class="mt-12 flex items-center justify-center gap-2 text-xs text-slate-400 font-bold uppercase tracking-widest">
-                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd"
-                            d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-                            clip-rule="evenodd"></path>
+                <div style="margin-top: var(--space-6); display: flex; items-center; justify-content: center; gap: var(--space-2); color: var(--ink-400);">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path>
                     </svg>
-                    Secure Checkout by Midtrans
+                    <span class="caption">SECURE CHECKOUT BY MIDTRANS</span>
                 </div>
             </div>
         </div>
@@ -132,34 +158,10 @@
 
     <script>
         function showMidtrans() {
-            document.getElementById('midtrans-overlay').classList.remove('hidden');
-            document.getElementById('midtrans-overlay').classList.add('flex');
+            document.getElementById('midtrans-overlay').style.display = 'flex';
         }
         function hideMidtrans() {
-            document.getElementById('midtrans-overlay').classList.add('hidden');
-            document.getElementById('midtrans-overlay').classList.remove('flex');
+            document.getElementById('midtrans-overlay').style.display = 'none';
         }
     </script>
-
-    <style>
-        @keyframes bounce-in {
-            0% {
-                transform: scale(0.9);
-                opacity: 0;
-            }
-
-            70% {
-                transform: scale(1.05);
-                opacity: 1;
-            }
-
-            100% {
-                transform: scale(1);
-            }
-        }
-
-        .animate-bounce-in {
-            animation: bounce-in 0.4s ease-out forwards;
-        }
-    </style>
 @endsection

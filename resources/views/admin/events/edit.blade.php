@@ -1,28 +1,28 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="max-w-4xl mx-auto">
-    <div class="flex items-center gap-4 mb-8">
-        <a href="{{ route('admin.events.index') }}" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-indigo-600 transition-all shadow-sm hover:shadow">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+<div style="max-width: 800px; margin: 0 auto;">
+    <div style="display: flex; align-items: center; gap: var(--space-4); margin-bottom: var(--space-8);">
+        <a href="{{ route('admin.events.index') }}" class="btn" style="width: 48px; height: 48px; padding: 0; display: flex; align-items: center; justify-content: center; background-color: var(--ink-0); color: var(--ink-950);">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" viewBox="0 0 24 24">
+                <path d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
             </svg>
         </a>
         <div>
-            <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight">Menyunting Pengaturan Event</h2>
-            <p class="text-sm text-slate-500 mt-1">Perbarui informasi event yang telah ada.</p>
+            <h2 class="h2" style="margin-bottom: var(--space-1);">SUNTING PENGATURAN EVENT</h2>
+            <p class="body" style="color: var(--ink-400);">Perbarui informasi event yang telah ada.</p>
         </div>
     </div>
 
     @if($errors->any())
-        <div class="bg-rose-50 text-rose-700 p-4 rounded-xl mb-6 border border-rose-200 shadow-sm">
-            <div class="flex items-center gap-2 mb-2">
-                <svg class="w-5 h-5 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        <div style="background-color: var(--feedback-error); color: var(--ink-0); padding: var(--space-6); border: 4px solid var(--ink-950); margin-bottom: var(--space-8); box-shadow: 4px 4px 0 var(--ink-950);">
+            <div style="display: flex; align-items: center; gap: var(--space-2); margin-bottom: var(--space-2);">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" viewBox="0 0 24 24">
+                    <path d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
-                <span class="font-semibold">Terjadi kesalahan:</span>
+                <span class="body-lg" style="font-weight: 700;">TERJADI KESALAHAN:</span>
             </div>
-            <ul class="list-disc list-inside text-sm space-y-1 ml-7">
+            <ul style="list-style-type: square; margin-left: var(--space-6); font-weight: 500;">
                 @foreach($errors->all() as $error)
                     <li>{{ $error }}</li>
                 @endforeach
@@ -30,86 +30,88 @@
         </div>
     @endif
 
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+    <div class="card" style="padding: 0; overflow: hidden;">
         <form action="{{ route('admin.events.update', $event->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             
-            <div class="p-8 space-y-6">
-                <div>
-                    <label class="block text-sm font-semibold text-slate-700 mb-2">Judul Event <span class="text-red-500">*</span></label>
-                    <input type="text" name="title" value="{{ $event->title }}" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 block p-3.5 transition-all font-medium" required>
+            <div style="padding: var(--space-8); display: flex; flex-direction: column; gap: var(--space-6);">
+                <div class="form-group">
+                    <label class="label">JUDUL EVENT <span style="color: var(--feedback-error);">*</span></label>
+                    <input type="text" name="title" value="{{ $event->title }}" class="input" required>
                 </div>
 
-                <div>
-                    <label class="block text-sm font-semibold text-slate-700 mb-2">Kategori Event <span class="text-red-500">*</span></label>
-                    <div class="relative">
-                        <select name="category_id" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 block p-3.5 appearance-none transition-all font-medium" required>
+                <div class="form-group">
+                    <label class="label">KATEGORI EVENT <span style="color: var(--feedback-error);">*</span></label>
+                    <div style="position: relative;">
+                        <select name="category_id" class="input" style="appearance: none;" required>
                             @foreach($categories as $category)
                             <option value="{{ $category->id }}" {{ $event->category_id == $category->id ? 'selected' : '' }}>
                                 {{ $category->name }}
                             </option>
                             @endforeach
                         </select>
-                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        <div style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); pointer-events: none;">
+                            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"></path></svg>
                         </div>
                     </div>
                 </div>
 
-                <div>
-                    <label class="block text-sm font-semibold text-slate-700 mb-2">Deskripsi Pendek <span class="text-red-500">*</span></label>
-                    <textarea name="description" rows="4" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 block p-3.5 transition-all resize-none font-medium" required>{{ $event->description }}</textarea>
+                <div class="form-group">
+                    <label class="label">DESKRIPSI PENDEK <span style="color: var(--feedback-error);">*</span></label>
+                    <textarea name="description" rows="4" class="input" required>{{ $event->description }}</textarea>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div>
-                        <label class="block text-sm font-semibold text-slate-700 mb-2">Tanggal & Waktu <span class="text-red-500">*</span></label>
-                        <input type="datetime-local" name="date" value="{{ $event->date }}" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 block p-3.5 transition-all font-medium" required>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-6);">
+                    <div class="form-group">
+                        <label class="label">TANGGAL & WAKTU <span style="color: var(--feedback-error);">*</span></label>
+                        <input type="datetime-local" name="date" value="{{ $event->date }}" class="input" required>
                     </div>
-                    <div>
-                        <label class="block text-sm font-semibold text-slate-700 mb-2">Rencana Harga Masuk (Rp) <span class="text-red-500">*</span></label>
-                        <div class="relative">
-                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 text-sm font-bold">Rp</span>
-                            <input type="number" name="price" value="{{ old('price', $event->price) }}" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 block p-3.5 pl-11 transition-all font-medium @error('price') border-red-400 bg-red-50 @enderror" required>
+                    <div class="form-group">
+                        <label class="label">RENCANA HARGA MASUK (RP) <span style="color: var(--feedback-error);">*</span></label>
+                        <div style="position: relative;">
+                            <span class="body" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); font-weight: 700; color: var(--ink-400);">Rp</span>
+                            <input type="number" name="price" value="{{ old('price', $event->price) }}" class="input @error('price') border-red-500 @enderror" style="padding-left: 48px;" required>
                         </div>
                         @error('price')
-                            <p class="text-xs text-red-500 mt-1.5 font-medium">{{ $message }}</p>
+                            <p class="caption" style="color: var(--feedback-error); margin-top: var(--space-1); font-weight: 700;">{{ $message }}</p>
                         @enderror
                     </div>
-                    <div>
-                        <label class="block text-sm font-semibold text-slate-700 mb-2">Kapasitas Stok Kuota <span class="text-red-500">*</span></label>
-                        <input type="number" name="stock" value="{{ $event->stock }}" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 block p-3.5 transition-all font-medium" required>
+                    <div class="form-group">
+                        <label class="label">KAPASITAS STOK KUOTA <span style="color: var(--feedback-error);">*</span></label>
+                        <input type="number" name="stock" value="{{ $event->stock }}" class="input" required>
                     </div>
                 </div>
 
-                <div>
-                    <label class="block text-sm font-semibold text-slate-700 mb-2">Lokasi / Gedung <span class="text-red-500">*</span></label>
-                    <div class="relative">
-                        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                <div class="form-group">
+                    <label class="label">LOKASI / GEDUNG <span style="color: var(--feedback-error);">*</span></label>
+                    <div style="position: relative;">
+                        <span style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--ink-400);">
+                            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" viewBox="0 0 24 24"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                         </span>
-                        <input type="text" name="location" value="{{ $event->location }}" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 block p-3.5 pl-11 transition-all font-medium" required>
+                        <input type="text" name="location" value="{{ $event->location }}" class="input" style="padding-left: 56px;" required>
                     </div>
                 </div>
 
-                <div>
-                    <label class="block text-sm font-semibold text-slate-700 mb-2">Poster Event (Opsional)</label>
+                <div class="form-group">
+                    <label class="label">POSTER EVENT (OPSIONAL)</label>
                     @if($event->poster_path && Storage::disk('public')->exists($event->poster_path))
-                        <div class="mb-3">
-                            <p class="text-xs text-slate-500 mb-1">Poster Saat Ini:</p>
-                            <img src="{{ asset('storage/' . $event->poster_path) }}" class="w-32 rounded-xl object-cover border border-slate-200">
+                        <div style="margin-bottom: var(--space-4);">
+                            <p class="caption" style="color: var(--ink-400); margin-bottom: var(--space-2);">POSTER SAAT INI:</p>
+                            <div style="width: 120px; border: 2px solid var(--ink-950); box-shadow: 2px 2px 0 var(--ink-950); overflow: hidden; background-color: var(--ink-0);">
+                                <img src="{{ asset('storage/' . $event->poster_path) }}" style="width: 100%; height: auto; display: block;">
+                            </div>
                         </div>
                     @endif
-                    <input type="file" name="poster" accept="image/*" class="w-full border border-slate-200 bg-slate-50 text-slate-900 text-sm rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 block p-2.5 transition-all font-medium">
+                    <input type="file" name="poster" accept="image/*" class="input" style="padding: var(--space-2);">
                 </div>
             </div>
 
-            <div class="p-6 bg-slate-50 border-t border-slate-200 flex justify-end gap-3 rounded-b-2xl">
-                <a href="{{ route('admin.events.index') }}" class="px-6 py-2.5 rounded-xl font-semibold text-slate-600 hover:bg-slate-200 transition-colors">Batal</a>
-                <button type="submit" class="px-6 py-2.5 rounded-xl font-semibold bg-indigo-600 text-white hover:bg-indigo-700 transition-all shadow-sm hover:shadow-md flex items-center gap-2">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-                    Simpan Perubahan
+            <div style="padding: var(--space-6) var(--space-8); border-top: 4px solid var(--ink-950); display: flex; justify-content: flex-end; gap: var(--space-4); background-color: var(--amber-500);">
+                <a href="{{ route('admin.events.index') }}" class="btn" style="background-color: var(--ink-0); color: var(--ink-950);">BATAL</a>
+                <button type="submit" class="btn btn-primary" style="display: flex; align-items: center; gap: var(--space-2);">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" viewBox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    SIMPAN PERUBAHAN
                 </button>
             </div>
         </form>
