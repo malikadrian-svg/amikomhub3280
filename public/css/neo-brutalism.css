@@ -498,3 +498,38 @@ input:checked + .slider:before {
   outline: 3px solid var(--amber-500);
   outline-offset: 2px;
 }
+
+/* ==========================================================================
+   11. Table Components
+   ========================================================================== */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.table th,
+.table td {
+  padding: var(--space-4);
+  border: var(--border-width-default) solid var(--ink-700);
+  vertical-align: middle;
+}
+
+.table th {
+  background-color: var(--ink-950);
+  color: var(--ink-400);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.table tbody tr {
+  transition: background-color var(--transition-fast);
+}
+
+.table tbody tr:hover {
+  background-color: var(--ink-900);
+}

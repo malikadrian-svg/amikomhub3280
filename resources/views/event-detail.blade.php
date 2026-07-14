@@ -1,114 +1,114 @@
 @extends('layouts.app')
 
 @section('content')
-    <main class="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 lg:grid-cols-3 gap-12 animate-fade-in-up">
-        <div class="lg:col-span-1">
-            <div class="sticky top-32">
-                <img src="{{ ($event->poster_path && Storage::disk('public')->exists($event->poster_path))
-                     ? asset('storage/' . $event->poster_path)
-                     : 'https://placehold.co/200x600' }}" alt="{{ $event->title }}" class="w-full rounded-[2.5rem] shadow-2xl border-8 border-white object-cover aspect-[3/4]">
-                <div class="mt-8 p-6 bg-white rounded-3xl border border-slate-100 shadow-sm">
-                    <h4 class="font-bold mb-4">Penyelenggara</h4>
-                    <div class="flex items-center gap-4">
-                        <div
-                            class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 font-bold">
-                            AB</div>
+    <main class="page-container" style="padding-top: var(--space-8); padding-bottom: var(--space-12);">
+        <div style="display: flex; flex-wrap: wrap; gap: var(--space-8); align-items: flex-start;">
+            
+            <!-- Left Side: Poster & Organizer -->
+            <div style="flex: 1 1 300px; max-width: 400px; position: sticky; top: 100px;">
+                <div style="border: 4px solid var(--ink-700); border-radius: var(--radius-xl); box-shadow: var(--shadow-hard-modal); overflow: hidden; background-color: var(--ink-900); margin-bottom: var(--space-6);">
+                    <img src="{{ ($event->poster_path && Storage::disk('public')->exists($event->poster_path))
+                         ? asset('storage/' . $event->poster_path)
+                         : 'https://placehold.co/400x600/141414/f5f5f0?text=POSTER' }}" alt="{{ $event->title }}" style="width: 100%; aspect-ratio: 3/4; object-fit: cover; display: block;">
+                </div>
+                
+                <div class="card">
+                    <h4 class="h5" style="margin-bottom: var(--space-4);">PENYELENGGARA</h4>
+                    <div class="d-flex align-center gap-3">
+                        <div style="width: 48px; height: 48px; background-color: var(--amber-500); color: var(--ink-950); display: flex; align-items: center; justify-content: center; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 18px; border: 2px solid var(--ink-950);">
+                            AB
+                        </div>
                         <div>
-                            <p class="font-bold text-slate-800">ABP Productions</p>
-                            <p class="text-xs text-slate-500">Verified Organizer</p>
+                            <p class="h6" style="margin: 0; color: var(--ink-0);">ABP Productions</p>
+                            <p class="caption" style="margin: 0; color: var(--ink-400);">VERIFIED ORGANIZER</p>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="lg:col-span-2 space-y-12">
-            <div class="space-y-4">
-                <span
-                    class="px-4 py-1.5 bg-indigo-100 text-indigo-700 rounded-full text-sm font-bold uppercase tracking-wider">
-                    {{ $event->category->name }}
-                </span>
-                <h1 class="text-4xl md:text-5xl font-extrabold leading-tight">{{ $event->title }}</h1>
-                <div class="flex flex-wrap gap-6 text-slate-500 font-medium">
-                    <div class="flex items-center gap-2">
-                        <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
-                            </path>
-                        </svg>
-                        <span>{{ \Carbon\Carbon::parse($event->date)->format('d M Y, H:i') }}</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z">
-                            </path>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                        </svg>
-                        <span>{{ $event->location }}</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="prose prose-slate max-w-none">
-                <h3 class="text-2xl font-bold mb-4">Deskripsi Event</h3>
-                <p class="text-lg text-slate-600 leading-relaxed">
-                    {{ $event->description }}
-                </p>
-            </div>
-
-            <div
-                class="bg-indigo-600 rounded-[2.5rem] p-8 md:p-12 text-white shadow-2xl shadow-indigo-200 relative overflow-hidden">
-                <div class="relative z-10 flex flex-col md:flex-row justify-between items-center gap-8">
-                    <div>
-                        <p class="text-indigo-200 font-bold uppercase tracking-widest text-sm mb-2">Harga Tiket</p>
-                        <h2 class="text-4xl md:text-5xl font-extrabold">Rp {{ number_format($event->price, 0, ',', '.') }} <span class="text-lg font-medium text-indigo-200">/
-                                orang</span></h2>
-                        <p class="mt-4 text-indigo-100 flex items-center gap-2">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            <!-- Right Side: Details -->
+            <div style="flex: 2 1 600px;">
+                <div style="margin-bottom: var(--space-8);">
+                    <span class="badge" style="margin-bottom: var(--space-3);">{{ strtoupper($event->category->name) }}</span>
+                    <h1 class="display" style="margin-bottom: var(--space-4); line-height: 1.1;">{{ $event->title }}</h1>
+                    
+                    <div class="d-flex align-center gap-4" style="flex-wrap: wrap; margin-bottom: var(--space-6);">
+                        <div class="d-flex align-center gap-2">
+                            <svg width="24" height="24" fill="none" stroke="var(--amber-500)" stroke-width="2.25" viewBox="0 0 24 24">
+                                <path stroke-linecap="square" stroke-linejoin="miter" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                             </svg>
-                            Sisa stok: <span class="font-bold underline">{{ $event->stock }} Tiket lagi!</span>
-                        </p>
-                    </div>
-                    <div>
-                        <a href="{{ url('checkout/' . $event->id) }}"
-                            class="inline-block px-10 py-5 bg-white text-indigo-600 rounded-2xl font-extrabold text-xl hover:scale-105 transition-transform shadow-xl hover:shadow-indigo-400">
-                            Pesan Sekarang
-                        </a>
+                            <span class="h6" style="color: var(--ink-200); margin:0;">{{ \Carbon\Carbon::parse($event->date)->format('d M Y, H:i') }}</span>
+                        </div>
+                        <div class="d-flex align-center gap-2">
+                            <svg width="24" height="24" fill="none" stroke="var(--amber-500)" stroke-width="2.25" viewBox="0 0 24 24">
+                                <path stroke-linecap="square" stroke-linejoin="miter" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                <path stroke-linecap="square" stroke-linejoin="miter" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                            <span class="h6" style="color: var(--ink-200); margin:0;">{{ $event->location }}</span>
+                        </div>
                     </div>
                 </div>
-                <div class="absolute -right-20 -bottom-20 w-64 h-64 bg-white opacity-10 rounded-full"></div>
-                <div class="absolute -left-10 -top-10 w-32 h-32 bg-indigo-400 opacity-20 rounded-full"></div>
-            </div>
 
-            <div class="space-y-4">
-                <h3 class="text-xl font-bold">Kebijakan Tiket</h3>
-                <ul class="space-y-3 text-slate-500">
-                    <li class="flex items-start gap-2">
-                        <svg class="w-5 h-5 text-green-500 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7">
-                            </path>
-                        </svg>
-                        E-Ticket akan dikirimkan otomatis setelah pembayaran berhasil.
-                    </li>
-                    <li class="flex items-start gap-2">
-                        <svg class="w-5 h-5 text-green-500 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7">
-                            </path>
-                        </svg>
-                        Tiket dapat discan di pintu masuk (Check-in).
-                    </li>
-                    <li class="flex items-start gap-2 text-rose-500">
-                        <svg class="w-5 h-5 text-rose-500 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                        Tiket yang sudah dibeli tidak dapat direfund.
-                    </li>
-                </ul>
+                <div style="margin-bottom: var(--space-10);">
+                    <h3 class="h3" style="margin-bottom: var(--space-4);">DESKRIPSI EVENT</h3>
+                    <div class="body-lg" style="color: var(--ink-200); line-height: 1.8;">
+                        {!! nl2br(e($event->description)) !!}
+                    </div>
+                </div>
+
+                <!-- Ticket Booking Box -->
+                <div style="background-color: var(--amber-500); padding: var(--space-8); border: 4px solid var(--ink-950); box-shadow: 8px 8px 0 var(--ink-950); margin-bottom: var(--space-10); position: relative;">
+                    <div class="d-flex align-center justify-between gap-6" style="flex-wrap: wrap;">
+                        <div>
+                            <p class="caption" style="color: var(--ink-950); margin-bottom: var(--space-1); font-weight: 700;">HARGA TIKET</p>
+                            <h2 class="display" style="color: var(--ink-950); margin: 0; line-height: 1;">Rp {{ number_format($event->price, 0, ',', '.') }} <span class="h5" style="color: var(--ink-900);">/ org</span></h2>
+                            
+                            <p class="body" style="color: var(--ink-950); font-weight: 600; margin-top: var(--space-3); display: flex; align-items: center; gap: var(--space-2);">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.25" viewBox="0 0 24 24">
+                                    <path stroke-linecap="square" stroke-linejoin="miter" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                Sisa stok: <span style="text-decoration: underline;">{{ $event->stock }} TIKET!</span>
+                            </p>
+                        </div>
+                        <div>
+                            @if($event->stock > 0)
+                            <a href="{{ url('checkout/' . $event->id) }}" class="btn" style="background-color: var(--ink-950); color: var(--amber-500); padding: var(--space-4) var(--space-6); font-size: 18px; border: 2px solid var(--ink-950);">
+                                PESAN SEKARANG
+                            </a>
+                            @else
+                            <button class="btn" disabled style="background-color: var(--ink-800); color: var(--ink-400); padding: var(--space-4) var(--space-6); font-size: 18px; cursor: not-allowed; border: 2px solid var(--ink-950);">
+                                TIKET HABIS
+                            </button>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Policies -->
+                <div>
+                    <h3 class="h4" style="margin-bottom: var(--space-4);">KEBIJAKAN TIKET</h3>
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        <li style="display: flex; align-items: flex-start; gap: var(--space-3); margin-bottom: var(--space-3);">
+                            <svg width="24" height="24" fill="none" stroke="var(--feedback-success)" stroke-width="2.25" viewBox="0 0 24 24" style="flex-shrink: 0; margin-top: 2px;">
+                                <path stroke-linecap="square" stroke-linejoin="miter" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span class="body" style="color: var(--ink-200);">E-Ticket akan dikirimkan otomatis setelah pembayaran berhasil.</span>
+                        </li>
+                        <li style="display: flex; align-items: flex-start; gap: var(--space-3); margin-bottom: var(--space-3);">
+                            <svg width="24" height="24" fill="none" stroke="var(--feedback-success)" stroke-width="2.25" viewBox="0 0 24 24" style="flex-shrink: 0; margin-top: 2px;">
+                                <path stroke-linecap="square" stroke-linejoin="miter" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span class="body" style="color: var(--ink-200);">Tiket dapat discan di pintu masuk (Check-in).</span>
+                        </li>
+                        <li style="display: flex; align-items: flex-start; gap: var(--space-3); margin-bottom: var(--space-3);">
+                            <svg width="24" height="24" fill="none" stroke="var(--feedback-error)" stroke-width="2.25" viewBox="0 0 24 24" style="flex-shrink: 0; margin-top: 2px;">
+                                <path stroke-linecap="square" stroke-linejoin="miter" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                            <span class="body" style="color: var(--feedback-error); font-weight: 500;">Tiket yang sudah dibeli tidak dapat direfund.</span>
+                        </li>
+                    </ul>
+                </div>
+                
             </div>
         </div>
     </main>

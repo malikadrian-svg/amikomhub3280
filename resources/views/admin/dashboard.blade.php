@@ -5,117 +5,112 @@
 
 @section('content')
     <!-- Header -->
-    <header class="flex justify-between items-center mb-10">
+    <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-10); flex-wrap: wrap; gap: var(--space-4);">
         <div>
-            <h1 class="text-3xl font-black">Dashboard Ringkasan</h1>
-            <p class="text-slate-500 font-medium">Selamat datang kembali, {{ auth()->user()->name ?? 'Admin' }}!</p>
+            <h1 class="display" style="margin-bottom: var(--space-2);">DASHBOARD RINGKASAN</h1>
+            <p class="body-lg" style="color: var(--ink-200);">Selamat datang kembali, {{ auth()->user()->name ?? 'Admin' }}!</p>
         </div>
-        <div class="flex items-center gap-4">
-            <div class="text-right hidden md:block">
-                <p class="font-bold">{{ auth()->user()->name ?? 'Admin' }}</p>
-                <p class="text-xs text-slate-400">{{ (auth()->user()->role ?? 'admin') === 'admin' ? 'Penyelenggara Utama' : 'User' }}</p>
+        <div style="display: flex; align-items: center; gap: var(--space-4);">
+            <div style="text-align: right;">
+                <p class="h6" style="margin: 0; color: var(--ink-0);">{{ auth()->user()->name ?? 'Admin' }}</p>
+                <p class="caption" style="margin: 0; color: var(--ink-400);">{{ (auth()->user()->role ?? 'admin') === 'admin' ? 'PENYELENGGARA UTAMA' : 'USER' }}</p>
             </div>
-            <div class="w-12 h-12 bg-white rounded-2xl shadow-sm border flex items-center justify-center p-1">
-                <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name ?? 'Admin') }}&background=6366f1&color=fff"
-                    class="rounded-xl">
+            <div style="width: 48px; height: 48px; background-color: var(--ink-0); border: 2px solid var(--ink-950); box-shadow: 2px 2px 0 var(--ink-950); display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name ?? 'Admin') }}&background=ffb800&color=0a0a0a" style="width: 100%; height: 100%; object-fit: cover;">
             </div>
         </div>
     </header>
 
     <!-- Stats Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-        <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
-            <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mb-4">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
-                    </path>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: var(--space-6); margin-bottom: var(--space-10);">
+        <div class="card" style="padding: var(--space-6);">
+            <div style="width: 48px; height: 48px; background-color: var(--amber-500); color: var(--ink-950); border: 2px solid var(--ink-950); display: flex; align-items: center; justify-content: center; margin-bottom: var(--space-4);">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="square" viewBox="0 0 24 24">
+                    <path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
             </div>
-            <p class="text-slate-400 text-sm font-bold uppercase mb-1">Total Pendapatan</p>
-            <h3 class="text-2xl font-black">Rp {{ number_format($totalRevenue, 0, ',', '.') }}</h3>
+            <p class="caption" style="color: var(--ink-400); margin-bottom: var(--space-1);">TOTAL PENDAPATAN</p>
+            <h3 class="h2" style="margin: 0; color: var(--ink-0);">Rp {{ number_format($totalRevenue, 0, ',', '.') }}</h3>
         </div>
 
-        <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
-            <div class="w-12 h-12 bg-green-50 text-green-600 rounded-2xl flex items-center justify-center mb-4">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z">
-                    </path>
+        <div class="card" style="padding: var(--space-6);">
+            <div style="width: 48px; height: 48px; background-color: var(--feedback-success); color: var(--ink-0); border: 2px solid var(--ink-950); display: flex; align-items: center; justify-content: center; margin-bottom: var(--space-4);">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="square" viewBox="0 0 24 24">
+                    <path d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"></path>
                 </svg>
             </div>
-            <p class="text-slate-400 text-sm font-bold uppercase mb-1">Tiket Terjual</p>
-            <h3 class="text-2xl font-black">{{ number_format($ticketsSold, 0, ',', '.') }}</h3>
+            <p class="caption" style="color: var(--ink-400); margin-bottom: var(--space-1);">TIKET TERJUAL</p>
+            <h3 class="h2" style="margin: 0; color: var(--ink-0);">{{ number_format($ticketsSold, 0, ',', '.') }}</h3>
         </div>
 
-        <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
-            <div class="w-12 h-12 bg-orange-50 text-orange-600 rounded-2xl flex items-center justify-center mb-4">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        <div class="card" style="padding: var(--space-6);">
+            <div style="width: 48px; height: 48px; background-color: var(--feedback-warning); color: var(--ink-950); border: 2px solid var(--ink-950); display: flex; align-items: center; justify-content: center; margin-bottom: var(--space-4);">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="square" viewBox="0 0 24 24">
+                    <path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
             </div>
-            <p class="text-slate-400 text-sm font-bold uppercase mb-1">Event Aktif</p>
-            <h3 class="text-2xl font-black">{{ $activeEvents }} Event</h3>
+            <p class="caption" style="color: var(--ink-400); margin-bottom: var(--space-1);">EVENT AKTIF</p>
+            <h3 class="h2" style="margin: 0; color: var(--ink-0);">{{ $activeEvents }} Event</h3>
         </div>
 
-        <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
-            <div class="w-12 h-12 bg-rose-50 text-rose-600 rounded-2xl flex items-center justify-center mb-4">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        <div class="card" style="padding: var(--space-6);">
+            <div style="width: 48px; height: 48px; background-color: var(--feedback-error); color: var(--ink-0); border: 2px solid var(--ink-950); display: flex; align-items: center; justify-content: center; margin-bottom: var(--space-4);">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="square" viewBox="0 0 24 24">
+                    <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
             </div>
-            <p class="text-slate-400 text-sm font-bold uppercase mb-1">Pesanan Pending</p>
-            <h3 class="text-2xl font-black">{{ $pendingOrders }} Pesanan</h3>
+            <p class="caption" style="color: var(--ink-400); margin-bottom: var(--space-1);">PESANAN PENDING</p>
+            <h3 class="h2" style="margin: 0; color: var(--ink-0);">{{ $pendingOrders }} Pesanan</h3>
         </div>
     </div>
 
     <!-- Latest Sales Table -->
-    <div class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
-        <div class="p-8 border-b flex justify-between items-center">
-            <h3 class="font-black text-xl">Transaksi Terakhir</h3>
-            <a href="{{ route('admin.transactions.index') }}" class="text-indigo-600 font-bold hover:underline">Lihat Semua</a>
+    <div class="card" style="padding: 0; overflow: hidden;">
+        <div style="padding: var(--space-6) var(--space-8); border-bottom: 2px solid var(--ink-700); display: flex; justify-content: space-between; align-items: center;">
+            <h3 class="h3" style="margin: 0;">TRANSAKSI TERAKHIR</h3>
+            <a href="{{ route('admin.transactions.index') }}" class="body" style="color: var(--amber-500); font-weight: 700; text-decoration: underline;">Lihat Semua</a>
         </div>
-        <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
-                <thead class="bg-slate-50 text-slate-400 uppercase text-[10px] font-black tracking-widest">
+        <div style="overflow-x: auto;">
+            <table class="table" style="margin: 0; border: none; box-shadow: none;">
+                <thead>
                     <tr>
-                        <th class="px-8 py-4 w-1/4">Tgl Transaksi</th>
-                        <th class="px-8 py-4 w-1/4">Pembeli</th>
-                        <th class="px-8 py-4 w-1/4">Event</th>
-                        <th class="px-8 py-4 w-[10%]">Status</th>
-                        <th class="px-8 py-4 text-right">Total</th>
+                        <th style="border-left: none;">Tgl Transaksi</th>
+                        <th>Pembeli</th>
+                        <th>Event</th>
+                        <th>Status</th>
+                        <th style="border-right: none; text-align: right;">Total</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y border-t">
+                <tbody>
                     @forelse($recentTransactions as $trx)
-                        <tr class="hover:bg-slate-50 transition">
-                            <td class="px-8 py-6 text-sm text-slate-600 max-w-xs break-all">
-                                {{ $trx->created_at->format('d M y - H:i') }}<br>
-                                <span class="text-xs text-slate-400">{{ $trx->order_id }}</span>
+                        <tr>
+                            <td style="border-left: none;">
+                                <span style="display: block; font-weight: 600;">{{ $trx->created_at->format('d M y - H:i') }}</span>
+                                <span class="caption" style="color: var(--ink-400);">{{ $trx->order_id }}</span>
                             </td>
-                            <td class="px-8 py-6">
-                                <p class="font-bold uppercase tracking-wide text-sm truncate max-w-[150px]">{{ $trx->customer_name }}</p>
-                                <p class="text-xs text-slate-400 truncate max-w-[150px]">{{ $trx->customer_email }}</p>
+                            <td>
+                                <span style="display: block; font-weight: 700; text-transform: uppercase;">{{ $trx->customer_name }}</span>
+                                <span class="caption" style="color: var(--ink-400);">{{ $trx->customer_email }}</span>
                             </td>
-                            <td class="px-8 py-6 font-medium text-slate-600 max-w-xs truncate">{{ $trx->event->title ?? '-' }}</td>
-                            <td class="px-8 py-6 whitespace-nowrap">
+                            <td style="font-weight: 500;">{{ $trx->event->title ?? '-' }}</td>
+                            <td>
                                 @if($trx->status === 'settlement' || $trx->status === 'success')
-                                    <span class="px-3 py-1 bg-green-100 text-green-700 rounded-lg text-xs font-bold uppercase">Success</span>
+                                    <span class="badge" style="background-color: var(--feedback-success); color: var(--ink-0); border-color: var(--ink-0);">SUCCESS</span>
                                 @elseif($trx->status === 'pending')
-                                    <span class="px-3 py-1 bg-orange-100 text-orange-700 rounded-lg text-xs font-bold uppercase">Pending</span>
+                                    <span class="badge" style="background-color: var(--feedback-warning); color: var(--ink-950); border-color: var(--ink-950);">PENDING</span>
                                 @else
-                                    <span class="px-3 py-1 bg-rose-100 text-rose-700 rounded-lg text-xs font-bold uppercase">{{ $trx->status }}</span>
+                                    <span class="badge" style="background-color: var(--feedback-error); color: var(--ink-0); border-color: var(--ink-0);">{{ strtoupper($trx->status) }}</span>
                                 @endif
                             </td>
-                            <td class="px-8 py-6 font-black text-indigo-600 whitespace-nowrap text-right">
+                            <td style="border-right: none; text-align: right; font-weight: 700; color: var(--amber-500); font-size: 18px;">
                                 Rp {{ number_format($trx->total_price, 0, ',', '.') }}
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="px-8 py-10 text-center text-slate-500">Belum ada transaksi</td>
+                            <td colspan="5" style="text-align: center; padding: var(--space-10); border: none;">
+                                <p class="body-lg" style="color: var(--ink-400);">Belum ada transaksi</p>
+                            </td>
                         </tr>
                     @endforelse
                 </tbody>

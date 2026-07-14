@@ -1,67 +1,112 @@
 @extends('layouts.admin')
 
 @section('title', 'Laporan Transaksi - Admin')
-@section('page_title', 'Laporan Transaksi')
+@section('page_title', 'LAPORAN TRANSAKSI')
 @section('page_subtitle', 'Pantau arus kas dan penjualan tiket Anda.')
 
 @section('content')
-<div class="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden">
-    <div class="overflow-x-auto">
-        <table class="w-full text-left border-collapse">
-            <thead class="bg-slate-50 text-slate-400 uppercase text-[10px] font-black tracking-widest">
-                <tr>
-                    <th class="px-8 py-4">Order ID</th>
-                    <th class="px-8 py-4">Detail Pembeli</th>
-                    <th class="px-8 py-4">Event</th>
-                    <th class="px-8 py-4">Tgl Transaksi</th>
-                    <th class="px-8 py-4">Status</th>
-                    <th class="px-8 py-4 text-right">Total Tagihan</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y border-t">
-                @forelse($transactions as $trx)
-                    <tr class="hover:bg-slate-50/50 transition {{ $trx->status == 'pending' ? 'text-slate-400' : '' }}">
-                        <td class="px-8 py-6">
-                            <span class="font-mono font-bold px-3 py-1 rounded-lg text-sm {{ $trx->status == 'pending' ? 'bg-slate-100' : 'text-indigo-600 bg-indigo-50' }}">
+<div style="max-width: 1200px; margin: 0 auto;">
+    <div style="margin-bottom: var(--space-8);">
+        <h2 class="h2" style="margin-bottom: var(--space-2);">@yield('page_title')</h2>
+        <p class="body" style="color: var(--ink-400);">@yield('page_subtitle')</p>
+    </div>
+
+    <div class="card" style="padding: 0; overflow: hidden;">
+        <div style="padding: var(--space-6); border-bottom: 4px solid var(--ink-950); background-color: var(--amber-500);">
+            <div style="display: flex; align-items: center; gap: var(--space-4);">
+                <div style="width: 48px; height: 48px; border: 2px solid var(--ink-950); background-color: var(--ink-0); display: flex; align-items: center; justify-content: center; box-shadow: 2px 2px 0 var(--ink-950);">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" viewBox="0 0 24 24" style="color: var(--ink-950);">
+                        <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="h3" style="margin: 0; color: var(--ink-950);">DAFTAR TRANSAKSI</h3>
+                </div>
+            </div>
+        </div>
+
+        <div style="overflow-x: auto;">
+            <table class="table" style="margin: 0; border: none; box-shadow: none;">
+                <thead>
+                    <tr>
+                        <th style="border-left: none; width: 64px; text-align: center;">NO</th>
+                        <th>ORDER ID</th>
+                        <th>DETAIL PEMBELI</th>
+                        <th>EVENT</th>
+                        <th>TANGGAL TRANSAKSI</th>
+                        <th>STATUS</th>
+                        <th style="border-right: none; text-align: right;">TOTAL TAGIHAN</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($transactions as $index => $trx)
+                    <tr style="background-color: {{ $trx->status == 'pending' ? 'var(--ink-950)' : 'transparent' }};">
+                        <td style="border-left: none; font-weight: 700; color: var(--ink-400); text-align: center;">{{ $index + 1 }}</td>
+                        <td>
+                            <span class="badge" style="font-family: monospace; font-size: 14px; background-color: {{ $trx->status == 'pending' ? 'var(--ink-800)' : 'var(--ink-950)' }}; color: {{ $trx->status == 'pending' ? 'var(--ink-200)' : 'var(--ink-0)' }}; border-color: {{ $trx->status == 'pending' ? 'var(--ink-700)' : 'var(--ink-700)' }};">
                                 {{ $trx->order_id }}
                             </span>
                         </td>
-                        <td class="px-8 py-6">
-                            <p class="font-bold text-slate-800">{{ $trx->customer_name }}</p>
-                            <p class="text-xs text-slate-500">
+                        <td>
+                            <p class="body" style="font-weight: 700; margin: 0; text-transform: uppercase; color: var(--ink-0);">{{ $trx->customer_name }}</p>
+                            <p class="caption" style="color: var(--ink-400); margin: var(--space-1) 0 0 0;">
                                 {{ $trx->customer_email }}<br>
                                 {{ $trx->customer_phone }}
                             </p>
                         </td>
-                        <td class="px-8 py-6">
-                            <p class="font-medium text-slate-700">{{ $trx->event->title ?? '-' }}</p>
+                        <td>
+                            <p class="body" style="font-weight: 700; margin: 0;">{{ $trx->event->title ?? '-' }}</p>
                         </td>
-                        <td class="px-8 py-6 text-sm text-slate-500">
-                            {{ $trx->created_at->format('d M Y, H:i') }}
+                        <td>
+                            <div style="display: flex; align-items: center; gap: var(--space-2); color: var(--ink-200); font-weight: 500; font-size: 14px;">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" viewBox="0 0 24 24">
+                                    <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                </svg>
+                                {{ $trx->created_at->format('d M Y, H:i') }}
+                            </div>
                         </td>
-                        <td class="px-8 py-6">
+                        <td>
                             @if($trx->status === 'settlement' || $trx->status === 'success')
-                                <span class="px-3 py-1 bg-green-100 text-green-700 rounded-lg text-xs font-bold uppercase ring-1 ring-green-200">Success</span>
+                                <span class="badge" style="background-color: var(--feedback-success); color: var(--ink-0); border-color: var(--ink-950);">SUCCESS</span>
                             @elseif($trx->status === 'pending')
-                                <span class="px-3 py-1 bg-orange-100 text-orange-700 rounded-lg text-xs font-bold uppercase ring-1 ring-orange-200">Pending</span>
+                                <span class="badge" style="background-color: var(--ink-800); color: var(--amber-500); border-color: var(--amber-700);">PENDING</span>
                             @else
-                                <span class="px-3 py-1 bg-rose-100 text-rose-700 rounded-lg text-xs font-bold uppercase ring-1 ring-rose-200">{{ $trx->status }}</span>
+                                <span class="badge" style="background-color: transparent; color: var(--error-border); border-color: var(--error-border);">{{ strtoupper($trx->status) }}</span>
                             @endif
                         </td>
-                        <td class="px-8 py-6 text-right font-black {{ $trx->status == 'pending' ? '' : 'text-slate-900' }}">
-                            Rp {{ number_format($trx->total_price, 0, ',', '.') }}
+                        <td style="border-right: none; text-align: right;">
+                            <p class="h4" style="margin: 0; color: {{ $trx->status == 'pending' ? 'var(--ink-400)' : 'var(--ink-0)' }};">
+                                RP {{ number_format($trx->total_price, 0, ',', '.') }}
+                            </p>
                         </td>
                     </tr>
-                @empty
+                    @empty
                     <tr>
-                        <td colspan="6" class="px-8 py-10 text-center text-slate-500">Belum ada transaksi</td>
+                        <td colspan="7" style="text-align: center; padding: var(--space-10); border: none;">
+                            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                                <div style="width: 80px; height: 80px; border: 4px solid var(--ink-700); background-color: var(--ink-950); display: flex; align-items: center; justify-content: center; margin-bottom: var(--space-4); box-shadow: 4px 4px 0 var(--ink-950);">
+                                    <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" viewBox="0 0 24 24" style="color: var(--ink-400);">
+                                        <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+                                    </svg>
+                                </div>
+                                <p class="h4" style="margin-bottom: var(--space-2);">BELUM ADA TRANSAKSI</p>
+                                <p class="body" style="color: var(--ink-400);">Belum ada data transaksi yang masuk.</p>
+                            </div>
+                        </td>
                     </tr>
-                @endforelse
-            </tbody>
-        </table>
-    </div>
-    <div class="px-8 py-6 bg-slate-50/50 border-t items-center">
-        {{ $transactions->links() }}
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+        
+        <div style="padding: var(--space-4) var(--space-6); border-top: var(--border-width-default) solid var(--ink-700); background-color: var(--ink-900); display: flex; justify-content: space-between; align-items: center;">
+            <p class="caption" style="font-weight: 700; color: var(--ink-200); margin: 0;">TOTAL: {{ $transactions->total() }} TRANSAKSI</p>
+            @if($transactions->hasPages())
+                <div>
+                    {{ $transactions->links() }}
+                </div>
+            @endif
+        </div>
     </div>
 </div>
 @endsection

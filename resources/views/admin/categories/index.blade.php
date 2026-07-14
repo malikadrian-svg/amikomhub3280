@@ -1,39 +1,38 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="max-w-7xl mx-auto">
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+<div style="max-width: 1000px; margin: 0 auto;">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-8); flex-wrap: wrap; gap: var(--space-4);">
         <div>
-            <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Manajemen Kategori</h2>
-            <p class="text-slate-500 mt-1 text-sm">Atur kategori event yang tersedia di platform.</p>
+            <h2 class="h2" style="margin-bottom: var(--space-2);">MANAJEMEN KATEGORI</h2>
+            <p class="body" style="color: var(--ink-400);">Atur kategori event yang tersedia di platform.</p>
         </div>
-        <button onclick="document.getElementById('modal-tambah').classList.remove('hidden')"
-            class="group flex items-center gap-2 bg-indigo-600 text-white px-5 py-2.5 rounded-xl font-semibold hover:bg-indigo-700 transition-all shadow-sm hover:shadow-md">
-            <svg class="w-5 h-5 transition-transform group-hover:rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+        <button onclick="document.getElementById('modal-tambah').style.display='flex'" class="btn btn-primary" style="display: flex; align-items: center; gap: var(--space-2);">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" viewBox="0 0 24 24">
+                <path d="M12 4v16m8-8H4"></path>
             </svg>
-            Tambah Kategori
+            TAMBAH KATEGORI
         </button>
     </div>
 
     @if(session('success'))
-        <div class="bg-emerald-50 text-emerald-700 p-4 rounded-xl mb-6 border border-emerald-200 flex items-center gap-3 shadow-sm" id="flash-success">
-            <svg class="w-5 h-5 text-emerald-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        <div id="flash-success" style="background-color: var(--feedback-success); color: var(--ink-0); padding: var(--space-4); border: 2px solid var(--ink-950); margin-bottom: var(--space-6); display: flex; align-items: center; gap: var(--space-3); box-shadow: 4px 4px 0 var(--ink-950);">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" viewBox="0 0 24 24">
+                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            <span class="font-medium">{{ session('success') }}</span>
+            <span style="font-weight: 700;">{{ session('success') }}</span>
         </div>
     @endif
 
     @if($errors->any())
-        <div class="bg-rose-50 text-rose-700 p-4 rounded-xl mb-6 border border-rose-200 shadow-sm">
-            <div class="flex items-center gap-2 mb-2">
-                <svg class="w-5 h-5 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        <div style="background-color: var(--feedback-error); color: var(--ink-0); padding: var(--space-6); border: 4px solid var(--ink-950); margin-bottom: var(--space-8); box-shadow: 4px 4px 0 var(--ink-950);">
+            <div style="display: flex; align-items: center; gap: var(--space-2); margin-bottom: var(--space-2);">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" viewBox="0 0 24 24">
+                    <path d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
-                <span class="font-semibold">Terjadi kesalahan:</span>
+                <span class="body-lg" style="font-weight: 700;">TERJADI KESALAHAN:</span>
             </div>
-            <ul class="list-disc list-inside text-sm space-y-1 ml-7">
+            <ul style="list-style-type: square; margin-left: var(--space-6); font-weight: 500;">
                 @foreach($errors->all() as $error)
                     <li>{{ $error }}</li>
                 @endforeach
@@ -41,90 +40,83 @@
         </div>
     @endif
 
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-        <div class="px-6 py-4 bg-slate-50/80 border-b border-slate-200">
-            <form method="GET" action="{{ route('admin.categories.index') }}" class="flex gap-3 items-center">
-                <div class="relative flex-1">
-                    <svg class="w-5 h-5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+    <div class="card" style="padding: 0; overflow: hidden;">
+        <div style="padding: var(--space-6); border-bottom: 4px solid var(--ink-950); background-color: var(--amber-500);">
+            <form method="GET" action="{{ route('admin.categories.index') }}" style="display: flex; gap: var(--space-4); flex-wrap: wrap; align-items: center;">
+                <div style="flex: 1; min-width: 250px; position: relative;">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" viewBox="0 0 24 24" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--ink-400);">
+                        <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                     </svg>
-                    <input type="text" name="search" value="{{ request('search') }}"
-                        placeholder="Cari nama kategori..."
-                        class="w-full pl-11 pr-4 py-2.5 rounded-xl border border-slate-200 bg-white focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition text-sm font-medium placeholder-slate-400">
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="CARI NAMA KATEGORI..." class="input" style="padding-left: 48px;">
                 </div>
-                <button type="submit"
-                    class="px-5 py-2.5 bg-indigo-600 text-white rounded-xl font-semibold hover:bg-indigo-700 transition-all text-sm shadow-sm">
-                    Cari
+                <button type="submit" class="btn btn-primary" style="background-color: var(--ink-950); color: var(--ink-0);">
+                    CARI
                 </button>
                 @if(request('search'))
-                    <a href="{{ route('admin.categories.index') }}"
-                        class="px-4 py-2.5 border border-slate-200 text-slate-600 rounded-xl font-semibold hover:bg-slate-100 transition-all text-sm">
-                        Reset
+                    <a href="{{ route('admin.categories.index') }}" class="btn" style="background-color: var(--ink-0); color: var(--ink-950);">
+                        RESET
                     </a>
                 @endif
             </form>
             @if(request('search'))
-                <p class="text-xs text-slate-500 mt-2">Menampilkan hasil pencarian untuk: <span class="font-semibold text-indigo-600">"{{ request('search') }}"</span> — {{ $categories->count() }} data ditemukan</p>
+                <p class="caption" style="margin-top: var(--space-4); font-weight: 700; color: var(--ink-950);">MENAMPILKAN HASIL UNTUK: <span style="background-color: var(--ink-0); padding: 2px 8px; border: 2px solid var(--ink-950);">{{ request('search') }}</span> — {{ $categories->count() }} DATA</p>
             @endif
         </div>
 
-        <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
+        <div style="overflow-x: auto;">
+            <table class="table" style="margin: 0; border: none; box-shadow: none;">
                 <thead>
-                    <tr class="bg-slate-50/80 border-b border-slate-200">
-                        <th class="p-5 font-semibold text-slate-600 text-sm tracking-wide w-16">No</th>
-                        <th class="p-5 font-semibold text-slate-600 text-sm tracking-wide">Nama Kategori</th>
-                        <th class="p-5 font-semibold text-slate-600 text-sm tracking-wide">Jumlah Event</th>
-                        <th class="p-5 font-semibold text-slate-600 text-sm tracking-wide">Dibuat Pada</th>
-                        <th class="p-5 font-semibold text-slate-600 text-sm tracking-wide text-right">Aksi</th>
+                    <tr>
+                        <th style="border-left: none; width: 64px; text-align: center;">NO</th>
+                        <th>NAMA KATEGORI</th>
+                        <th>JUMLAH EVENT</th>
+                        <th>DIBUAT PADA</th>
+                        <th style="border-right: none; text-align: right;">AKSI</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-100">
+                <tbody>
                     @forelse($categories as $index => $category)
-                    <tr class="hover:bg-slate-50/80 transition-colors group">
-                        <td class="p-5 font-bold text-slate-400">{{ $index + 1 }}</td>
-                        <td class="p-5">
-                            <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 bg-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center flex-shrink-0">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z"></path>
+                    <tr>
+                        <td style="border-left: none; font-weight: 700; color: var(--ink-400); text-align: center;">{{ $index + 1 }}</td>
+                        <td>
+                            <div style="display: flex; align-items: center; gap: var(--space-4);">
+                                <div style="width: 48px; height: 48px; border: 2px solid var(--ink-700); background-color: var(--ink-950); display: flex; align-items: center; justify-content: center; box-shadow: 2px 2px 0 var(--ink-950);">
+                                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" viewBox="0 0 24 24" style="color: var(--ink-400);">
+                                        <path d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z"></path>
                                     </svg>
                                 </div>
                                 <div>
-                                    <p class="font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">{{ $category->name }}</p>
-                                    <p class="text-xs text-slate-400 font-medium">{{ $category->slug }}</p>
+                                    <p class="body" style="font-weight: 700; margin: 0; text-transform: uppercase;">{{ $category->name }}</p>
+                                    <p class="caption" style="color: var(--ink-400); margin: 0;">{{ $category->slug }}</p>
                                 </div>
                             </div>
                         </td>
-                        <td class="p-5">
-                            <span class="inline-flex items-center px-3 py-1 rounded-lg text-sm font-bold {{ $category->events_count > 0 ? 'bg-indigo-50 text-indigo-600' : 'bg-slate-100 text-slate-500' }}">
-                                {{ $category->events_count }} Event
+                        <td>
+                            <span class="badge" style="background-color: var(--ink-950); color: var(--ink-0); border-color: var(--ink-700);">
+                                {{ $category->events_count }} EVENT
                             </span>
                         </td>
-                        <td class="p-5">
-                            <div class="flex items-center text-slate-600 text-sm font-medium">
-                                <svg class="w-4 h-4 mr-2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        <td>
+                            <div style="display: flex; align-items: center; gap: var(--space-2); color: var(--ink-200); font-weight: 500; font-size: 14px;">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" viewBox="0 0 24 24">
+                                    <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                                 </svg>
                                 {{ $category->created_at ? $category->created_at->format('d M Y') : '-' }}
                             </div>
                         </td>
-                        <td class="p-5">
-                            <div class="flex justify-end gap-2">
-                                <button onclick="openEditModal({{ $category->id }}, '{{ addslashes($category->name) }}')"
-                                    class="inline-flex items-center justify-center w-9 h-9 rounded-xl text-slate-500 hover:text-blue-600 hover:bg-blue-50 transition-colors" title="Edit Kategori">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                        <td style="border-right: none; text-align: right;">
+                            <div style="display: flex; justify-content: flex-end; gap: var(--space-2);">
+                                <button onclick="openEditModal({{ $category->id }}, '{{ addslashes($category->name) }}')" class="btn" style="padding: var(--space-2); background-color: var(--ink-800); color: var(--ink-0); border: 2px solid var(--ink-700);">
+                                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" viewBox="0 0 24 24">
+                                        <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                     </svg>
                                 </button>
-                                <form action="{{ route('admin.categories.destroy', $category->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Anda yakin ingin menghapus kategori \'{{ addslashes($category->name) }}\' secara permanen?');">
+                                <form action="{{ route('admin.categories.destroy', $category->id) }}" method="POST" style="display: inline-block;" onsubmit="return confirm('Anda yakin ingin menghapus kategori \'{{ addslashes($category->name) }}\' secara permanen?');">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit"
-                                        class="inline-flex items-center justify-center w-9 h-9 rounded-xl text-slate-500 hover:text-red-600 hover:bg-red-50 transition-colors" title="Hapus Kategori">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                    <button type="submit" class="btn" style="padding: var(--space-2); background-color: transparent; border: 2px solid var(--error-border); color: var(--error-border);">
+                                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" viewBox="0 0 24 24">
+                                            <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                                         </svg>
                                     </button>
                                 </form>
@@ -133,15 +125,15 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="5" class="p-12 text-center text-slate-500">
-                            <div class="flex flex-col items-center justify-center">
-                                <div class="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center mb-4">
-                                    <svg class="w-8 h-8 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z"></path>
+                        <td colspan="5" style="text-align: center; padding: var(--space-10); border: none;">
+                            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                                <div style="width: 80px; height: 80px; border: 4px solid var(--ink-700); background-color: var(--ink-950); display: flex; align-items: center; justify-content: center; margin-bottom: var(--space-4); box-shadow: 4px 4px 0 var(--ink-950);">
+                                    <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" viewBox="0 0 24 24" style="color: var(--ink-400);">
+                                        <path d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z"></path>
                                     </svg>
                                 </div>
-                                <p class="text-base font-semibold text-slate-700 mb-1">Belum ada kategori</p>
-                                <p class="text-sm text-slate-400">
+                                <p class="h4" style="margin-bottom: var(--space-2);">BELUM ADA KATEGORI</p>
+                                <p class="body" style="color: var(--ink-400);">
                                     @if(request('search'))
                                         Tidak ditemukan kategori dengan kata kunci "{{ request('search') }}".
                                     @else
@@ -156,87 +148,79 @@
             </table>
         </div>
 
-        <div class="px-6 py-3 bg-slate-50/60 border-t border-slate-200">
-            <p class="text-xs text-slate-400 font-medium">Total: {{ $categories->count() }} kategori terdaftar</p>
+        <div style="padding: var(--space-4) var(--space-6); border-top: var(--border-width-default) solid var(--ink-700); background-color: var(--ink-900);">
+            <p class="caption" style="font-weight: 700; color: var(--ink-200);">TOTAL: {{ $categories->count() }} KATEGORI</p>
         </div>
     </div>
 </div>
 
-<div id="modal-tambah" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-6" onclick="if(event.target===this) this.classList.add('hidden')">
-    <div class="bg-white w-full max-w-md rounded-2xl overflow-hidden shadow-2xl transform transition-all">
+<div id="modal-tambah" style="position: fixed; inset: 0; background-color: rgba(0,0,0,0.8); z-index: 50; display: none; align-items: center; justify-content: center; padding: var(--space-6);" onclick="if(event.target===this) this.style.display='none'">
+    <div class="card" style="width: 100%; max-width: 500px; padding: 0; overflow: hidden; background-color: var(--ink-900);">
         <form action="{{ route('admin.categories.store') }}" method="POST">
             @csrf
-            <div class="p-6 border-b border-slate-100">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            <div style="padding: var(--space-6); border-bottom: 4px solid var(--ink-950); background-color: var(--amber-500);">
+                <div style="display: flex; align-items: center; gap: var(--space-4);">
+                    <div style="width: 48px; height: 48px; border: 2px solid var(--ink-950); background-color: var(--ink-0); display: flex; align-items: center; justify-content: center; box-shadow: 2px 2px 0 var(--ink-950);">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" viewBox="0 0 24 24" style="color: var(--ink-950);">
+                            <path d="M12 4v16m8-8H4"></path>
                         </svg>
                     </div>
                     <div>
-                        <h3 class="text-lg font-bold text-slate-900">Tambah Kategori Baru</h3>
-                        <p class="text-slate-500 text-sm">Masukkan nama kategori untuk event.</p>
+                        <h3 class="h3" style="margin: 0; color: var(--ink-950);">TAMBAH KATEGORI</h3>
                     </div>
                 </div>
             </div>
-            <div class="p-6 space-y-4">
-                <div>
-                    <label class="block text-sm font-semibold text-slate-700 mb-2">Nama Kategori <span class="text-red-500">*</span></label>
-                    <input type="text" name="name" value="{{ old('name') }}" placeholder="Contoh: Olahraga"
-                        class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition font-medium text-sm placeholder-slate-400" required autofocus>
-                    <p class="text-xs text-slate-400 mt-1.5">Slug akan digenerate otomatis dari nama kategori.</p>
+            
+            <div style="padding: var(--space-6);">
+                <div class="form-group">
+                    <label class="label" style="color: var(--ink-200);">NAMA KATEGORI <span style="color: var(--feedback-error);">*</span></label>
+                    <input type="text" name="name" value="{{ old('name') }}" placeholder="Contoh: Olahraga" class="form-control" required autofocus>
+                    <p class="caption" style="margin-top: var(--space-2); font-weight: 700;">Slug akan digenerate otomatis.</p>
                 </div>
             </div>
-            <div class="p-6 bg-slate-50 border-t border-slate-100 flex gap-3">
-                <button type="button" onclick="document.getElementById('modal-tambah').classList.add('hidden')"
-                    class="flex-1 py-2.5 border border-slate-200 rounded-xl font-semibold text-slate-600 hover:bg-slate-100 transition text-sm">
-                    Batal
-                </button>
-                <button type="submit"
-                    class="flex-1 py-2.5 bg-indigo-600 text-white rounded-xl font-semibold shadow-sm hover:bg-indigo-700 transition text-sm flex items-center justify-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                    Simpan
+            
+            <div style="padding: var(--space-6); border-top: 4px solid var(--ink-950); display: flex; gap: var(--space-4);">
+                <button type="button" onclick="document.getElementById('modal-tambah').style.display='none'" class="btn" style="flex: 1; background-color: var(--ink-800); color: var(--ink-0); border: 2px solid var(--ink-700);">BATAL</button>
+                <button type="submit" class="btn btn-primary" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: var(--space-2);">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>
+                    SIMPAN
                 </button>
             </div>
         </form>
     </div>
 </div>
 
-<div id="modal-edit" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-6" onclick="if(event.target===this) this.classList.add('hidden')">
-    <div class="bg-white w-full max-w-md rounded-2xl overflow-hidden shadow-2xl transform transition-all">
+<div id="modal-edit" style="position: fixed; inset: 0; background-color: rgba(0,0,0,0.8); z-index: 50; display: none; align-items: center; justify-content: center; padding: var(--space-6);" onclick="if(event.target===this) this.style.display='none'">
+    <div class="card" style="width: 100%; max-width: 500px; padding: 0; overflow: hidden; background-color: var(--ink-900);">
         <form id="form-edit" method="POST">
             @csrf
             @method('PUT')
-            <div class="p-6 border-b border-slate-100">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-amber-100 text-amber-600 rounded-xl flex items-center justify-center">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+            <div style="padding: var(--space-6); border-bottom: 4px solid var(--ink-950); background-color: var(--amber-500);">
+                <div style="display: flex; align-items: center; gap: var(--space-4);">
+                    <div style="width: 48px; height: 48px; border: 2px solid var(--ink-950); background-color: var(--ink-0); display: flex; align-items: center; justify-content: center; box-shadow: 2px 2px 0 var(--ink-950);">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" viewBox="0 0 24 24" style="color: var(--ink-950);">
+                            <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                         </svg>
                     </div>
                     <div>
-                        <h3 class="text-lg font-bold text-slate-900">Edit Kategori</h3>
-                        <p class="text-slate-500 text-sm">Ubah nama kategori yang dipilih.</p>
+                        <h3 class="h3" style="margin: 0; color: var(--ink-950);">EDIT KATEGORI</h3>
                     </div>
                 </div>
             </div>
-            <div class="p-6 space-y-4">
-                <div>
-                    <label class="block text-sm font-semibold text-slate-700 mb-2">Nama Kategori <span class="text-red-500">*</span></label>
-                    <input type="text" name="name" id="edit-name" placeholder="Nama kategori"
-                        class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition font-medium text-sm placeholder-slate-400" required>
-                    <p class="text-xs text-slate-400 mt-1.5">Slug akan diperbarui otomatis sesuai nama baru.</p>
+            
+            <div style="padding: var(--space-6);">
+                <div class="form-group">
+                    <label class="label" style="color: var(--ink-200);">NAMA KATEGORI <span style="color: var(--feedback-error);">*</span></label>
+                    <input type="text" name="name" id="edit-name" placeholder="Nama kategori" class="form-control" required>
+                    <p class="caption" style="margin-top: var(--space-2); font-weight: 700;">Slug akan diperbarui otomatis.</p>
                 </div>
             </div>
-            <div class="p-6 bg-slate-50 border-t border-slate-100 flex gap-3">
-                <button type="button" onclick="document.getElementById('modal-edit').classList.add('hidden')"
-                    class="flex-1 py-2.5 border border-slate-200 rounded-xl font-semibold text-slate-600 hover:bg-slate-100 transition text-sm">
-                    Batal
-                </button>
-                <button type="submit"
-                    class="flex-1 py-2.5 bg-indigo-600 text-white rounded-xl font-semibold shadow-sm hover:bg-indigo-700 transition text-sm flex items-center justify-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                    Simpan Perubahan
+            
+            <div style="padding: var(--space-6); border-top: 4px solid var(--ink-950); display: flex; gap: var(--space-4);">
+                <button type="button" onclick="document.getElementById('modal-edit').style.display='none'" class="btn" style="flex: 1; background-color: var(--ink-800); color: var(--ink-0); border: 2px solid var(--ink-700);">BATAL</button>
+                <button type="submit" class="btn btn-primary" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: var(--space-2);">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>
+                    SIMPAN PERUBAHAN
                 </button>
             </div>
         </form>
@@ -247,7 +231,7 @@
     function openEditModal(id, name) {
         document.getElementById('edit-name').value = name;
         document.getElementById('form-edit').action = '/admin/categories/' + id;
-        document.getElementById('modal-edit').classList.remove('hidden');
+        document.getElementById('modal-edit').style.display = 'flex';
     }
 
     const flash = document.getElementById('flash-success');
@@ -260,7 +244,7 @@
     }
 
     @if($errors->any() && old('_method') === null)
-        document.getElementById('modal-tambah').classList.remove('hidden');
+        document.getElementById('modal-tambah').style.display = 'flex';
     @endif
 </script>
 @endsection
