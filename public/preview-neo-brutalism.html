@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Neo-Brutalism Design System Preview</title>
+  <link rel="stylesheet" href="./css/neo-brutalism.css">
+  <style>
+    /* Demo specific styles */
+    .demo-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--space-8) var(--space-4);
+    }
+    .demo-section {
+      margin-bottom: var(--space-10);
+    }
+    .demo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--space-5);
+    }
+    .demo-flex-col {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+      align-items: flex-start;
+    }
+    .demo-flex-row {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: var(--space-3);
+      align-items: center;
+    }
+    .demo-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: var(--ink-400);
+      text-transform: uppercase;
+      margin-bottom: var(--space-1);
+    }
+    .hr-divider {
+      border: 0;
+      border-top: var(--border-width-default) solid var(--ink-700);
+      margin: var(--space-8) 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="h3" style="margin: 0;">BRAND.</div>
+    <div class="nav-links">
+      <a href="#" class="sidebar-item active" style="border:none;">Dashboard</a>
+      <a href="#" class="sidebar-item" style="border:none;">Projects</a>
+      <a href="#" class="sidebar-item" style="border:none;">Settings</a>
+    </div>
+  </nav>
+
+  <div class="demo-container">
+    
+    <div class="demo-section">
+      <h1 class="display">Neo-Brutalism</h1>
+      <p class="subtitle">A bold, dark-mode-first editorial design system.</p>
+    </div>
+
+    <!-- Typography -->
+    <div class="demo-section">
+      <h2 class="h2">Typography Scale</h2>
+      <div class="demo-grid">
+        <div class="demo-flex-col">
+          <div><div class="demo-label">Display (56px)</div><div class="display">Big Impact</div></div>
+          <div><div class="demo-label">H1 (36px)</div><h1>Page Title</h1></div>
+          <div><div class="demo-label">H2 (28px)</div><h2>Section Title</h2></div>
+          <div><div class="demo-label">H3 (22px)</div><h3>Card Block Header</h3></div>
+          <div><div class="demo-label">H4 (18px)</div><h4>Card Title</h4></div>
+          <div><div class="demo-label">H5 (15px)</div><h5>Table Header</h5></div>
+          <div><div class="demo-label">H6 (13px)</div><h6>Inner Panel Header</h6></div>
+        </div>
+        <div class="demo-flex-col">
+          <div>
+            <div class="demo-label">Body Large (17px)</div>
+            <p class="body-lg">We reject soft, safe SaaS conventions in favor of raw structure, hard edges, and unapologetic contrast.</p>
+          </div>
+          <div>
+            <div class="demo-label">Body (15px)</div>
+            <p class="body">Whitespace is used sparingly and deliberately, not as padding for its own sake. Content blocks sit close together.</p>
+          </div>
+          <div>
+            <div class="demo-label">Body Small (13px)</div>
+            <p class="body-sm">A single saturated accent is used aggressively and often.</p>
+          </div>
+          <div>
+            <div class="demo-label">Caption / Label</div>
+            <div class="caption">System Tag</div>
+            <div class="label" style="margin-top: 4px;">Field Label</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="hr-divider">
+
+    <!-- Buttons -->
+    <div class="demo-section">
+      <h2 class="h2">Buttons & Actions</h2>
+      <div class="demo-flex-row" style="margin-bottom: var(--space-4);">
+        <button class="btn btn-primary">Primary Action</button>
+        <button class="btn btn-secondary">Secondary Action</button>
+        <button class="btn btn-ghost">Ghost Button</button>
+        <button class="btn btn-text">Text Button</button>
+        <button class="btn btn-destructive">Delete Item</button>
+      </div>
+      <div class="demo-flex-row">
+        <button class="btn btn-primary" disabled>Primary Disabled</button>
+        <button class="btn btn-secondary" disabled>Secondary Disabled</button>
+      </div>
+    </div>
+
+    <hr class="hr-divider">
+
+    <!-- Inputs & Forms -->
+    <div class="demo-section">
+      <h2 class="h2">Form Controls</h2>
+      <div class="demo-grid">
+        <!-- Text Inputs -->
+        <div class="demo-flex-col" style="align-items: stretch;">
+          <div class="form-group">
+            <label class="label">Email Address</label>
+            <input type="email" class="form-control" placeholder="user@example.com">
+          </div>
+          <div class="form-group">
+            <label class="label">Username</label>
+            <input type="text" class="form-control is-invalid" value="invalid_user!">
+            <span class="form-error">Username contains invalid characters.</span>
+          </div>
+          <div class="form-group">
+            <label class="label">Bio</label>
+            <textarea class="form-control" placeholder="Write something about yourself..."></textarea>
+          </div>
+        </div>
+        
+        <!-- Toggles & Checks -->
+        <div class="demo-flex-col">
+          <div class="form-group">
+            <label class="label">Preferences</label>
+            <label class="checkbox-container">
+              <input type="checkbox" checked>
+              <span class="checkmark"></span>
+              <span class="body-sm">Subscribe to newsletter</span>
+            </label>
+            <label class="checkbox-container" style="margin-top: 8px;">
+              <input type="checkbox">
+              <span class="checkmark"></span>
+              <span class="body-sm">Enable dark mode</span>
+            </label>
+          </div>
+
+          <div class="form-group" style="margin-top: var(--space-3);">
+            <label class="label">Notifications</label>
+            <div style="display: flex; align-items: center; gap: var(--space-2);">
+              <label class="switch">
+                <input type="checkbox" checked>
+                <span class="slider"></span>
+              </label>
+              <span class="body-sm">Push notifications enabled</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="hr-divider">
+
+    <!-- Cards & Feedback -->
+    <div class="demo-section">
+      <h2 class="h2">Surfaces & Feedback</h2>
+      <div class="demo-grid">
+        
+        <!-- Card -->
+        <div class="card">
+          <div class="card-header">
+            <h4 class="h4" style="margin:0;">Project Statistics</h4>
+          </div>
+          <p class="body" style="margin-bottom: var(--space-4); color: var(--ink-200);">
+            Your recent activity across all environments. Elements are not hidden behind soft shadows.
+          </p>
+          <div class="demo-flex-row" style="margin-bottom: var(--space-4);">
+            <div>
+              <div class="label" style="color: var(--ink-400);">Deployments</div>
+              <div class="display" style="font-size: 32px; color: var(--amber-500);">142</div>
+            </div>
+            <div style="margin-left: var(--space-4);">
+              <div class="label" style="color: var(--ink-400);">Uptime</div>
+              <div class="display" style="font-size: 32px; color: var(--success-border);">99.9%</div>
+            </div>
+          </div>
+          <button class="btn btn-primary" style="width: 100%;">View Report</button>
+        </div>
+
+        <!-- Alerts -->
+        <div class="demo-flex-col" style="align-items: stretch;">
+          <div class="alert alert-info">
+            <h5 class="h5" style="margin-bottom: 4px; color: var(--amber-500);">System Update</h5>
+            <p class="body-sm" style="color: var(--ink-200);">A new version is available. Please refresh to apply changes.</p>
+          </div>
+          <div class="alert alert-error">
+            <h5 class="h5" style="margin-bottom: 4px; color: var(--error-border);">Connection Failed</h5>
+            <p class="body-sm" style="color: var(--ink-200);">Unable to reach the database server. Retrying in 5s...</p>
+          </div>
+          
+          <div style="margin-top: var(--space-3);">
+            <div class="demo-label">Badges</div>
+            <div class="demo-flex-row">
+              <span class="badge">New Feature</span>
+              <span class="badge" style="background-color: var(--ink-800); border-color: var(--ink-700); color: var(--ink-200);">Draft</span>
+            </div>
+          </div>
+          
+          <div style="margin-top: var(--space-3);">
+            <div class="demo-label">Progress</div>
+            <div class="progress-bar-container">
+              <div class="progress-bar" style="width: 65%;"></div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>
