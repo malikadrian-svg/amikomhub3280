@@ -4,12 +4,15 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\TicketController;
+use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\PartnerProfileController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EventController as AdminEventController;
 use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\PartnerController;
 use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Auth\GoogleController;
 
@@ -19,6 +22,9 @@ use App\Http\Controllers\Auth\GoogleController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/events/{event}', [EventController::class, 'show'])->name('events.show');
+
+// Public partner profile page
+Route::get('/partners/{partner}', [PartnerProfileController::class, 'show'])->name('partners.show');
 
 // =============================================================================
 // Google OAuth Routes (guests only for login page & redirect)
@@ -57,6 +63,18 @@ Route::middleware('auth')->group(function () {
     // User logout
     Route::post('/auth/logout', [GoogleController::class, 'logout'])->name('user.logout');
 
+    // ─── Review Routes ────────────────────────────────────────────────────────
+    // throttle:5,1 = max 5 review submissions per minute per user (anti-spam)
+    Route::post('/events/{event}/reviews', [ReviewController::class, 'store'])
+        ->name('reviews.store')
+        ->middleware('throttle:5,1');
+
+    Route::put('/reviews/{review}', [ReviewController::class, 'update'])
+        ->name('reviews.update');
+
+    Route::delete('/reviews/{review}', [ReviewController::class, 'destroy'])
+        ->name('reviews.destroy');
+
 });
 
 // =============================================================================
@@ -82,5 +100,10 @@ Route::prefix('admin')->group(function () {
         Route::get('transactions', [TransactionController::class, 'index'])->name('transactions.index');
         Route::resource('categories', CategoryController::class)->except(['show']);
         Route::resource('partners', PartnerController::class)->except(['show']);
+
+        // Review management
+        Route::get('reviews', [AdminReviewController::class, 'index'])->name('reviews.index');
+        Route::delete('reviews/{review}', [AdminReviewController::class, 'destroy'])->name('reviews.destroy');
+        Route::patch('reviews/{review}/toggle', [AdminReviewController::class, 'toggleApproval'])->name('reviews.toggle');
     });
 });

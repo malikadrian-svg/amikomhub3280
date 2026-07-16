@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Event;
 use App\Models\Category;
+use App\Models\Partner;
 
 class EventController extends Controller
 {
@@ -14,14 +15,15 @@ class EventController extends Controller
      */
     public function index()
     {
-        $events = Event::with('category')->latest()->paginate(10);
+        $events = Event::with('category', 'partner')->latest()->paginate(10);
         return view('admin.events.index', compact('events'));
     }
 
     public function create()
     {
         $categories = Category::all();
-        return view('admin.events.create', compact('categories'));
+        $partners   = Partner::orderBy('name')->get();
+        return view('admin.events.create', compact('categories', 'partners'));
     }
 
     public function store(Request $request)
@@ -29,13 +31,14 @@ class EventController extends Controller
         // Menerapkan validasi data request dari pengguna
         $data = $request->validate([
             'category_id' => 'required|exists:categories,id',
-            'title' => 'required|string|max:255',
+            'partner_id'  => 'nullable|exists:partners,id',
+            'title'       => 'required|string|max:255',
             'description' => 'nullable|string',
-            'date' => 'required|date',
-            'location' => 'required|string|max:255',
-            'price' => 'required|numeric|min:0',
-            'stock' => 'required|numeric|min:1',
-            'poster' => 'nullable|image|max:2048' // Maksimal 2MB
+            'date'        => 'required|date',
+            'location'    => 'required|string|max:255',
+            'price'       => 'required|numeric|min:0',
+            'stock'       => 'required|numeric|min:1',
+            'poster'      => 'nullable|image|max:2048', // Maksimal 2MB
         ]);
 
         if ($request->hasFile('poster')) {
@@ -52,20 +55,22 @@ class EventController extends Controller
     public function edit(Event $event)
     {
         $categories = Category::all();
-        return view('admin.events.edit', compact('event', 'categories'));
+        $partners   = Partner::orderBy('name')->get();
+        return view('admin.events.edit', compact('event', 'categories', 'partners'));
     }
 
     public function update(Request $request, Event $event)
     {
         $data = $request->validate([
             'category_id' => 'required|exists:categories,id',
-            'title' => 'required|string|max:255',
+            'partner_id'  => 'nullable|exists:partners,id',
+            'title'       => 'required|string|max:255',
             'description' => 'nullable|string',
-            'date' => 'required|date',
-            'location' => 'required|string|max:255',
-            'price' => 'required|numeric|min:0',
-            'stock' => 'required|numeric|min:1',
-            'poster' => 'nullable|image|max:2048'
+            'date'        => 'required|date',
+            'location'    => 'required|string|max:255',
+            'price'       => 'required|numeric|min:0',
+            'stock'       => 'required|numeric|min:1',
+            'poster'      => 'nullable|image|max:2048',
         ]);
 
         if ($request->hasFile('poster')) {

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Event;
+use App\Models\Review;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -26,8 +27,20 @@ class DashboardController extends Controller
 
         $pendingOrders = Transaction::where('status', 'pending')->count();
 
+        // Review statistics
+        $totalReviews  = Review::count();
+        $avgRating     = round((float) Review::where('is_approved', true)->avg('rating'), 1);
+        $pendingReviews = Review::where('is_approved', false)->count();
+
         // 5 transaksi terakhir untuk tabel ringkasan
         $recentTransactions = Transaction::with('event')
+            ->latest()
+            ->take(5)
+            ->get();
+
+        // 5 most recent reviews
+        $recentReviews = Review::with(['user:id,name,avatar', 'event:id,title'])
+            ->where('is_approved', true)
             ->latest()
             ->take(5)
             ->get();
@@ -40,7 +53,11 @@ class DashboardController extends Controller
             'ticketsSold',
             'activeEvents',
             'pendingOrders',
+            'totalReviews',
+            'avgRating',
+            'pendingReviews',
             'recentTransactions',
+            'recentReviews',
             'admin'
         ));
     }

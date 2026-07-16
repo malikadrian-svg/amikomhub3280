@@ -2,20 +2,60 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
+use App\Models\Event;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class EventController extends Controller
 {
     /**
-     * Menampilkan halaman detail event.
+     * Display the event detail page.
+     *
+     * Loads reviews with eager loading to prevent N+1.
+     * Also determines review eligibility for the authenticated user.
      */
-    public function show(\App\Models\Event $event)
+    public function show(Event $event)
     {
-        // Mengambil daftar kategori untuk keperluan menu footer
-        $categories = \App\Models\Category::all();
+        $categories = Category::all();
 
-        // Me-render view dengan membawa data kategori dan data spesifik acara tersebut
-        return view('event-detail', compact('categories', 'event'));
+        // Eager-load the partner and category
+        $event->load(['partner', 'category']);
+
+        // Paginate approved reviews with reviewer info (10 per page)
+        $reviews = $event->approvedReviews()
+            ->with('user:id,name,avatar')
+            ->latest()
+            ->paginate(10);
+
+        // Pre-compute rating data (served from indexed query — no N+1)
+        $avgRating    = $event->averageRating();
+        $reviewCount  = $event->reviewCount();
+        $distribution = $event->ratingDistribution();
+
+        // Determine this user's review status for the event (null = not authenticated)
+        $userReview      = null;
+        $canReview       = false;
+        $reviewableAfter = null;
+
+        if (Auth::check()) {
+            $userReview      = Auth::user()->reviewForEvent($event->id);
+            $canReview       = Auth::user()->canReviewEvent($event);
+            // Tell the view when reviews unlock (for countdown / info message)
+            $reviewableAfter = \Carbon\Carbon::parse($event->date)->addDay()->startOfDay();
+        }
+
+        return view('event-detail', compact(
+            'categories',
+            'event',
+            'reviews',
+            'avgRating',
+            'reviewCount',
+            'distribution',
+            'userReview',
+            'canReview',
+            'reviewableAfter',
+        ));
     }
 
     /**

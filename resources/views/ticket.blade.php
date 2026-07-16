@@ -119,6 +119,29 @@
                 {{-- Ticket Footer --}}
                 <div style="padding: var(--space-4) var(--space-8); background-color: var(--slate-800); border-top: 1px solid var(--slate-700);">
                     <div style="display: flex; flex-direction: column; gap: var(--space-3);">
+
+                        {{-- Review CTA --}}
+                        @if($canReview)
+                            <a href="{{ route('events.show', $transaction->event) }}#review-list"
+                               style="width: 100%; padding: var(--space-3); font-size: 15px; display: flex; align-items: center; justify-content: center; gap: var(--space-2); background-color: #f59e0b; color: #0a0a0a; border: 2px solid #d97706; font-family: 'Space Grotesk', sans-serif; font-weight: 700; text-decoration: none; letter-spacing: 0.03em; box-sizing: border-box; text-align: center;">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="#d97706" stroke="#0a0a0a" stroke-width="1.5">
+                                    <path d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.562.562 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/>
+                                </svg>
+                                TULIS ULASAN EVENT INI
+                            </a>
+                        @elseif($userReview)
+                            <a href="{{ route('events.show', $transaction->event) }}#review-list"
+                               style="width: 100%; padding: var(--space-3); font-size: 14px; display: flex; align-items: center; justify-content: center; gap: var(--space-2); background-color: var(--slate-700); color: var(--slate-200); border: 2px solid var(--slate-600); font-family: 'Space Grotesk', sans-serif; font-weight: 700; text-decoration: none; box-sizing: border-box;">
+                                ✓ LIHAT ULASAN ANDA
+                            </a>
+                        @elseif($transaction->event->isFinished() && !$transaction->event->isReviewable())
+                            <div style="text-align: center; padding: var(--space-2);">
+                                <p class="caption" style="color: var(--slate-400); margin: 0;">
+                                    Ulasan tersedia mulai <strong style="color: var(--slate-0);">{{ $reviewableAfter->translatedFormat('d F Y') }}</strong>
+                                </p>
+                            </div>
+                        @endif
+
                         <button onclick="window.print()" class="btn btn-primary" style="width: 100%; padding: var(--space-3); font-size: 15px; display: flex; align-items: center; justify-content: center; gap: var(--space-2);">
                             <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" viewBox="0 0 24 24">
                                 <path d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>

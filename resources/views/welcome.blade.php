@@ -120,10 +120,22 @@
                         </div>
                     </div>
 
-                    <div class="d-flex align-center justify-between" style="border-top: 1px solid var(--slate-600); padding-top: var(--space-4); margin-top: auto;">
+                    <div class="d-flex align-center justify-between" style="border-top: 1px solid var(--slate-600); padding-top: var(--space-4); margin-top: auto; flex-wrap: wrap; gap: var(--space-2);">
                         <div>
                             <p class="caption" style="color: var(--slate-400); margin-bottom: 2px;">MULAI DARI</p>
                             <span class="h4" style="color: var(--purple-500); margin:0;">Rp {{ number_format($event->price, 0, ',', '.') }}</span>
+                            {{-- Star rating (only shown when reviews exist) --}}
+                            @if($event->approved_reviews_count > 0)
+                                <div style="display: flex; align-items: center; gap: 4px; margin-top: 4px;">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="1.5">
+                                        <path d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.562.562 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/>
+                                    </svg>
+                                    <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 700; color: #f59e0b;">
+                                        {{ number_format($event->approved_reviews_avg_rating, 1) }}
+                                    </span>
+                                    <span class="caption" style="color: var(--slate-400);">({{ $event->approved_reviews_count }})</span>
+                                </div>
+                            @endif
                         </div>
                         <a href="{{ route('events.show', $event->id) }}" class="btn btn-secondary">DETAIL</a>
                     </div>

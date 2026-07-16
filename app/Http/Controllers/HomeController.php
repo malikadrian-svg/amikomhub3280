@@ -1,23 +1,34 @@
 <?php
+
 namespace App\Http\Controllers;
-use App\Models\Event;
+
 use App\Models\Category;
+use App\Models\Event;
 use App\Models\Partner;
 use Illuminate\Http\Request;
+
 class HomeController extends Controller
 {
- public function index(Request $request)
- {
- $categories = Category::withCount('events')->get();
-$query = Event::with('category')->where('date', '>=', now())->orderBy('date', 'asc');
- if ($request->has('category') && $request->category !='') {
- $query->whereHas('category', function ($q) use
-($request) {$q->where('slug', $request->category); });
-}
-$events = $query->get();
+    public function index(Request $request)
+    {
+        $categories = Category::withCount('events')->get();
 
- $partners = Partner::latest()->get();
+        $query = Event::with('category')
+            ->withAvg('approvedReviews', 'rating')
+            ->withCount('approvedReviews')
+            ->where('date', '>=', now())
+            ->orderBy('date', 'asc');
 
- return view('welcome', compact('events', 'categories', 'partners'));
- }
+        if ($request->has('category') && $request->category != '') {
+            $query->whereHas('category', function ($q) use ($request) {
+                $q->where('slug', $request->category);
+            });
+        }
+
+        $events = $query->get();
+
+        $partners = Partner::latest()->get();
+
+        return view('welcome', compact('events', 'categories', 'partners'));
+    }
 }

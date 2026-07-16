@@ -56,6 +56,24 @@
                 </div>
 
                 <div class="form-group">
+                    <label class="label">PENYELENGGARA / PARTNER <span class="caption" style="color: var(--slate-400);">(Opsional)</span></label>
+                    <div style="position: relative;">
+                        <select name="partner_id" class="input" style="appearance: none;">
+                            <option value="">— Tidak Ada / Pilih Nanti —</option>
+                            @foreach($partners as $partner)
+                            <option value="{{ $partner->id }}" {{ old('partner_id') == $partner->id ? 'selected' : '' }}>
+                                {{ $partner->name }}
+                            </option>
+                            @endforeach
+                        </select>
+                        <div style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); pointer-events: none;">
+                            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"></path></svg>
+                        </div>
+                    </div>
+                    <p class="caption" style="color: var(--slate-400); margin-top: var(--space-1);">Partner yang dipilih akan tampil di halaman detail event.</p>
+                </div>
+
+                <div class="form-group">
                     <label class="label">DESKRIPSI PENDEK <span style="color: var(--feedback-error);">*</span></label>
                     <textarea name="description" rows="4" class="input" placeholder="Tuliskan deskripsi singkat tentang acara ini..." required></textarea>
                 </div>
