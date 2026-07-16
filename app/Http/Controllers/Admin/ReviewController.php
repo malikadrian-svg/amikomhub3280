@@ -16,7 +16,7 @@ class ReviewController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Review::with(['user:id,name,email', 'event:id,title,date'])
+        $query = Review::with(['user:id,name,email', 'event:id,title,start_date'])
             ->latest();
 
         // Search by reviewer name/email or event title

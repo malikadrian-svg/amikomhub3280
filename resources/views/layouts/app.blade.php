@@ -120,6 +120,35 @@
                             <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" viewBox="0 0 24 24"><path d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"></path></svg>
                             TIKET SAYA
                         </a>
+
+                        {{-- Organizer Links --}}
+                        @php
+                            $userOrgs = Auth::user()->organizations()->wherePivot('role', 'owner')->where('status', 'approved')->get();
+                        @endphp
+                        
+                        @if($userOrgs->isNotEmpty())
+                            <div style="padding: 8px 16px; background-color: var(--slate-800); border-bottom: 1px solid var(--slate-700);">
+                                <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--slate-400); font-weight: bold;">ORGANISASI SAYA</span>
+                            </div>
+                            @foreach($userOrgs as $org)
+                            <a href="{{ route('organizer.dashboard', $org->slug) }}"
+                               style="display: flex; align-items: center; gap: 8px; padding: 10px 16px; text-decoration: none; font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 700; color: var(--purple-400); border-bottom: 1px solid var(--slate-700);"
+                               onmouseover="this.style.backgroundColor='var(--slate-800)';"
+                               onmouseout="this.style.backgroundColor='transparent';">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" viewBox="0 0 24 24"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                                <span style="max-width: 130px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ $org->name }}</span>
+                            </a>
+                            @endforeach
+                        @else
+                            <a href="{{ route('organizer.register') }}"
+                               style="display: flex; align-items: center; gap: 8px; padding: 10px 16px; text-decoration: none; font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 700; color: var(--purple-400); border-bottom: 1px solid var(--slate-700);"
+                               onmouseover="this.style.backgroundColor='var(--slate-800)';"
+                               onmouseout="this.style.backgroundColor='transparent';">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+                                BUAT ORGANISASI
+                            </a>
+                        @endif
+
                         <form action="{{ route('user.logout') }}" method="POST" style="margin: 0;">
                             @csrf
                             <button type="submit"

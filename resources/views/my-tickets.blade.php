@@ -35,7 +35,7 @@
         </div>
     @endif
 
-    @if($transactions->isEmpty())
+    @if($orders->isEmpty())
         {{-- Empty state --}}
         <div class="card" style="text-align: center; padding: var(--space-10);">
             <svg width="64" height="64" fill="none" stroke="var(--slate-600)" stroke-width="1.5" stroke-linecap="square" viewBox="0 0 24 24" style="margin: 0 auto var(--space-4) auto; display: block;">
@@ -52,9 +52,9 @@
     @else
         {{-- Ticket grid --}}
         <div style="display: flex; flex-direction: column; gap: var(--space-4);">
-            @foreach($transactions as $transaction)
+            @foreach($orders as $order)
             @php
-                $event       = $transaction->event;
+                $event       = $order->event;
                 $userReview  = $userReviews->get($event->id);
                 $isFinished  = $event->isFinished();
                 $isReviewable = $event->isReviewable();
@@ -108,13 +108,13 @@
                         <div>
                             <p class="caption" style="margin: 0; color: var(--slate-400);">ORDER ID</p>
                             <p style="margin: 0; font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 700; color: var(--slate-0);">
-                                {{ $transaction->order_id }}
+                                {{ $order->order_number }}
                             </p>
                         </div>
                         <div style="text-align: right;">
                             <p class="caption" style="margin: 0 0 4px 0; color: var(--slate-400);">TOTAL BAYAR</p>
                             <p class="h5" style="margin: 0; color: var(--purple-500);">
-                                Rp {{ number_format($transaction->total_price, 0, ',', '.') }}
+                                Rp {{ number_format($order->total_amount, 0, ',', '.') }}
                             </p>
                         </div>
 
@@ -138,7 +138,7 @@
                                 </a>
                             @endif
 
-                            <a href="{{ route('ticket', $transaction->order_id) }}" class="btn btn-primary" style="padding: var(--space-1) var(--space-3); font-size: 13px;">
+                            <a href="{{ route('ticket', $order->order_number) }}" class="btn btn-primary" style="padding: var(--space-1) var(--space-3); font-size: 13px;">
                                 LIHAT TIKET
                                 <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" viewBox="0 0 24 24" style="margin-left: 6px;"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
                             </a>
@@ -151,7 +151,7 @@
 
         {{-- Summary --}}
         <p class="caption" style="text-align: center; color: var(--slate-400); margin-top: var(--space-6);">
-            Menampilkan {{ $transactions->count() }} tiket lunas
+            Menampilkan {{ $orders->count() }} tiket lunas
         </p>
     @endif
 

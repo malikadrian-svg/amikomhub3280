@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Pembayaran - ' . $transaction->event->title)
+@section('title', 'Pembayaran - ' . $transaction->order->event->title)
 
 @section('content')
 <main class="page-container" style="padding-top: var(--space-12); padding-bottom: var(--space-12); display: flex; justify-content: center; align-items: center; min-height: 70vh;">
@@ -12,12 +12,12 @@
         </div>
         
         <h2 class="h2" style="margin-bottom: var(--space-2);">SELESAIKAN PEMBAYARAN</h2>
-        <p class="body" style="color: var(--slate-200); margin-bottom: var(--space-6);">Mohon selesaikan pembayaran tiket Anda untuk event <strong>{{ $transaction->event->title }}</strong>.</p>
+        <p class="body" style="color: var(--slate-200); margin-bottom: var(--space-6);">Mohon selesaikan pembayaran tiket Anda untuk event <strong>{{ $transaction->order->event->title }}</strong>.</p>
         
         <div style="background-color: #ffffff; border: 2px solid var(--slate-600); padding: var(--space-6); margin-bottom: var(--space-8);">
             <p class="caption" style="color: var(--slate-400); margin-bottom: var(--space-1);">TOTAL TAGIHAN</p>
-            <h3 class="display" style="color: var(--purple-500); margin: 0;">Rp {{ number_format($transaction->total_price, 0, ',', '.') }}</h3>
-            <p class="caption" style="color: var(--slate-400); margin-top: var(--space-2);">ORDER ID: {{ $transaction->order_id }}</p>
+            <h3 class="display" style="color: var(--purple-500); margin: 0;">Rp {{ number_format($transaction->amount, 0, ',', '.') }}</h3>
+            <p class="caption" style="color: var(--slate-400); margin-top: var(--space-2);">ORDER ID: {{ $transaction->gateway_order_id }}</p>
         </div>
         
         <button id="pay-button" class="btn btn-primary w-100" style="padding: var(--space-4); font-size: 18px;">
@@ -33,11 +33,11 @@
         snap.pay('{{ $transaction->snap_token }}', {
             // Optional
             onSuccess: function(result){
-                window.location.href = "{{ route('checkout.success', $transaction->order_id) }}";
+                window.location.href = "{{ route('checkout.success', $transaction->gateway_order_id) }}";
             },
             // Optional
             onPending: function(result){
-                window.location.href = "{{ route('checkout.success', $transaction->order_id) }}";
+                window.location.href = "{{ route('checkout.success', $transaction->gateway_order_id) }}";
             },
             // Optional
             onError: function(result){

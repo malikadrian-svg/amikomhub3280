@@ -4,22 +4,23 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Event;
-use App\Models\Partner;
+use App\Models\Organization;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
     public function index(Request $request)
     {
-        $categories = Category::withCount('events')->get();
+        $categories = Category::withCount('events')->active()->get();
 
         $query = Event::with('category')
             ->withAvg('approvedReviews', 'rating')
             ->withCount('approvedReviews')
-            ->where('date', '>=', now())
-            ->orderBy('date', 'asc');
+            ->whereIn('status', ['approved', 'active'])
+            ->where('start_date', '>=', now())
+            ->orderBy('start_date', 'asc');
 
-        if ($request->has('category') && $request->category != '') {
+        if ($request->filled('category')) {
             $query->whereHas('category', function ($q) use ($request) {
                 $q->where('slug', $request->category);
             });
@@ -27,8 +28,8 @@ class HomeController extends Controller
 
         $events = $query->get();
 
-        $partners = Partner::latest()->get();
+        $organizations = Organization::where('status', 'approved')->latest()->get();
 
-        return view('welcome', compact('events', 'categories', 'partners'));
+        return view('welcome', compact('events', 'categories', 'organizations'));
     }
 }

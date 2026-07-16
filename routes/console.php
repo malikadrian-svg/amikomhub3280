@@ -1,6 +1,7 @@
 <?php
 
 use App\Console\Commands\SendReviewReminders;
+use App\Console\Commands\UpdateEventStatuses;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schedule;
@@ -25,3 +26,8 @@ Schedule::command(SendReviewReminders::class)
     ->withoutOverlapping()
     ->runInBackground()
     ->appendOutputTo(storage_path('logs/review-reminders.log'));
+
+Schedule::command(UpdateEventStatuses::class)
+    ->hourly()
+    ->withoutOverlapping()
+    ->runInBackground();

@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Event;
+use App\Models\Order;
+use App\Models\OrderCommission;
+use App\Models\Organization;
 use App\Models\Review;
-use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -16,29 +18,56 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        // Statistik kartu ringkasan
-        $totalRevenue = Transaction::whereIn('status', ['settlement', 'success'])
-            ->sum('total_price');
+        // Data metrics dengan Order dan OrderCommission, di-cache 15 menit
+        $gmv = \Illuminate\Support\Facades\Cache::remember('admin.dashboard.gmv', 900, function () {
+            return Order::whereIn('status', ['paid', 'completed'])->sum('total_amount');
+        });
+        
+        $platformEarnings = \Illuminate\Support\Facades\Cache::remember('admin.dashboard.platform_earnings', 900, function () {
+            $totalPlatformFees = Order::whereIn('status', ['paid', 'completed'])->sum('platform_fee');
+            $totalCommissions = OrderCommission::whereHas('order', function($q) {
+                $q->whereIn('status', ['paid', 'completed']);
+            })->sum('commission_amount');
+            return $totalPlatformFees + $totalCommissions;
+        });
 
-        $ticketsSold = Transaction::whereIn('status', ['settlement', 'success'])
-            ->count();
+        $ticketsSold = \Illuminate\Support\Facades\Cache::remember('admin.dashboard.tickets_sold', 900, function () {
+            return Order::whereIn('status', ['paid', 'completed'])
+                ->withSum('items', 'quantity')
+                ->get()
+                ->sum('items_sum_quantity');
+        });
 
-        $activeEvents = Event::where('date', '>=', now())->count();
+        $activeEvents = \Illuminate\Support\Facades\Cache::remember('admin.dashboard.active_events', 900, function () {
+            return Event::where('status', 'published')
+                ->where('start_date', '>=', now())
+                ->count();
+        });
 
-        $pendingOrders = Transaction::where('status', 'pending')->count();
+        // Aksi Diperlukan (Pending Approvals) - real-time (no cache)
+        $pendingOrgs = Organization::where('status', 'pending')->count();
+        $pendingEvents = Event::where('status', 'pending')->count();
 
-        // Review statistics
-        $totalReviews  = Review::count();
-        $avgRating     = round((float) Review::where('is_approved', true)->avg('rating'), 1);
-        $pendingReviews = Review::where('is_approved', false)->count();
+        // Review statistics - di-cache 15 menit
+        $reviewStats = \Illuminate\Support\Facades\Cache::remember('admin.dashboard.review_stats', 900, function () {
+            return [
+                'total' => Review::count(),
+                'avg' => round((float) Review::where('is_approved', true)->avg('rating'), 1),
+                'pending' => Review::where('is_approved', false)->count(),
+            ];
+        });
+        $totalReviews = $reviewStats['total'];
+        $avgRating = $reviewStats['avg'];
+        $pendingReviews = $reviewStats['pending'];
 
-        // 5 transaksi terakhir untuk tabel ringkasan
-        $recentTransactions = Transaction::with('event')
+        // 5 transaksi terakhir untuk tabel ringkasan (real-time)
+        $recentOrders = Order::with('user', 'event')
+            ->whereIn('status', ['paid', 'completed'])
             ->latest()
             ->take(5)
             ->get();
 
-        // 5 most recent reviews
+        // 5 most recent reviews (real-time)
         $recentReviews = Review::with(['user:id,name,avatar', 'event:id,title'])
             ->where('is_approved', true)
             ->latest()
@@ -49,14 +78,16 @@ class DashboardController extends Controller
         $admin = Auth::user();
 
         return view('admin.dashboard', compact(
-            'totalRevenue',
+            'gmv',
+            'platformEarnings',
             'ticketsSold',
             'activeEvents',
-            'pendingOrders',
+            'pendingOrgs',
+            'pendingEvents',
             'totalReviews',
             'avgRating',
             'pendingReviews',
-            'recentTransactions',
+            'recentOrders',
             'recentReviews',
             'admin'
         ));

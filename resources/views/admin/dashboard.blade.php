@@ -23,14 +23,27 @@
 
     <!-- Stats Grid -->
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: var(--space-6); margin-bottom: var(--space-10);">
+        
+        <!-- GMV -->
         <div class="card" style="padding: var(--space-6);">
             <div style="width: 48px; height: 48px; background-color: var(--purple-500); color: #ffffff; border: 1px solid var(--slate-700); display: flex; align-items: center; justify-content: center; margin-bottom: var(--space-4);">
                 <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="square" viewBox="0 0 24 24">
                     <path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
             </div>
-            <p class="caption" style="color: var(--slate-400); margin-bottom: var(--space-1);">TOTAL PENDAPATAN</p>
-            <h3 class="h2" style="margin: 0; color: var(--slate-0);">Rp {{ number_format($totalRevenue, 0, ',', '.') }}</h3>
+            <p class="caption" style="color: var(--slate-400); margin-bottom: var(--space-1);">GMV KESELURUHAN</p>
+            <h3 class="h2" style="margin: 0; color: var(--slate-0);">Rp {{ number_format($gmv, 0, ',', '.') }}</h3>
+        </div>
+
+        <!-- Platform Earnings -->
+        <div class="card" style="padding: var(--space-6); border-color: var(--green-500);">
+            <div style="width: 48px; height: 48px; background-color: var(--green-500); color: var(--slate-900); border: 1px solid var(--green-600); display: flex; align-items: center; justify-content: center; margin-bottom: var(--space-4);">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="square" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path>
+                </svg>
+            </div>
+            <p class="caption" style="color: var(--slate-400); margin-bottom: var(--space-1);">PENDAPATAN PLATFORM</p>
+            <h3 class="h2" style="margin: 0; color: var(--green-400);">Rp {{ number_format($platformEarnings, 0, ',', '.') }}</h3>
         </div>
 
         <div class="card" style="padding: var(--space-6);">
@@ -53,14 +66,23 @@
             <h3 class="h2" style="margin: 0; color: var(--slate-0);">{{ $activeEvents }} Event</h3>
         </div>
 
-        <div class="card" style="padding: var(--space-6);">
+        <!-- Pending Approvals Widget -->
+        <div class="card" style="padding: var(--space-6); border-color: var(--feedback-error);">
             <div style="width: 48px; height: 48px; background-color: var(--feedback-error); color: var(--slate-0); border: 1px solid var(--slate-700); display: flex; align-items: center; justify-content: center; margin-bottom: var(--space-4);">
                 <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="square" viewBox="0 0 24 24">
-                    <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
                 </svg>
             </div>
-            <p class="caption" style="color: var(--slate-400); margin-bottom: var(--space-1);">PESANAN PENDING</p>
-            <h3 class="h2" style="margin: 0; color: var(--slate-0);">{{ $pendingOrders }} Pesanan</h3>
+            <p class="caption" style="color: var(--slate-400); margin-bottom: var(--space-1);">AKSI DIPERLUKAN</p>
+            <h3 class="h2" style="margin: 0; color: var(--feedback-error);">{{ $pendingOrgs + $pendingEvents }} Pending</h3>
+            <div style="display: flex; gap: var(--space-2); margin-top: var(--space-2);">
+                @if($pendingOrgs > 0)
+                    <a href="{{ route('admin.organizations.index', ['status' => 'pending']) }}" class="badge" style="background-color: var(--slate-800); color: var(--slate-200); text-decoration: none;">{{ $pendingOrgs }} Penyelenggara</a>
+                @endif
+                @if($pendingEvents > 0)
+                    <a href="{{ route('admin.event-approvals.index') }}" class="badge" style="background-color: var(--slate-800); color: var(--slate-200); text-decoration: none;">{{ $pendingEvents }} Event</a>
+                @endif
+            </div>
         </div>
 
         {{-- Review stats card --}}
@@ -99,34 +121,34 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($recentTransactions as $trx)
+                    @forelse($recentOrders as $order)
                         <tr>
                             <td style="border-left: none;">
-                                <span style="display: block; font-weight: 600;">{{ $trx->created_at->format('d M y - H:i') }}</span>
-                                <span class="caption" style="color: var(--slate-400);">{{ $trx->order_id }}</span>
+                                <span style="display: block; font-weight: 600;">{{ $order->created_at->format('d M y - H:i') }}</span>
+                                <span class="caption" style="color: var(--slate-400);">{{ $order->order_number }}</span>
                             </td>
                             <td>
-                                <span style="display: block; font-weight: 700; text-transform: uppercase;">{{ $trx->customer_name }}</span>
-                                <span class="caption" style="color: var(--slate-400);">{{ $trx->customer_email }}</span>
+                                <span style="display: block; font-weight: 700; text-transform: uppercase;">{{ $order->customer_name }}</span>
+                                <span class="caption" style="color: var(--slate-400);">{{ $order->customer_email }}</span>
                             </td>
-                            <td style="font-weight: 500;">{{ $trx->event->title ?? '-' }}</td>
+                            <td style="font-weight: 500;">{{ $order->event->title ?? '-' }}</td>
                             <td>
-                                @if($trx->status === 'settlement' || $trx->status === 'success')
+                                @if($order->status === 'paid' || $order->status === 'completed')
                                     <span class="badge" style="background-color: var(--feedback-success); color: var(--slate-0); border-color: var(--slate-0);">SUCCESS</span>
-                                @elseif($trx->status === 'pending')
+                                @elseif($order->status === 'pending')
                                     <span class="badge" style="background-color: var(--feedback-warning); color: #ffffff; border-color: #ffffff;">PENDING</span>
                                 @else
-                                    <span class="badge" style="background-color: var(--feedback-error); color: var(--slate-0); border-color: var(--slate-0);">{{ strtoupper($trx->status) }}</span>
+                                    <span class="badge" style="background-color: var(--feedback-error); color: var(--slate-0); border-color: var(--slate-0);">{{ strtoupper($order->status) }}</span>
                                 @endif
                             </td>
                             <td style="border-right: none; text-align: right; font-weight: 700; color: var(--purple-500); font-size: 18px;">
-                                Rp {{ number_format($trx->total_price, 0, ',', '.') }}
+                                Rp {{ number_format($order->total_amount, 0, ',', '.') }}
                             </td>
                         </tr>
                     @empty
                         <tr>
                             <td colspan="5" style="text-align: center; padding: var(--space-10); border: none;">
-                                <p class="body-lg" style="color: var(--slate-400);">Belum ada transaksi</p>
+                                <p class="body-lg" style="color: var(--slate-400);">Belum ada transaksi berhasil</p>
                             </td>
                         </tr>
                     @endforelse

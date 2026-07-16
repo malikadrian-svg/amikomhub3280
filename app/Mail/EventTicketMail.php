@@ -7,23 +7,24 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
-use App\Models\Transaction;
+use App\Models\Order;
 
 class EventTicketMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $transaction;
+    public $order;
 
-    public function __construct(Transaction $transaction)
+    public function __construct(Order $order)
     {
-        $this->transaction = $transaction;
+        $order->load(['event', 'items.ticketType', 'items.tickets']);
+        $this->order = $order;
     }
 
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'E-Ticket Resmi Anda: ' . $this->transaction->event->title,
+            subject: 'E-Ticket Resmi Anda: ' . $this->order->event->title,
         );
     }
 

@@ -157,7 +157,7 @@
         @endif
     </section>
 
-    @if($partners->isNotEmpty())
+    @if($organizations->isNotEmpty())
     <hr style="border: 0; border-top: var(--border-width-default) solid var(--slate-600); margin: var(--space-8) 0;">
     <section id="partners" class="page-container" style="padding-bottom: var(--space-10);">
         <div style="text-center; margin-bottom: var(--space-8);">
@@ -166,12 +166,12 @@
         </div>
 
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--space-4);">
-            @foreach($partners as $partner)
+            @foreach($organizations as $org)
             <div style="padding: var(--space-4); border: 2px solid var(--slate-600); display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: var(--slate-800);">
-                <div style="width: 64px; height: 64px; border: 2px solid var(--slate-600); margin-bottom: var(--space-3); display: flex; align-items: center; justify-content: center; overflow: hidden; background-color: #ffffff;">
-                    <img src="{{ $partner->logo_url }}" alt="{{ $partner->name }}" style="max-width: 100%; max-height: 100%; filter: grayscale(100%) contrast(1.2);" onerror="this.parentElement.innerHTML='<span class=\'h4\' style=\'color: var(--slate-400);\'>{{ strtoupper(substr($partner->name, 0, 2)) }}</span>'">
+                <div style="aspect-ratio: 16/9; background-color: #ffffff; border: 2px solid var(--slate-700); display: flex; align-items: center; justify-content: center; padding: var(--space-4); margin-bottom: var(--space-2); box-shadow: 4px 4px 0 var(--slate-900);">
+                    <span class="h4" style="color: var(--slate-400);">{{ strtoupper(substr($org->name, 0, 2)) }}</span>
                 </div>
-                <p class="label" style="text-align: center; color: var(--slate-0);">{{ $partner->name }}</p>
+                <p class="label" style="text-align: center; color: var(--slate-0);">{{ $org->name }}</p>
             </div>
             @endforeach
         </div>

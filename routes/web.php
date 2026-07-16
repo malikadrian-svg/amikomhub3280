@@ -7,12 +7,16 @@ use App\Http\Controllers\TicketController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\PartnerProfileController;
 use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\EventController as AdminEventController;
 use App\Http\Controllers\Admin\TransactionController;
+use App\Http\Controllers\Admin\EventController as AdminEventController;
 use App\Http\Controllers\Admin\CategoryController;
-use App\Http\Controllers\Admin\PartnerController;
+use App\Http\Controllers\Admin\OrganizationController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
+use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\AnalyticsController as AdminAnalyticsController;
+use App\Http\Controllers\Organizer\AnalyticsController as OrganizerAnalyticsController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Auth\GoogleController;
 
@@ -75,13 +79,50 @@ Route::middleware('auth')->group(function () {
     Route::delete('/reviews/{review}', [ReviewController::class, 'destroy'])
         ->name('reviews.destroy');
 
+    // ─── Organizer Registration ──────────────────────────────────────────────
+    Route::get('/organizer/register', [\App\Http\Controllers\OrganizerRegistrationController::class, 'create'])
+        ->name('organizer.register');
+    Route::post('/organizer/register', [\App\Http\Controllers\OrganizerRegistrationController::class, 'store'])
+        ->name('organizer.register.store');
+
 });
+
+// =============================================================================
+// Organizer Dashboard Area
+// =============================================================================
+
+Route::prefix('organizer/{organization:slug}')
+    ->middleware(['auth', 'org'])
+    ->name('organizer.')
+    ->group(function () {
+        
+        // Organizer Dashboard
+        Route::get('/dashboard', [\App\Http\Controllers\Organizer\DashboardController::class, 'index'])
+            ->name('dashboard');
+        
+        // Analytics Charts
+        Route::get('/analytics/revenue-chart', [OrganizerAnalyticsController::class, 'revenueChart'])->name('analytics.revenue-chart');
+            
+        // Organizer Events & Ticket Types
+        Route::resource('events', \App\Http\Controllers\Organizer\EventController::class);
+        Route::patch('events/{event}/submit', [\App\Http\Controllers\Organizer\EventController::class, 'submitForApproval'])->name('events.submit');
+        
+        Route::resource('events.ticket-types', \App\Http\Controllers\Organizer\TicketTypeController::class)->only(['store', 'update', 'destroy']);
+        
+    });
 
 // =============================================================================
 // Midtrans Webhook (public, no CSRF — excluded in bootstrap/app.php)
 // =============================================================================
 
 Route::post('/midtrans/callback', [\App\Http\Controllers\MidtransWebhookController::class, 'handle']);
+
+// =============================================================================
+// Authenticated Users
+// =============================================================================
+Route::middleware('auth')->group(function () {
+    Route::post('/notifications/mark-all-read', [\App\Http\Controllers\NotificationController::class, 'markAllRead'])->name('notifications.mark-all-read');
+});
 
 // =============================================================================
 // Admin Area
@@ -93,17 +134,41 @@ Route::prefix('admin')->group(function () {
     Route::post('login', [AuthController::class, 'login'])->name('login.post');
     Route::post('logout', [AuthController::class, 'logout'])->name('admin.logout');
 
+
+
     // Admin protected area
     Route::middleware(['auth', 'admin'])->name('admin.')->group(function () {
         Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        
+        // Analytics Charts
+        Route::get('analytics/revenue-chart', [AdminAnalyticsController::class, 'revenueChart'])->name('analytics.revenue-chart');
+
         Route::resource('events', AdminEventController::class)->except(['show']);
         Route::get('transactions', [TransactionController::class, 'index'])->name('transactions.index');
         Route::resource('categories', CategoryController::class)->except(['show']);
-        Route::resource('partners', PartnerController::class)->except(['show']);
+        
+        // Organization Management & Approvals
+        Route::get('organizations', [OrganizationController::class, 'index'])->name('organizations.index');
+        Route::get('organizations/documents/{document}', [OrganizationController::class, 'downloadDocument'])->name('organizations.document.download');
+        Route::patch('organizations/{organization}/approve', [OrganizationController::class, 'approve'])->name('organizations.approve');
+        Route::patch('organizations/{organization}/suspend', [OrganizationController::class, 'suspend'])->name('organizations.suspend');
+
+        // Event Approvals
+        Route::get('event-approvals', [\App\Http\Controllers\Admin\EventApprovalController::class, 'index'])->name('event-approvals.index');
+        Route::patch('event-approvals/{event}/approve', [\App\Http\Controllers\Admin\EventApprovalController::class, 'approve'])->name('event-approvals.approve');
+        Route::patch('event-approvals/{event}/reject', [\App\Http\Controllers\Admin\EventApprovalController::class, 'reject'])->name('event-approvals.reject');
 
         // Review management
         Route::get('reviews', [AdminReviewController::class, 'index'])->name('reviews.index');
         Route::delete('reviews/{review}', [AdminReviewController::class, 'destroy'])->name('reviews.destroy');
         Route::patch('reviews/{review}/toggle', [AdminReviewController::class, 'toggleApproval'])->name('reviews.toggle');
+
+        // Platform Settings
+        Route::get('settings', [SettingController::class, 'index'])->name('settings.index');
+        Route::put('settings', [SettingController::class, 'update'])->name('settings.update');
+
+        // User Management
+        Route::get('users', [UserController::class, 'index'])->name('users.index');
+        Route::patch('users/{user}/role', [UserController::class, 'updateRole'])->name('users.update-role');
     });
 });

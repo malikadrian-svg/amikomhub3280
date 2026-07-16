@@ -19,8 +19,8 @@ class EventController extends Controller
     {
         $categories = Category::all();
 
-        // Eager-load the partner and category
-        $event->load(['partner', 'category']);
+        // Eager-load the organization, category, and active ticket types
+        $event->load(['organization', 'category', 'activeTicketTypes']);
 
         // Paginate approved reviews with reviewer info (10 per page)
         $reviews = $event->approvedReviews()
@@ -42,7 +42,7 @@ class EventController extends Controller
             $userReview      = Auth::user()->reviewForEvent($event->id);
             $canReview       = Auth::user()->canReviewEvent($event);
             // Tell the view when reviews unlock (for countdown / info message)
-            $reviewableAfter = \Carbon\Carbon::parse($event->date)->addDay()->startOfDay();
+            $reviewableAfter = \Carbon\Carbon::parse($event->start_date)->addDay()->startOfDay();
         }
 
         return view('event-detail', compact(

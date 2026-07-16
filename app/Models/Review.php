@@ -4,15 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Models\Traits\BelongsToOrganization;
 
 class Review extends Model
 {
+    use BelongsToOrganization;
+
     /**
-     * The attributes that are mass assignable.
-     *
-     * Security: 'is_approved', 'admin_notes', 'user_id', and 'event_id' are
-     * deliberately excluded from $fillable. They are set explicitly in the
-     * controller or by admins only — never from user request data.
+     * Security: 'is_approved', 'admin_notes', 'user_id', 'event_id',
+     * and 'organization_id' are excluded from $fillable.
+     * They are set explicitly in the controller — never from user payload.
      */
     protected $fillable = [
         'rating',
@@ -20,9 +21,6 @@ class Review extends Model
         'body',
     ];
 
-    /**
-     * The attributes that should be cast.
-     */
     protected function casts(): array
     {
         return [
@@ -51,6 +49,14 @@ class Review extends Model
         return $this->belongsTo(Event::class);
     }
 
+    /**
+     * Denormalized organization link for efficient organizer dashboard queries.
+     */
+    public function organization(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class);
+    }
+
     // =========================================================================
     // Scopes
     // =========================================================================
@@ -68,10 +74,7 @@ class Review extends Model
     // =========================================================================
 
     /**
-     * Determine if this review can still be edited by its author.
-     *
-     * Reviews may be edited up to 7 days after creation. After that,
-     * the review is considered final to maintain integrity.
+     * Reviews can be edited up to 7 days after submission.
      */
     public function isEditable(): bool
     {
@@ -79,7 +82,7 @@ class Review extends Model
     }
 
     /**
-     * Return a human-readable relative time string.
+     * Human-readable relative time string.
      */
     public function timeAgo(): string
     {

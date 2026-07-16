@@ -16,8 +16,21 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+
+            // Nullable: OAuth-only users (Google SSO) never set a password
+            $table->string('password')->nullable();
+
+            // Google OAuth fields (consolidated from patch migration)
+            $table->string('google_id')->nullable()->unique();
+            $table->string('avatar')->nullable();
+            $table->string('provider')->nullable();
+            $table->string('provider_id')->nullable();
+            $table->string('phone', 20)->nullable();
+
+            // Deprecated in Milestone 2 (replaced by role_user RBAC pivot).
+            // Kept here so the IsAdmin middleware continues to work during M1.
             $table->enum('role', ['admin', 'user'])->default('user');
+
             $table->rememberToken();
             $table->timestamps();
         });

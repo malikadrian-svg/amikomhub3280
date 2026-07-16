@@ -1,0 +1,109 @@
+@extends('layouts.organizer')
+
+@section('content')
+<div style="margin-bottom: var(--space-8); display: flex; align-items: center; gap: var(--space-4);">
+    <a href="{{ route('organizer.events.show', [request()->route('organization'), $event]) }}" style="width: 40px; height: 40px; border-radius: var(--radius-md); background: var(--slate-100); border: 1px solid var(--slate-200); display: flex; align-items: center; justify-content: center; color: var(--slate-500); text-decoration: none; transition: all 0.2s;" onmouseover="this.style.background='var(--purple-50)';this.style.color='var(--purple-600)'" onmouseout="this.style.background='var(--slate-100)';this.style.color='var(--slate-500)'">
+        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+    </a>
+    <div>
+        <h1 class="display" style="margin-bottom: var(--space-1); color: var(--slate-900);">Edit Event</h1>
+        <p class="body-sm" style="color: var(--purple-600); font-weight: 600; margin: 0;">{{ $event->title }}</p>
+    </div>
+</div>
+
+@if ($errors->any())
+    <div style="background: rgba(220,38,38,0.07); border: 1px solid rgba(220,38,38,0.2); border-radius: var(--radius-md); padding: var(--space-4) var(--space-5); margin-bottom: var(--space-6);">
+        <p style="font-weight: 600; color: var(--feedback-error); margin: 0 0 var(--space-2) 0;">Terdapat kesalahan pada form:</p>
+        <ul style="margin: 0; padding-left: var(--space-5); color: var(--feedback-error);">
+            @foreach ($errors->all() as $error)
+                <li style="font-size: 13px;">{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
+<div class="card" style="max-width: 860px; padding: var(--space-8);">
+    <form action="{{ route('organizer.events.update', [request()->route('organization'), $event]) }}" method="POST" enctype="multipart/form-data">
+        @csrf
+        @method('PUT')
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-6); margin-bottom: var(--space-6);">
+
+            {{-- Title (full width) --}}
+            <div style="grid-column: 1 / -1;">
+                <label style="display: block; font-size: 13px; font-weight: 600; color: var(--slate-700); margin-bottom: var(--space-2);">Judul Event <span style="color: var(--feedback-error);">*</span></label>
+                <input type="text" name="title" value="{{ old('title', $event->title) }}" required
+                    class="form-control @error('title') is-invalid @enderror">
+                @error('title') <p style="color: var(--feedback-error); font-size: 12px; margin: var(--space-1) 0 0 0;">{{ $message }}</p> @enderror
+            </div>
+
+            {{-- Category --}}
+            <div>
+                <label style="display: block; font-size: 13px; font-weight: 600; color: var(--slate-700); margin-bottom: var(--space-2);">Kategori <span style="color: var(--feedback-error);">*</span></label>
+                <select name="category_id" required class="form-control @error('category_id') is-invalid @enderror">
+                    <option value="">Pilih Kategori...</option>
+                    @foreach($categories as $category)
+                        <option value="{{ $category->id }}" {{ old('category_id', $event->category_id) == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                    @endforeach
+                </select>
+                @error('category_id') <p style="color: var(--feedback-error); font-size: 12px; margin: var(--space-1) 0 0 0;">{{ $message }}</p> @enderror
+            </div>
+
+            {{-- Location --}}
+            <div>
+                <label style="display: block; font-size: 13px; font-weight: 600; color: var(--slate-700); margin-bottom: var(--space-2);">Lokasi <span style="color: var(--feedback-error);">*</span></label>
+                <input type="text" name="location" value="{{ old('location', $event->location) }}" required
+                    class="form-control @error('location') is-invalid @enderror">
+                @error('location') <p style="color: var(--feedback-error); font-size: 12px; margin: var(--space-1) 0 0 0;">{{ $message }}</p> @enderror
+            </div>
+
+            {{-- Start Date --}}
+            <div>
+                <label style="display: block; font-size: 13px; font-weight: 600; color: var(--slate-700); margin-bottom: var(--space-2);">Tanggal Mulai <span style="color: var(--feedback-error);">*</span></label>
+                <input type="datetime-local" name="start_date" value="{{ old('start_date', \Carbon\Carbon::parse($event->start_date)->format('Y-m-d\TH:i')) }}" required
+                    class="form-control @error('start_date') is-invalid @enderror">
+                @error('start_date') <p style="color: var(--feedback-error); font-size: 12px; margin: var(--space-1) 0 0 0;">{{ $message }}</p> @enderror
+            </div>
+
+            {{-- End Date --}}
+            <div>
+                <label style="display: block; font-size: 13px; font-weight: 600; color: var(--slate-700); margin-bottom: var(--space-2);">Tanggal Selesai <span style="color: var(--feedback-error);">*</span></label>
+                <input type="datetime-local" name="end_date" value="{{ old('end_date', \Carbon\Carbon::parse($event->end_date)->format('Y-m-d\TH:i')) }}" required
+                    class="form-control @error('end_date') is-invalid @enderror">
+                @error('end_date') <p style="color: var(--feedback-error); font-size: 12px; margin: var(--space-1) 0 0 0;">{{ $message }}</p> @enderror
+            </div>
+
+            {{-- Image (full width) --}}
+            <div style="grid-column: 1 / -1;">
+                <label style="display: block; font-size: 13px; font-weight: 600; color: var(--slate-700); margin-bottom: var(--space-2);">Banner / Poster Event</label>
+                @if($event->image)
+                    <div style="margin-bottom: var(--space-3);">
+                        <img src="{{ Storage::url($event->image) }}" style="height: 120px; object-fit: cover; border-radius: var(--radius-sm); border: 1px solid var(--slate-200);">
+                    </div>
+                @endif
+                <input type="file" name="image" accept="image/*"
+                    class="form-control @error('image') is-invalid @enderror"
+                    style="padding: var(--space-2);">
+                <p class="caption" style="color: var(--slate-400); margin: var(--space-2) 0 0 0;">Biarkan kosong jika tidak ingin mengubah gambar.</p>
+                @error('image') <p style="color: var(--feedback-error); font-size: 12px; margin: var(--space-1) 0 0 0;">{{ $message }}</p> @enderror
+            </div>
+
+            {{-- Description (full width) --}}
+            <div style="grid-column: 1 / -1;">
+                <label style="display: block; font-size: 13px; font-weight: 600; color: var(--slate-700); margin-bottom: var(--space-2);">Deskripsi Lengkap <span style="color: var(--feedback-error);">*</span></label>
+                <textarea name="description" rows="6" required minlength="50"
+                    class="form-control @error('description') is-invalid @enderror">{{ old('description', $event->description) }}</textarea>
+                @error('description') <p style="color: var(--feedback-error); font-size: 12px; margin: var(--space-1) 0 0 0;">{{ $message }}</p> @enderror
+            </div>
+        </div>
+
+        <div style="border-top: 1px solid var(--slate-100); padding-top: var(--space-6); display: flex; justify-content: flex-end; gap: var(--space-3);">
+            <a href="{{ route('organizer.events.show', [request()->route('organization'), $event]) }}" class="btn btn-secondary">Batal</a>
+            <button type="submit" class="btn btn-primary">
+                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="margin-right: var(--space-2);"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                Simpan Perubahan
+            </button>
+        </div>
+    </form>
+</div>
+@endsection

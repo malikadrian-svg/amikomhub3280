@@ -19,7 +19,9 @@ class MidtransWebhookController extends Controller
         }
 
         // Mencari ID transaksi tersebut di database lokal kita
-        $transaction = Transaction::with('event')->where('order_id', $orderId)->first();
+        $transaction = Transaction::with(['order.event', 'order.items.ticketType'])
+            ->where('gateway_order_id', $orderId)
+            ->first();
 
         if (!$transaction) {
             return response()->json(['message' => 'Transaction not found'], 404);
@@ -54,21 +56,74 @@ class MidtransWebhookController extends Controller
 
     private function processSuccess(Transaction $transaction)
     {
-        $event = $transaction->event;
+        \Illuminate\Support\Facades\DB::beginTransaction();
+        try {
+            $order = $transaction->order;
+            
+            if ($order && $order->status === 'pending') {
+                $order->update([
+                    'status' => 'paid',
+                    'paid_at' => now(),
+                ]);
 
-        // Jika tiket masih ada dan terhubung dengan data event, kurangi jumlahnya sebanyak 1
-        if ($event && $event->stock > 0) {
-            $event->stock = $event->stock - 1;
-            $event->save();
+                // Create Commission
+                $ratePercentage = $order->organization->commission_rate 
+                    ?? \App\Models\PlatformSetting::get('default_commission_rate', 5.00);
+                    
+                $commissionRate = $ratePercentage / 100;
+                $commissionAmount = (int) ($order->subtotal * $commissionRate);
+                $organizerAmount = $order->subtotal - $commissionAmount;
 
-            // Mengirimkan email E-Ticket ke pelanggan
-            try {
-                \Illuminate\Support\Facades\Mail::to($transaction->customer_email)->send(new \App\Mail\EventTicketMail($transaction));
-            } catch (\Exception $e) {
-                \Log::error('Gagal mengirim email E-Ticket: ' . $e->getMessage());
+                \App\Models\OrderCommission::create([
+                    'order_id'          => $order->id,
+                    'organization_id'   => $order->organization_id,
+                    'gross_amount'      => $order->subtotal,
+                    'commission_rate'   => $commissionRate,
+                    'commission_amount' => $commissionAmount,
+                    'organizer_amount'  => $organizerAmount,
+                    'settlement_status' => 'pending',
+                ]);
+
+                // Generate Tickets & Reduce Stock
+                foreach ($order->items as $item) {
+                    $ticketType = $item->ticketType;
+                    
+                    if ($ticketType) {
+                        $ticketType->increment('quantity_sold', $item->quantity);
+                    }
+
+                    for ($i = 0; $i < $item->quantity; $i++) {
+                        $ticketCode = 'TIX-' . strtoupper(\Illuminate\Support\Str::random(10));
+                        
+                        \App\Models\Ticket::create([
+                            'order_item_id'  => $item->id,
+                            'user_id'        => $order->user_id,
+                            'event_id'       => $order->event_id,
+                            'ticket_type_id' => $item->ticket_type_id,
+                            'ticket_code'    => $ticketCode,
+                            'qr_code'        => $ticketCode, 
+                            'status'         => 'active',
+                        ]);
+                    }
+                }
+
+                // Send Email
+                try {
+                    \Illuminate\Support\Facades\Mail::to($order->customer_email)
+                        ->send(new \App\Mail\EventTicketMail($order));
+                } catch (\Exception $e) {
+                    \Log::error('Gagal mengirim email E-Ticket dari Webhook: ' . $e->getMessage());
+                }
+
+                // Send Notification to Organizer
+                if ($order->organization && $order->organization->owner) {
+                    $order->organization->owner->notify(new \App\Notifications\OrderPaidNotification($order));
+                }
             }
-        } else {
-            \Log::warning('Stock habis setelah pembayaran berhasil (Perlu proses refund opsional). Order: ' . $transaction->order_id);
+            \Illuminate\Support\Facades\DB::commit();
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\DB::rollBack();
+            \Log::error('Error in Webhook processSuccess: ' . $e->getMessage());
         }
     }
 }

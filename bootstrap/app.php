@@ -13,6 +13,9 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'admin' => \App\Http\Middleware\IsAdmin::class,
+            'role' => \App\Http\Middleware\RequireRole::class,
+            'permission' => \App\Http\Middleware\RequirePermission::class,
+            'org' => \App\Http\Middleware\EnsureOrganization::class,
         ]);
 
         // Redirect unauthenticated users to the Google login page.

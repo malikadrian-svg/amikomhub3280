@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'E-Ticket - ' . $transaction->event->title)
+@section('title', 'E-Ticket - ' . $order->event->title)
 
 @section('content')
     <div style="background-color: var(--slate-950); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: var(--space-6) var(--space-4); margin-top: -20px;">
@@ -18,14 +18,16 @@
             </div>
 
             {{-- Ticket Card --}}
-            <div class="card" style="padding: 0; overflow: hidden; position: relative; border: 2px solid var(--slate-700); box-shadow: 6px 6px 0 var(--slate-700);">
+                @foreach($order->items as $item)
+                    @foreach($item->tickets as $ticket)
+                    <div class="card" style="padding: 0; overflow: hidden; position: relative; border: 2px solid var(--slate-700); box-shadow: 6px 6px 0 var(--slate-700); margin-bottom: var(--space-6);">
 
-                {{-- Ticket Header (Purple strip) --}}
-                <div style="padding: var(--space-6) var(--space-8); background-color: var(--purple-500); border-bottom: 1px dashed var(--slate-700); text-align: center; position: relative;">
-                    <p class="caption" style="color: rgba(255,255,255,0.7); margin-bottom: var(--space-1); letter-spacing: 0.1em;">E-TICKET RESMI · AMIKOMEVENTHUB</p>
-                    <h2 class="h2" style="color: #ffffff; margin: 0; line-height: 1.2;">{{ $transaction->event->title }}</h2>
+                        {{-- Ticket Header (Purple strip) --}}
+                        <div style="padding: var(--space-6) var(--space-8); background-color: var(--purple-500); border-bottom: 1px dashed var(--slate-700); text-align: center; position: relative;">
+                            <p class="caption" style="color: rgba(255,255,255,0.7); margin-bottom: var(--space-1); letter-spacing: 0.1em;">E-TICKET RESMI · AMIKOMEVENTHUB</p>
+                            <h2 class="h2" style="color: #ffffff; margin: 0; line-height: 1.2;">{{ $order->event->title }}</h2>
                     <p class="body-sm" style="color: rgba(255,255,255,0.8); margin: var(--space-1) 0 0 0; font-weight: 600;">
-                        {{ \Carbon\Carbon::parse($transaction->event->date)->translatedFormat('d F Y, H:i') }} WIB
+                                {{ \Carbon\Carbon::parse($order->event->start_date)->translatedFormat('d F Y, H:i') }} WIB
                     </p>
 
                     {{-- Ticket notch decorations --}}
@@ -38,22 +40,22 @@
 
                     {{-- Info grid --}}
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4);">
-                        <div>
-                            <p class="caption" style="color: var(--slate-400); margin-bottom: 4px; letter-spacing: 0.06em;">NAMA PEMBELI</p>
-                            <p class="body" style="font-weight: 700; color: var(--slate-0); margin: 0;">{{ $transaction->customer_name }}</p>
-                        </div>
-                        <div>
-                            <p class="caption" style="color: var(--slate-400); margin-bottom: 4px; letter-spacing: 0.06em;">LOKASI</p>
-                            <p class="body" style="font-weight: 700; color: var(--slate-0); margin: 0;">{{ $transaction->event->location }}</p>
-                        </div>
-                        <div>
-                            <p class="caption" style="color: var(--slate-400); margin-bottom: 4px; letter-spacing: 0.06em;">ORDER ID</p>
-                            <p style="font-family: 'IBM Plex Mono', monospace; font-weight: 700; color: var(--slate-0); margin: 0; font-size: 13px;">{{ $transaction->order_id }}</p>
-                        </div>
-                        <div>
-                            <p class="caption" style="color: var(--slate-400); margin-bottom: 4px; letter-spacing: 0.06em;">KATEGORI</p>
-                            <p class="body" style="font-weight: 700; color: var(--slate-0); margin: 0;">{{ $transaction->event->category->name ?? '—' }}</p>
-                        </div>
+                                <div>
+                                    <p class="caption" style="color: var(--slate-400); margin-bottom: 4px; letter-spacing: 0.06em;">NAMA PEMBELI</p>
+                                    <p class="body" style="font-weight: 700; color: var(--slate-0); margin: 0;">{{ $order->customer_name }}</p>
+                                </div>
+                                <div>
+                                    <p class="caption" style="color: var(--slate-400); margin-bottom: 4px; letter-spacing: 0.06em;">LOKASI</p>
+                                    <p class="body" style="font-weight: 700; color: var(--slate-0); margin: 0;">{{ $order->event->location }}</p>
+                                </div>
+                                <div>
+                                    <p class="caption" style="color: var(--slate-400); margin-bottom: 4px; letter-spacing: 0.06em;">KODE TIKET</p>
+                                    <p style="font-family: 'IBM Plex Mono', monospace; font-weight: 700; color: var(--slate-0); margin: 0; font-size: 13px;">{{ $ticket->ticket_code }}</p>
+                                </div>
+                                <div>
+                                    <p class="caption" style="color: var(--slate-400); margin-bottom: 4px; letter-spacing: 0.06em;">JENIS TIKET</p>
+                                    <p class="body" style="font-weight: 700; color: var(--slate-0); margin: 0;">{{ $item->ticketType->name ?? 'Standard' }}</p>
+                                </div>
                     </div>
 
                     {{-- QR Code Section --}}
@@ -65,25 +67,25 @@
                             {{-- We generate a deterministic QR-like visual using the order_id seed --}}
                             <div style="width: 100%; height: 100%; position: relative;">
                                 @php
-                                    // Generate a deterministic 8×8 grid pattern from the order_id hash
-                                    $hash  = md5($transaction->order_id);
-                                    $cells = [];
-                                    for ($i = 0; $i < 64; $i++) {
-                                        $cells[] = hexdec($hash[$i % strlen($hash)]) > 7;
-                                    }
-                                @endphp
-                                <div style="display: grid; grid-template-columns: repeat(8, 1fr); grid-template-rows: repeat(8, 1fr); width: 100%; height: 100%; gap: 1px;">
-                                    @foreach($cells as $filled)
-                                        <div style="background-color: {{ $filled ? '#0f172a' : '#ffffff' }};"></div>
-                                    @endforeach
+                                        // Generate a deterministic 8×8 grid pattern from the ticket_code hash
+                                        $hash  = md5($ticket->ticket_code);
+                                        $cells = [];
+                                        for ($i = 0; $i < 64; $i++) {
+                                            $cells[] = hexdec($hash[$i % strlen($hash)]) > 7;
+                                        }
+                                    @endphp
+                                    <div style="display: grid; grid-template-columns: repeat(8, 1fr); grid-template-rows: repeat(8, 1fr); width: 100%; height: 100%; gap: 1px;">
+                                        @foreach($cells as $filled)
+                                            <div style="background-color: {{ $filled ? '#0f172a' : '#ffffff' }};"></div>
+                                        @endforeach
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        {{-- Ticket code --}}
-                        <p style="margin-top: var(--space-4); font-family: 'IBM Plex Mono', monospace; font-weight: 700; color: var(--slate-0); font-size: 15px; letter-spacing: 0.08em;">
-                            {{ strtoupper(substr($transaction->order_id, 0, 18)) }}
-                        </p>
+                            {{-- Ticket code --}}
+                            <p style="margin-top: var(--space-4); font-family: 'IBM Plex Mono', monospace; font-weight: 700; color: var(--slate-0); font-size: 15px; letter-spacing: 0.08em;">
+                                {{ $ticket->ticket_code }}
+                            </p>
 
                         {{-- Status badge --}}
                         <span style="
@@ -103,18 +105,21 @@
                     </div>
 
                     {{-- Price summary --}}
-                    <div style="border-top: 1px dashed var(--slate-700); padding-top: var(--space-4); display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <p class="caption" style="color: var(--slate-400); margin: 0;">TOTAL PEMBAYARAN</p>
-                            <p class="h4" style="color: var(--purple-500); margin: 4px 0 0 0;">Rp {{ number_format($transaction->total_price, 0, ',', '.') }}</p>
+                        <div style="border-top: 1px dashed var(--slate-700); padding-top: var(--space-4); display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <p class="caption" style="color: var(--slate-400); margin: 0;">TOTAL PEMBAYARAN ORDER</p>
+                                <p class="h4" style="color: var(--purple-500); margin: 4px 0 0 0;">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</p>
+                            </div>
+                            <div style="text-align: right;">
+                                <p class="caption" style="color: var(--slate-400); margin: 0;">ORDER ID</p>
+                                <p style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 700; color: var(--slate-0); margin: 4px 0 0 0; word-break: break-all;">{{ $order->order_number }}</p>
+                            </div>
                         </div>
-                        <div style="text-align: right;">
-                            <p class="caption" style="color: var(--slate-400); margin: 0;">DIKIRIM KE</p>
-                            <p style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 700; color: var(--slate-0); margin: 4px 0 0 0; word-break: break-all;">{{ $transaction->customer_email }}</p>
-                        </div>
-                    </div>
 
+                    </div>
                 </div>
+                @endforeach
+            @endforeach
 
                 {{-- Ticket Footer --}}
                 <div style="padding: var(--space-4) var(--space-8); background-color: var(--slate-800); border-top: 1px solid var(--slate-700);">
@@ -122,7 +127,7 @@
 
                         {{-- Review CTA --}}
                         @if($canReview)
-                            <a href="{{ route('events.show', $transaction->event) }}#review-list"
+                            <a href="{{ route('events.show', $order->event) }}#review-list"
                                style="width: 100%; padding: var(--space-3); font-size: 15px; display: flex; align-items: center; justify-content: center; gap: var(--space-2); background-color: #f59e0b; color: #0a0a0a; border: 2px solid #d97706; font-family: 'Space Grotesk', sans-serif; font-weight: 700; text-decoration: none; letter-spacing: 0.03em; box-sizing: border-box; text-align: center;">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="#d97706" stroke="#0a0a0a" stroke-width="1.5">
                                     <path d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.562.562 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/>
@@ -130,11 +135,11 @@
                                 TULIS ULASAN EVENT INI
                             </a>
                         @elseif($userReview)
-                            <a href="{{ route('events.show', $transaction->event) }}#review-list"
+                            <a href="{{ route('events.show', $order->event) }}#review-list"
                                style="width: 100%; padding: var(--space-3); font-size: 14px; display: flex; align-items: center; justify-content: center; gap: var(--space-2); background-color: var(--slate-700); color: var(--slate-200); border: 2px solid var(--slate-600); font-family: 'Space Grotesk', sans-serif; font-weight: 700; text-decoration: none; box-sizing: border-box;">
                                 ✓ LIHAT ULASAN ANDA
                             </a>
-                        @elseif($transaction->event->isFinished() && !$transaction->event->isReviewable())
+                        @elseif($order->event->isFinished() && !$order->event->isReviewable())
                             <div style="text-align: center; padding: var(--space-2);">
                                 <p class="caption" style="color: var(--slate-400); margin: 0;">
                                     Ulasan tersedia mulai <strong style="color: var(--slate-0);">{{ $reviewableAfter->translatedFormat('d F Y') }}</strong>

@@ -38,7 +38,7 @@
                             </div>
                             <div>
                                 <p class="h6" style="margin: 0; color: var(--slate-0);">AmikomEventHub</p>
-                                <p class="caption" style="margin: 0; color: var(--slate-400);">VERIFIED ORGANIZER</p>
+                                <p class="caption" style="margin: 0; color: var(--slate-400);">ORGANIZER</p>
                             </div>
                         </div>
                     @endif
@@ -88,37 +88,66 @@
                     </div>
                 </div>
 
-                <!-- Ticket Booking Box -->
-                <div style="background-color: var(--purple-500); padding: var(--space-8); border: 1px solid var(--slate-700); box-shadow: var(--shadow-hard-sm); margin-bottom: var(--space-10); position: relative;">
-                    <div class="d-flex align-center justify-between gap-6" style="flex-wrap: wrap;">
-                        <div>
-                            <p class="caption" style="color: #ffffff; margin-bottom: var(--space-1); font-weight: 700;">HARGA TIKET</p>
-                            <h2 class="display" style="color: #ffffff; margin: 0; line-height: 1;">Rp {{ number_format($event->price, 0, ',', '.') }} <span class="h5" style="color: var(--slate-800);">/ org</span></h2>
-                            
-                            <p class="body" style="color: #ffffff; font-weight: 600; margin-top: var(--space-3); display: flex; align-items: center; gap: var(--space-2);">
-                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.25" viewBox="0 0 24 24">
-                                    <path stroke-linecap="square" stroke-linejoin="miter" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                                Sisa stok: <span style="text-decoration: underline;">{{ $event->stock }} TIKET!</span>
-                            </p>
-                        </div>
-                        <div>
-                            @if($event->stock > 0 && !$event->isFinished())
-                            <a href="{{ route('checkout.create', $event) }}" class="btn" style="background-color: #ffffff; color: var(--purple-500); padding: var(--space-4) var(--space-6); font-size: 18px; border: 1px solid var(--slate-700);">
-                                PESAN SEKARANG
-                            </a>
-                            @elseif($event->isFinished())
-                            <button class="btn" disabled style="background-color: var(--slate-700); color: var(--slate-400); padding: var(--space-4) var(--space-6); font-size: 18px; cursor: not-allowed; border: 1px solid var(--slate-700);">
-                                EVENT SELESAI
-                            </button>
-                            @else
-                            <button class="btn" disabled style="background-color: var(--slate-700); color: var(--slate-400); padding: var(--space-4) var(--space-6); font-size: 18px; cursor: not-allowed; border: 1px solid var(--slate-700);">
-                                TIKET HABIS
-                            </button>
-                            @endif
-                        </div>
+                <!-- Ticket Booking Section -->
+                <div style="background-color: var(--slate-800); border: 2px solid var(--slate-700); box-shadow: 4px 4px 0 var(--slate-900); margin-bottom: var(--space-10);">
+                    <div style="padding: var(--space-4) var(--space-6); background-color: var(--slate-700); border-bottom: 2px solid var(--slate-600);">
+                        <h3 class="h4" style="margin: 0; color: #ffffff;">PILIH TIKET</h3>
                     </div>
+                    
+                    <form action="{{ route('checkout.create', $event) }}" method="GET" style="padding: var(--space-6);">
+                        @forelse($event->activeTicketTypes as $ticket)
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: var(--space-4); border: 2px solid var(--slate-600); background-color: var(--slate-900); margin-bottom: var(--space-4); flex-wrap: wrap; gap: var(--space-4);">
+                            <div>
+                                <h4 class="h5" style="margin: 0; color: #ffffff;">{{ $ticket->name }}</h4>
+                                <p class="caption" style="color: var(--slate-400); margin-top: 4px;">{{ $ticket->description }}</p>
+                                <p class="h4" style="color: var(--purple-500); margin: var(--space-2) 0 0 0;">Rp {{ number_format($ticket->price, 0, ',', '.') }}</p>
+                                @if($ticket->remaining() > 0 && $ticket->remaining() <= 20)
+                                    <p class="caption" style="color: var(--feedback-warning); margin-top: 4px; font-weight: bold;">Sisa stok: {{ $ticket->remaining() }} tiket!</p>
+                                @endif
+                            </div>
+                            
+                            <div>
+                                @if($event->isFinished())
+                                    <span class="badge" style="background-color: var(--slate-700); color: var(--slate-400);">EVENT SELESAI</span>
+                                @elseif($ticket->remaining() <= 0)
+                                    <span class="badge" style="background-color: var(--feedback-error); color: #ffffff;">HABIS</span>
+                                @else
+                                    <div style="display: flex; align-items: center; border: 2px solid var(--slate-600); background-color: #ffffff;">
+                                        <button type="button" onclick="const input = document.getElementById('qty_{{ $ticket->id }}'); input.value = Math.max(0, parseInt(input.value) - 1);" style="width: 40px; height: 40px; border: none; border-right: 2px solid var(--slate-600); background: none; font-size: 20px; cursor: pointer; color: var(--slate-900); font-weight: bold;">-</button>
+                                        <input type="number" id="qty_{{ $ticket->id }}" name="tickets[{{ $ticket->id }}]" value="0" min="0" max="{{ min($ticket->remaining(), $ticket->max_per_order) }}" style="width: 60px; height: 40px; border: none; text-align: center; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 16px; color: var(--slate-900); outline: none; -moz-appearance: textfield;">
+                                        <button type="button" onclick="const input = document.getElementById('qty_{{ $ticket->id }}'); input.value = Math.min(input.max, parseInt(input.value) + 1);" style="width: 40px; height: 40px; border: none; border-left: 2px solid var(--slate-600); background: none; font-size: 20px; cursor: pointer; color: var(--slate-900); font-weight: bold;">+</button>
+                                    </div>
+                                    <p class="caption" style="color: var(--slate-400); margin-top: 4px; text-align: center;">Maks. {{ $ticket->max_per_order }}</p>
+                                @endif
+                            </div>
+                        </div>
+                        @empty
+                            <p class="body" style="color: var(--slate-400); text-align: center; padding: var(--space-4);">Belum ada tiket yang tersedia untuk event ini.</p>
+                        @endforelse
+                        
+                        @if(!$event->isFinished() && $event->activeTicketTypes->count() > 0)
+                        <div style="text-align: right; margin-top: var(--space-6);">
+                            <button type="submit" class="btn btn-primary" onclick="return validateCheckout(this.form)" style="padding: var(--space-4) var(--space-8); font-size: 18px; width: 100%; max-width: 300px;">PESAN SEKARANG</button>
+                        </div>
+                        @endif
+                    </form>
                 </div>
+                
+                <script>
+                    function validateCheckout(form) {
+                        let total = 0;
+                        const inputs = form.querySelectorAll('input[type="number"]');
+                        inputs.forEach(input => {
+                            total += parseInt(input.value) || 0;
+                        });
+                        
+                        if (total === 0) {
+                            alert('Pilih setidaknya 1 tiket untuk melanjutkan.');
+                            return false;
+                        }
+                        return true;
+                    }
+                </script>
 
                 <!-- ============================================================ -->
                 <!-- RATING & REVIEW SECTION -->

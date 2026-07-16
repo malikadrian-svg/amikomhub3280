@@ -34,7 +34,7 @@ class SendReviewReminders extends Command
     {
         $yesterday = Carbon::yesterday();
 
-        $events = Event::whereBetween('date', [
+        $events = Event::whereBetween('start_date', [
             $yesterday->copy()->startOfDay(),
             $yesterday->copy()->endOfDay(),
         ])->get();
@@ -53,9 +53,9 @@ class SendReviewReminders extends Command
             $this->line("  → Processing: {$event->title}");
 
             // Get all users with a paid transaction for this event
-            $eligibleUsers = \App\Models\User::whereHas('transactions', function ($q) use ($event) {
+            $eligibleUsers = \App\Models\User::whereHas('orders', function ($q) use ($event) {
                 $q->where('event_id', $event->id)
-                  ->whereIn('status', ['success', 'settlement', 'capture']);
+                  ->whereIn('status', ['paid', 'completed']);
             })
             // Exclude users who already submitted a review
             ->whereDoesntHave('reviews', function ($q) use ($event) {

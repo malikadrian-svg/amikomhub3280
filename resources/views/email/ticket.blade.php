@@ -128,45 +128,51 @@
             <p>Tiket Anda telah terbit dan siap digunakan.</p>
         </div>
         <!-- Ticket Card -->
-        <div class="ticket-card">
-            <!-- Ticket Header -->
-            <div class="ticket-top">
-                <p>E-TICKET RESMI</p>
-                <h2>{{ $transaction->event->title }}</h2>
-            </div>
-            <!-- Ticket Body -->
-            <div class="ticket-body">
-                <div class="grid">
-                    <div class="grid-item">
-                        <p class="label">NAMA PEMBELI</p>
-                        <p class="value">{{ $transaction->customer_name }}</p>
+        @foreach($order->items as $item)
+            @foreach($item->tickets as $ticket)
+            <div class="ticket-card" style="margin-bottom: 30px;">
+                <!-- Ticket Header -->
+                <div class="ticket-top">
+                    <p>E-TICKET RESMI</p>
+                    <h2>{{ $order->event->title }}</h2>
+                </div>
+                <!-- Ticket Body -->
+                <div class="ticket-body">
+                    <div class="grid">
+                        <div class="grid-item">
+                            <p class="label">NAMA PEMBELI</p>
+                            <p class="value">{{ $order->customer_name }}</p>
+                        </div>
+                        <div class="grid-item">
+                            <p class="label">TANGGAL & WAKTU</p>
+                            <p class="value">{{ \Carbon\Carbon::parse($order->event->start_date)->format('d M Y, H:i') }}</p>
+                        </div>
+                        <div class="grid-item">
+                            <p class="label">JENIS TIKET</p>
+                            <p class="value">{{ $item->ticketType->name ?? 'Standard' }}</p>
+                        </div>
+                        <div class="grid-item">
+                            <p class="label">LOKASI</p>
+                            <p class="value">{{ $order->event->location }}</p>
+                        </div>
                     </div>
-                    <div class="grid-item">
-                        <p class="label">TANGGAL & WAKTU</p>
-                        <p class="value">{{ \Carbon\Carbon::parse($transaction->event->date)->format('d M Y, H:i') }}</p>
-                    </div>
-                    <div class="grid-item">
-                        <p class="label">ORDER ID</p>
-                        <p class="value">{{ $transaction->order_id }}</p>
-                    </div>
-                    <div class="grid-item">
-                        <p class="label">LOKASI</p>
-                        <p class="value">{{ $transaction->event->location }}</p>
+                    <div class="qr-section">
+                        <p class="label" style="margin-bottom: 15px; background-color: #f43f5e; color: #fff;">SCAN QR UNTUK CHECK-IN</p><br>
+                        <div class="qr-container">
+                            <img src="https://api.qrserver.com/v1/create-qrcode/?size=150x150&data={{ urlencode($ticket->ticket_code) }}" alt="QR Code" width="150" height="150" style="display: block;">
+                        </div>
+                        <p style="margin: 0; font-family: monospace; font-size: 18px; font-weight: 900; color: #000000; text-transform: uppercase;">{{ $ticket->ticket_code }}</p>
                     </div>
                 </div>
-                <div class="qr-section">
-                    <p class="label" style="margin-bottom: 15px; background-color: #f43f5e; color: #fff;">SCAN QR UNTUK CHECK-IN</p><br>
-                    <div class="qr-container">
-                        <img src="https://api.qrserver.com/v1/create-qrcode/?size=150x150&data={{ urlencode($transaction->order_id) }}" alt="QR Code" width="150" height="150" style="display: block;">
-                    </div>
-                    <p style="margin: 0; font-family: monospace; font-size: 18px; font-weight: 900; color: #000000; text-transform: uppercase;">{{ $transaction->order_id }}</p>
+                <div class="footer">
+                    <p>MOHON TUNJUKKAN E-TICKET INI SAAT MEMASUKI AREA ACARA.</p>
                 </div>
             </div>
-            <div class="footer">
-                <p>MOHON TUNJUKKAN E-TICKET INI SAAT MEMASUKI AREA ACARA.</p>
-                <p style="margin-top: 10px;">&copy; {{ date('Y') }} AMIKOMEVENTHUB.</p>
-            </div>
-        </div>
+            @endforeach
+        @endforeach
+    </div>
+    <div style="text-align: center; color: #000000; font-size: 14px; font-weight: 700; margin-top: 20px;">
+        <p>&copy; {{ date('Y') }} AMIKOMEVENTHUB. ORDER: {{ $order->order_number }}</p>
     </div>
 </body>
 </html>

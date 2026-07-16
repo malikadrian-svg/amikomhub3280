@@ -16,19 +16,19 @@
         <h2 class="h2" style="margin-bottom: var(--space-4);">TERIMA KASIH!</h2>
 
         <p class="body-lg" style="color: var(--slate-200); margin-bottom: var(--space-6); line-height: 1.6;">
-            Pembayaran untuk pesanan <strong>{{ $transaction->order_id }}</strong> sedang diproses atau telah berhasil.
-            E-Ticket akan dikirim ke email Anda (<strong>{{ $transaction->customer_email }}</strong>) setelah pembayaran terkonfirmasi lunas.
+            Pembayaran untuk pesanan <strong>{{ $transaction->gateway_order_id }}</strong> sedang diproses atau telah berhasil.
+            E-Ticket akan dikirim ke email Anda (<strong>{{ $transaction->order->customer_email }}</strong>) setelah pembayaran terkonfirmasi lunas.
         </p>
 
         {{-- Order summary box --}}
         <div style="background-color: var(--slate-800); border: 1.5px solid var(--slate-700); padding: var(--space-4); margin-bottom: var(--space-6); text-align: left;">
             <div style="display: flex; justify-content: space-between; margin-bottom: var(--space-2);">
                 <span class="caption" style="color: var(--slate-400);">EVENT</span>
-                <span class="body" style="font-weight: 700; color: var(--slate-0);">{{ $transaction->event->title }}</span>
+                <span class="body" style="font-weight: 700; color: var(--slate-0);">{{ $transaction->order->event->title }}</span>
             </div>
             <div style="display: flex; justify-content: space-between; margin-bottom: var(--space-2);">
                 <span class="caption" style="color: var(--slate-400);">TOTAL</span>
-                <span class="body" style="font-weight: 700; color: var(--purple-500);">Rp {{ number_format($transaction->total_price, 0, ',', '.') }}</span>
+                <span class="body" style="font-weight: 700; color: var(--purple-500);">Rp {{ number_format($transaction->amount, 0, ',', '.') }}</span>
             </div>
             <div style="display: flex; justify-content: space-between;">
                 <span class="caption" style="color: var(--slate-400);">STATUS</span>
@@ -41,7 +41,7 @@
         {{-- CTAs --}}
         <div style="display: flex; flex-direction: column; gap: var(--space-3);">
             @if($transaction->isPaid())
-                <a href="{{ route('ticket', $transaction->order_id) }}" class="btn btn-primary" style="padding: var(--space-3); font-size: 16px; display: flex; align-items: center; justify-content: center; gap: var(--space-2);">
+                <a href="{{ route('ticket', $transaction->order->order_number) }}" class="btn btn-primary" style="padding: var(--space-3); font-size: 16px; display: flex; align-items: center; justify-content: center; gap: var(--space-2);">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" viewBox="0 0 24 24">
                         <path d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"></path>
                     </svg>

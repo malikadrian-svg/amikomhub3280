@@ -2,35 +2,44 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Transaction;
+use App\Models\Category;
+use App\Models\Order;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Handles the "My Tickets" section for authenticated customers.
+ *
+ * NOTE (M1 transition): This controller now queries `orders` (the new model)
+ * instead of `transactions`. The view receives $orders instead of $transactions.
+ * The `my-tickets.blade.php` view will need to be updated to use order fields
+ * once this controller change goes live. Until then, check that the view
+ * references are compatible.
+ *
+ * Full checkout refactor (orders → order_items → tickets) is M6.
+ */
 class TicketController extends Controller
 {
     /**
-     * Display all tickets (paid transactions) belonging to the authenticated user.
+     * Display all paid orders belonging to the authenticated user.
      *
      * Route: GET /my-tickets  (middleware: auth)
-     *
-     * For each ticket, we determine review eligibility so the view can
-     * show "Tulis Ulasan" or "Edit Ulasan" buttons inline.
      */
     public function index()
     {
-        $categories = \App\Models\Category::all();
+        $categories = Category::active()->get();
         $user       = Auth::user();
 
-        $transactions = $user->transactions()
-            ->with('event.category')
-            ->whereIn('status', ['success', 'settlement', 'capture'])
+        $orders = $user->orders()
+            ->with('event.category', 'event.organization')
+            ->whereIn('status', ['paid', 'completed'])
             ->latest()
             ->get();
 
         // Collect all event IDs to batch-check review status (avoids N+1)
-        $eventIds = $transactions->pluck('event_id')->unique()->all();
+        $eventIds = $orders->pluck('event_id')->unique()->all();
 
         // Map event_id → user's review (null if not reviewed)
         $userReviews = $user->reviews()
@@ -38,42 +47,40 @@ class TicketController extends Controller
             ->get()
             ->keyBy('event_id');
 
-        return view('my-tickets', compact('transactions', 'categories', 'userReviews'));
+        return view('my-tickets', compact('orders', 'categories', 'userReviews'));
     }
 
     /**
-     * Display a single e-ticket.
+     * Display a single order detail / e-ticket.
      *
-     * Security: verifies that the transaction belongs to the authenticated user.
-     * A user must NEVER see another user's ticket.
+     * Security: verifies the order belongs to the authenticated user.
+     * A user must NEVER see another user's order.
      *
-     * Route: GET /my-ticket/{order_id}  (middleware: auth)
-     *
-     * @param  string  $order_id
+     * Route: GET /my-ticket/{order_number}  (middleware: auth)
      */
-    public function show(string $order_id)
+    public function show(string $order_number)
     {
-        $categories = \App\Models\Category::all();
+        $categories = Category::active()->get();
         $user       = Auth::user();
 
-        $transaction = Transaction::with('event.category', 'event.partner')
-            ->where('order_id', $order_id)
+        $order = Order::with(['event.category', 'event.organization', 'items.ticketType', 'items.tickets'])
+            ->where('order_number', $order_number)
             ->firstOrFail();
 
-        // Ownership check: abort with 403 if this ticket doesn't belong to the user
-        if ($transaction->user_id !== $user->id) {
+        // Ownership check
+        if ($order->user_id !== $user->id) {
             abort(Response::HTTP_FORBIDDEN, 'Anda tidak memiliki akses ke tiket ini.');
         }
 
-        $event = $transaction->event;
+        $event = $order->event;
 
         // Review eligibility for the ticket detail page CTA
         $userReview      = $user->reviewForEvent($event->id);
         $canReview       = $user->canReviewEvent($event);
-        $reviewableAfter = Carbon::parse($event->date)->addDay()->startOfDay();
+        $reviewableAfter = Carbon::parse($event->start_date)->addDay()->startOfDay();
 
         return view('ticket', compact(
-            'transaction',
+            'order',
             'categories',
             'userReview',
             'canReview',

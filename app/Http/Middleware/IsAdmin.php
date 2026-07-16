@@ -16,8 +16,8 @@ class IsAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Memastikan user sudah login dan role-nya adalah 'admin'
-        if (Auth::check() && Auth::user()->role === 'admin') {
+        // Memastikan user sudah login dan role-nya adalah 'super_admin'
+        if (Auth::check() && Auth::user()->hasRole('super_admin')) {
             return $next($request);
         }
 

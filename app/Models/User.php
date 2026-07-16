@@ -6,25 +6,24 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Models\Traits\HasRolesAndPermissions;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasRolesAndPermissions;
 
     /**
-     * The attributes that are mass assignable.
-     *
-     * Switched from PHP attribute syntax to $fillable property because
-     * we are adding OAuth fields that need to be mass-assigned during
-     * the find-or-create flow in GoogleController.
+     * Switched from PHP attribute syntax to $fillable property during OAuth feature.
+     * OAuth fields (google_id, avatar, provider, provider_id) are intentionally
+     * mass-assignable for the find-or-create flow in GoogleController.
      */
     protected $fillable = [
         'name',
         'email',
         'password',
-        'role',
         'google_id',
         'avatar',
         'provider',
@@ -33,81 +32,106 @@ class User extends Authenticatable
         'email_verified_at',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'password'          => 'hashed',
         ];
     }
 
     // =========================================================================
-    // Relationships
+    // Relationships — Commerce
     // =========================================================================
 
     /**
-     * A user can own many transactions (tickets they purchased).
-     * Used in "My Tickets" to retrieve all tickets belonging to this user.
+     * All orders placed by this user.
      */
-    public function transactions(): HasMany
+    public function orders(): HasMany
     {
-        return $this->hasMany(Transaction::class);
+        return $this->hasMany(Order::class);
     }
 
     /**
-     * All reviews written by this user.
+     * Digital tickets owned by this user.
      */
+    public function tickets(): HasMany
+    {
+        return $this->hasMany(Ticket::class);
+    }
+
+    /**
+     * Legacy transactions (pre-M6; kept for backward compat with My Tickets).
+     * TODO: Migrate to orders() after M6 checkout refactor.
+     */
+    public function transactions(): HasMany
+    {
+        return $this->hasMany(Transaction::class, 'user_id');
+    }
+
+    // =========================================================================
+    // Relationships — RBAC (M2: populated after RBAC middleware is live)
+    // =========================================================================
+
+    /**
+     * Platform-level roles (super_admin, customer).
+     */
+    public function roles(): BelongsToMany
+    {
+        return $this->belongsToMany(Role::class, 'role_user');
+    }
+
+    /**
+     * Organizations this user is a member of.
+     */
+    public function organizations(): BelongsToMany
+    {
+        return $this->belongsToMany(Organization::class, 'organization_user')
+            ->withPivot('role', 'joined_at')
+            ->withTimestamps();
+    }
+
+    /**
+     * Organizations where this user is the owner.
+     */
+    public function ownedOrganizations(): HasMany
+    {
+        return $this->hasMany(Organization::class, 'owner_id');
+    }
+
+    // =========================================================================
+    // Relationships — Reviews (existing ✅)
+    // =========================================================================
+
     public function reviews(): HasMany
     {
         return $this->hasMany(Review::class);
     }
 
     // =========================================================================
-    // Review Helper Methods
+    // Review Helper Methods (existing ✅ — unchanged)
     // =========================================================================
 
-    /**
-     * Check whether this user has already reviewed a specific event.
-     *
-     * @param int $eventId
-     */
     public function hasReviewedEvent(int $eventId): bool
     {
         return $this->reviews()->where('event_id', $eventId)->exists();
     }
 
-    /**
-     * Retrieve this user's review for a specific event (or null if none).
-     *
-     * @param int $eventId
-     */
     public function reviewForEvent(int $eventId): ?Review
     {
         return $this->reviews()->where('event_id', $eventId)->first();
     }
 
     /**
-     * Determine whether this user is eligible to leave a review for an event.
-     *
-     * All conditions must be true:
-     *  1. User has a paid transaction for the event
-     *  2. The event has ended AND 1 day has passed (isReviewable)
-     *  3. User has not already reviewed the event
-     *
-     * @param Event $event
+     * All conditions:
+     *  1. Event is reviewable (ended + 1 day grace period)
+     *  2. User has NOT already reviewed
+     *  3. User has a paid order for this event
      */
     public function canReviewEvent(Event $event): bool
     {
@@ -119,9 +143,9 @@ class User extends Authenticatable
             return false;
         }
 
-        return $this->transactions()
+        return $this->orders()
             ->where('event_id', $event->id)
-            ->whereIn('status', ['success', 'settlement', 'capture'])
+            ->whereIn('status', ['paid', 'completed'])
             ->exists();
     }
 
@@ -134,14 +158,26 @@ class User extends Authenticatable
      */
     public function isOAuthUser(): bool
     {
-        return is_null($this->password) && !is_null($this->google_id);
+        return is_null($this->password) && ! is_null($this->google_id);
     }
 
     /**
-     * Determine if this user is an administrator.
+     * Check org-scoped membership role.
      */
-    public function isAdmin(): bool
+    public function organizationRole(int $organizationId): ?string
     {
-        return $this->role === 'admin';
+        return $this->organizations()
+            ->wherePivot('organization_id', $organizationId)
+            ->first()
+            ?->pivot
+            ?->role;
+    }
+
+    /**
+     * Is this user an owner, manager, or staff of any organization?
+     */
+    public function isOrganizer(): bool
+    {
+        return $this->organizations()->exists();
     }
 }

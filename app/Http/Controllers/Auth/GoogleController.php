@@ -86,7 +86,7 @@ class GoogleController extends Controller
         // 3. Block admin accounts from OAuth login (privilege separation)
         $existingUser = User::where('email', $email)->first();
 
-        if ($existingUser && $existingUser->isAdmin()) {
+        if ($existingUser && $existingUser->hasRole('super_admin')) {
             return redirect()->route('google.login')
                 ->with('error', 'Email ini terdaftar sebagai akun admin. Gunakan halaman login admin untuk masuk.');
         }
@@ -171,16 +171,23 @@ class GoogleController extends Controller
         }
 
         // Case 3: Brand new user — create account
-        return User::create([
+        $user = User::create([
             'name'              => $name,
             'email'             => $email,
             'password'          => null,   // OAuth users have no password
-            'role'              => 'user',
             'google_id'         => $googleId,
             'avatar'            => $avatar,
             'provider'          => 'google',
             'provider_id'       => $googleId,
             'email_verified_at' => now(),  // Google has already verified the email
         ]);
+        
+        // Attach customer role
+        $customerRole = \App\Models\Role::where('slug', 'customer')->first();
+        if ($customerRole) {
+            $user->roles()->attach($customerRole->id);
+        }
+        
+        return $user;
     }
 }
