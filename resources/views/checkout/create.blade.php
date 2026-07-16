@@ -35,7 +35,15 @@
                 </div>
                 <div>
                     <h3 class="h3" style="margin: 0; font-size: 18px;">DATA PEMESAN</h3>
-                    <p class="caption" style="color: var(--slate-400); margin: 0;">Isi detail di bawah ini tanpa perlu login.</p>
+                    {{-- Show user's Google account info if authenticated --}}
+                    <div style="display: flex; align-items: center; gap: 8px; margin-top: 4px;">
+                        @if($authUser->avatar)
+                            <img src="{{ $authUser->avatar }}" alt="" style="width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--purple-500);">
+                        @endif
+                        <p class="caption" style="color: var(--purple-500); margin: 0; font-weight: 700;">
+                            ✓ AKUN GOOGLE TERHUBUNG — {{ $authUser->email }}
+                        </p>
+                    </div>
                 </div>
             </div>
             
@@ -43,13 +51,32 @@
                 @csrf
                 <div class="form-group">
                     <label class="label">NAMA LENGKAP</label>
-                    <input type="text" name="customer_name" autocomplete="name" placeholder="Sesuai kartu identitas" class="form-control" required value="{{ old('customer_name') }}">
+                    <input
+                        type="text"
+                        name="customer_name"
+                        autocomplete="name"
+                        placeholder="Sesuai kartu identitas"
+                        class="form-control"
+                        required
+                        value="{{ old('customer_name', $authUser->name) }}"
+                    >
                 </div>
-                
+
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--space-4);">
                     <div class="form-group" style="margin-bottom: 0;">
                         <label class="label">EMAIL AKTIF</label>
-                        <input type="email" name="customer_email" inputmode="email" autocomplete="email" placeholder="email@anda.com" class="form-control" required value="{{ old('customer_email') }}">
+                        {{-- Email is pre-filled and readonly: verified by Google, used for e-ticket delivery --}}
+                        <input
+                            type="email"
+                            name="customer_email"
+                            inputmode="email"
+                            autocomplete="email"
+                            class="form-control"
+                            required
+                            readonly
+                            value="{{ $authUser->email }}"
+                            style="background-color: var(--slate-800); color: var(--slate-400); cursor: not-allowed; opacity: 0.85;"
+                        >
                         <p class="caption" style="color: var(--purple-500); margin-top: var(--space-1); display: flex; align-items: center; gap: 4px;">
                             <svg width="12" height="12" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
                             E-TICKET DIKIRIM KE SINI
@@ -57,7 +84,16 @@
                     </div>
                     <div class="form-group" style="margin-bottom: 0;">
                         <label class="label">NO. WHATSAPP</label>
-                        <input type="tel" name="customer_phone" inputmode="tel" autocomplete="tel" placeholder="08xxxxxxxxxxx" class="form-control" required value="{{ old('customer_phone') }}">
+                        <input
+                            type="tel"
+                            name="customer_phone"
+                            inputmode="tel"
+                            autocomplete="tel"
+                            placeholder="08xxxxxxxxxxx"
+                            class="form-control"
+                            required
+                            value="{{ old('customer_phone', $authUser->phone) }}"
+                        >
                     </div>
                 </div>
 

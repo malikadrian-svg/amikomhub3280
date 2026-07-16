@@ -35,4 +35,20 @@ return [
         ],
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Google OAuth (Laravel Socialite)
+    |--------------------------------------------------------------------------
+    |
+    | Used for "Continue with Google" SSO on the public checkout flow.
+    | Credentials are obtained from Google Cloud Console → APIs & Services
+    | → Credentials → OAuth 2.0 Client IDs.
+    |
+    */
+    'google' => [
+        'client_id'     => env('GOOGLE_CLIENT_ID'),
+        'client_secret' => env('GOOGLE_CLIENT_SECRET'),
+        'redirect'      => env('GOOGLE_REDIRECT_URI'),
+    ],
+
 ];

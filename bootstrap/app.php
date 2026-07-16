@@ -15,12 +15,18 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => \App\Http\Middleware\IsAdmin::class,
         ]);
 
-        // Mengecualikan route webhook Midtrans dari blokir CSRF
+        // Redirect unauthenticated users to the Google login page.
+        // This replaces the default redirect to /login (which is our admin login).
+        // Laravel automatically stores the intended URL before redirecting here,
+        // so redirect()->intended() in GoogleController restores the checkout URL.
+        $middleware->redirectGuestsTo(fn () => route('google.login'));
+
+        // Exclude the Midtrans webhook from CSRF verification
         $middleware->validateCsrfTokens(except: [
             '/midtrans/callback',
         ]);
 
-        // Mempercayai semua proxy agar HTTPS dari tunnel terdeteksi dengan benar
+        // Trust all proxies so HTTPS is detected correctly through tunnels
         $middleware->trustProxies(at: '*');
     })
     ->withExceptions(function (Exceptions $exceptions): void {

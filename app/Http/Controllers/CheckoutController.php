@@ -5,16 +5,19 @@ namespace App\Http\Controllers;
 use App\Models\Event;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class CheckoutController extends Controller
 {
     public function create(Event $event)
     {
-        // Mengambil daftar kategori untuk keperluan menu footer
         $categories = \App\Models\Category::all();
 
-        return view('checkout.create', compact('event', 'categories'));
+        // Pass the authenticated user so the view can pre-fill the form
+        $authUser = Auth::user();
+
+        return view('checkout.create', compact('event', 'categories', 'authUser'));
     }
 
     public function store(Request $request, Event $event)
@@ -36,14 +39,16 @@ class CheckoutController extends Controller
         $totalPrice = $event->price + 5000; // Menambahkan biaya admin (dummy)
 
         // 4. Merekam Transaksi ke Database
+        //    user_id links this transaction to the authenticated user (ticket ownership)
         $transaction = Transaction::create([
-            'event_id' => $event->id,
-            'order_id' => $orderId,
-            'customer_name' => $request->customer_name,
+            'event_id'       => $event->id,
+            'user_id'        => Auth::id(),  // Never null here — checkout is auth-protected
+            'order_id'       => $orderId,
+            'customer_name'  => $request->customer_name,
             'customer_email' => $request->customer_email,
             'customer_phone' => $request->customer_phone,
-            'total_price' => $totalPrice,
-            'status' => 'Pending', // Status Awal
+            'total_price'    => $totalPrice,
+            'status'         => 'Pending',
         ]);
 
         // 5. Arahkan ke rute dummy halaman sukses sementara
