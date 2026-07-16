@@ -16,8 +16,8 @@
     
     <style>
         body {
-            background-color: var(--ink-950);
-            color: var(--ink-0);
+            background-color: #ffffff;
+            color: var(--slate-0);
             display: flex;
             min-height: 100vh;
         }
@@ -25,15 +25,15 @@
         /* Sidebar Styling (Neo-Brutalist) */
         .admin-sidebar {
             width: 280px;
-            background-color: var(--ink-900);
-            border-right: 4px solid var(--ink-950);
+            background-color: var(--slate-800);
+            border-right: 1px solid var(--slate-700);
             display: flex;
             flex-direction: column;
             padding: var(--space-6);
             position: sticky;
             top: 0;
             height: 100vh;
-            box-shadow: 4px 0 0 var(--ink-950);
+            box-shadow: 4px 0 0 var(--slate-900);
             z-index: 10;
         }
 
@@ -47,16 +47,16 @@
         .admin-sidebar-brand .logo {
             width: 48px;
             height: 48px;
-            background-color: var(--amber-500);
-            color: var(--ink-950);
+            background-color: var(--purple-500);
+            color: #ffffff;
             font-family: 'Space Grotesk', sans-serif;
             font-weight: 700;
             font-size: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 2px solid var(--ink-950);
-            box-shadow: 2px 2px 0 var(--ink-950);
+            border: 1px solid var(--slate-700);
+            box-shadow: var(--shadow-hard-sm);
         }
 
         .admin-sidebar-menu {
@@ -71,7 +71,7 @@
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.1em;
-            color: var(--ink-400);
+            color: var(--slate-400);
             margin-bottom: var(--space-2);
             padding: 0 var(--space-2);
         }
@@ -83,33 +83,33 @@
             padding: var(--space-3) var(--space-4);
             font-family: 'Space Grotesk', sans-serif;
             font-weight: 700;
-            color: var(--ink-200);
+            color: var(--slate-200);
             text-decoration: none;
             border: 2px solid transparent;
             transition: all 0.2s ease;
         }
 
         .admin-nav-link:hover {
-            color: var(--ink-0);
-            background-color: var(--ink-800);
-            border-color: var(--ink-700);
+            color: var(--slate-0);
+            background-color: var(--slate-700);
+            border-color: var(--slate-600);
         }
 
         .admin-nav-link.active {
-            background-color: var(--amber-500);
-            color: var(--ink-950);
-            border-color: var(--ink-950);
-            box-shadow: 2px 2px 0 var(--ink-950);
+            background-color: var(--purple-500);
+            color: #ffffff;
+            border-color: #ffffff;
+            box-shadow: var(--shadow-hard-sm);
         }
         
         .admin-nav-link.active svg {
-            color: var(--ink-950);
-            stroke: var(--ink-950);
+            color: #ffffff;
+            stroke: var(--slate-900);
         }
 
         .admin-logout {
             margin-top: auto;
-            border-top: 2px solid var(--ink-800);
+            border-top: 2px solid var(--slate-700);
             padding-top: var(--space-4);
         }
 
@@ -147,7 +147,7 @@
     <aside class="admin-sidebar">
         <div class="admin-sidebar-brand">
             <div class="logo">AH</div>
-            <span class="h4" style="color: var(--ink-0); margin: 0;">AmikomEventHub</span>
+            <span class="h4" style="color: var(--slate-0); margin: 0;">AmikomEventHub</span>
         </div>
 
         <nav class="admin-sidebar-menu">
