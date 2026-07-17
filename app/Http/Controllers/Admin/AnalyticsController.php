@@ -3,57 +3,54 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\DailyRevenue;
+use App\Services\Admin\DashboardAnalyticsService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class AnalyticsController extends Controller
 {
-    /**
-     * Get platform revenue data for charts.
-     */
-    public function revenueChart(Request $request)
+    protected $analyticsService;
+
+    public function __construct(DashboardAnalyticsService $analyticsService)
     {
-        $days = $request->query('days', 30);
-        $startDate = Carbon::today()->subDays($days - 1);
+        $this->analyticsService = $analyticsService;
+    }
+
+    public function data(Request $request)
+    {
+        $range = $request->query('range', '30'); // default 30 days
+        $end = Carbon::now();
         
-        $revenues = DailyRevenue::whereNull('organization_id')
-            ->where('date', '>=', $startDate->format('Y-m-d'))
-            ->orderBy('date', 'asc')
-            ->get();
-
-        // Fill in missing days with zeros
-        $data = [];
-        $labels = [];
-        $gmvData = [];
-        $platformEarningsData = [];
-
-        for ($i = 0; $i < $days; $i++) {
-            $currentDate = $startDate->copy()->addDays($i)->format('Y-m-d');
-            $labels[] = Carbon::parse($currentDate)->format('d M');
-            
-            $dayData = $revenues->firstWhere('date', $currentDate);
-            
-            $gmvData[] = $dayData ? $dayData->gross_revenue : 0;
-            $platformEarningsData[] = $dayData ? $dayData->net_revenue : 0;
+        switch ($range) {
+            case 'today':
+                $start = Carbon::today();
+                break;
+            case '7':
+                $start = Carbon::now()->subDays(7);
+                break;
+            case '90':
+                $start = Carbon::now()->subDays(90);
+                break;
+            case 'year':
+                $start = Carbon::now()->startOfYear();
+                break;
+            case 'custom':
+                $start = $request->query('start') ? Carbon::parse($request->query('start')) : Carbon::now()->subDays(30);
+                $end = $request->query('end') ? Carbon::parse($request->query('end')) : Carbon::now();
+                break;
+            case '30':
+            default:
+                $start = Carbon::now()->subDays(30);
+                break;
         }
 
         return response()->json([
-            'labels' => $labels,
-            'datasets' => [
-                [
-                    'label' => 'GMV (Gross Merchandise Value)',
-                    'data' => $gmvData,
-                    'borderColor' => '#8b5cf6', // purple-500
-                    'backgroundColor' => 'rgba(139, 92, 246, 0.1)',
-                ],
-                [
-                    'label' => 'Platform Earnings',
-                    'data' => $platformEarningsData,
-                    'borderColor' => '#22c55e', // green-500
-                    'backgroundColor' => 'rgba(34, 197, 94, 0.1)',
-                ]
-            ]
+            'summary' => $this->analyticsService->getSummary($start, $end),
+            'revenue_trend' => $this->analyticsService->getRevenueTrend($start, $end),
+            'platform_growth' => $this->analyticsService->getPlatformGrowth($start, $end),
+            'category_distribution' => $this->analyticsService->getCategoryDistribution($start, $end),
+            'top_organizers' => $this->analyticsService->getTopOrganizers($start, $end),
+            'top_events' => $this->analyticsService->getTopEvents($start, $end),
         ]);
     }
 }

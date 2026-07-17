@@ -31,3 +31,8 @@ Schedule::command(UpdateEventStatuses::class)
     ->hourly()
     ->withoutOverlapping()
     ->runInBackground();
+
+Schedule::command(\App\Console\Commands\CheckAbandonedCarts::class)
+    ->everyFiveMinutes()
+    ->withoutOverlapping()
+    ->runInBackground();

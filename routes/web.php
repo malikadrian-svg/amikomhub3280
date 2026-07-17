@@ -141,7 +141,7 @@ Route::prefix('admin')->group(function () {
         Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
         
         // Analytics Charts
-        Route::get('analytics/revenue-chart', [AdminAnalyticsController::class, 'revenueChart'])->name('analytics.revenue-chart');
+        Route::get('analytics/data', [AdminAnalyticsController::class, 'data'])->name('analytics.data');
 
         Route::resource('events', AdminEventController::class)->except(['show']);
         Route::get('transactions', [TransactionController::class, 'index'])->name('transactions.index');

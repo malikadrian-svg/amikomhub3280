@@ -1,222 +1,281 @@
 @extends('layouts.admin')
 
-@section('title', 'Admin Dashboard')
-@section('page_title', 'Dashboard Ringkasan')
+@section('title', 'Admin Dashboard - Analytics')
+@section('page_title', 'Analytics Dashboard')
 
 @section('content')
-    <!-- Header -->
-    <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-10); flex-wrap: wrap; gap: var(--space-4);">
+    <!-- Header with Filters -->
+    <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-8); flex-wrap: wrap; gap: var(--space-4);">
         <div>
-            <h1 class="display" style="margin-bottom: var(--space-2);">DASHBOARD RINGKASAN</h1>
-            <p class="body-lg" style="color: var(--slate-200);">Selamat datang kembali, {{ auth()->user()->name ?? 'Admin' }}!</p>
+            <h1 class="display" style="margin-bottom: var(--space-2);">ANALYTICS DASHBOARD</h1>
+            <p class="body-lg" style="color: var(--slate-400);">Platform performance and growth metrics.</p>
         </div>
         <div style="display: flex; align-items: center; gap: var(--space-4);">
-            <div style="text-align: right;">
+            <select id="dateRangeFilter" style="padding: var(--space-2) var(--space-4); background-color: #ffffff; color: #0f172a; border: 2px solid #0f172a; font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 14px; box-shadow: var(--shadow-hard-sm); cursor: pointer; outline: none;">
+                <option value="today">Today</option>
+                <option value="7">Last 7 Days</option>
+                <option value="30" selected>Last 30 Days</option>
+                <option value="90">Last 90 Days</option>
+                <option value="year">This Year</option>
+            </select>
+            
+            <div style="text-align: right; margin-left: var(--space-4);">
                 <p class="h6" style="margin: 0; color: var(--slate-0);">{{ auth()->user()->name ?? 'Admin' }}</p>
-                <p class="caption" style="margin: 0; color: var(--slate-400);">{{ (auth()->user()->role ?? 'admin') === 'admin' ? 'PENYELENGGARA UTAMA' : 'USER' }}</p>
+                <p class="caption" style="margin: 0; color: var(--slate-400);">SUPER ADMIN</p>
             </div>
             <div style="width: 48px; height: 48px; background-color: var(--slate-0); border: 1px solid var(--slate-700); box-shadow: var(--shadow-hard-sm); display: flex; align-items: center; justify-content: center; overflow: hidden;">
-                <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name ?? 'Admin') }}&background=ffb800&color=0a0a0a" style="width: 100%; height: 100%; object-fit: cover;">
+                <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name ?? 'Admin') }}&background=8b5cf6&color=ffffff" style="width: 100%; height: 100%; object-fit: cover;">
             </div>
         </div>
     </header>
 
-    <!-- Stats Grid -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: var(--space-6); margin-bottom: var(--space-10);">
-        
-        <!-- GMV -->
-        <div class="card" style="padding: var(--space-6);">
-            <div style="width: 48px; height: 48px; background-color: var(--purple-500); color: #ffffff; border: 1px solid var(--slate-700); display: flex; align-items: center; justify-content: center; margin-bottom: var(--space-4);">
-                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="square" viewBox="0 0 24 24">
-                    <path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-            </div>
-            <p class="caption" style="color: var(--slate-400); margin-bottom: var(--space-1);">GMV KESELURUHAN</p>
-            <h3 class="h2" style="margin: 0; color: var(--slate-0);">Rp {{ number_format($gmv, 0, ',', '.') }}</h3>
-        </div>
-
-        <!-- Platform Earnings -->
-        <div class="card" style="padding: var(--space-6); border-color: var(--green-500);">
-            <div style="width: 48px; height: 48px; background-color: var(--green-500); color: var(--slate-900); border: 1px solid var(--green-600); display: flex; align-items: center; justify-content: center; margin-bottom: var(--space-4);">
-                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="square" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path>
-                </svg>
-            </div>
-            <p class="caption" style="color: var(--slate-400); margin-bottom: var(--space-1);">PENDAPATAN PLATFORM</p>
-            <h3 class="h2" style="margin: 0; color: var(--green-400);">Rp {{ number_format($platformEarnings, 0, ',', '.') }}</h3>
-        </div>
-
-        <div class="card" style="padding: var(--space-6);">
-            <div style="width: 48px; height: 48px; background-color: var(--feedback-success); color: var(--slate-0); border: 1px solid var(--slate-700); display: flex; align-items: center; justify-content: center; margin-bottom: var(--space-4);">
-                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="square" viewBox="0 0 24 24">
-                    <path d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"></path>
-                </svg>
-            </div>
-            <p class="caption" style="color: var(--slate-400); margin-bottom: var(--space-1);">TIKET TERJUAL</p>
-            <h3 class="h2" style="margin: 0; color: var(--slate-0);">{{ number_format($ticketsSold, 0, ',', '.') }}</h3>
-        </div>
-
-        <div class="card" style="padding: var(--space-6);">
-            <div style="width: 48px; height: 48px; background-color: var(--feedback-warning); color: #ffffff; border: 1px solid var(--slate-700); display: flex; align-items: center; justify-content: center; margin-bottom: var(--space-4);">
-                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="square" viewBox="0 0 24 24">
-                    <path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-            </div>
-            <p class="caption" style="color: var(--slate-400); margin-bottom: var(--space-1);">EVENT AKTIF</p>
-            <h3 class="h2" style="margin: 0; color: var(--slate-0);">{{ $activeEvents }} Event</h3>
-        </div>
-
-        <!-- Pending Approvals Widget -->
-        <div class="card" style="padding: var(--space-6); border-color: var(--feedback-error);">
-            <div style="width: 48px; height: 48px; background-color: var(--feedback-error); color: var(--slate-0); border: 1px solid var(--slate-700); display: flex; align-items: center; justify-content: center; margin-bottom: var(--space-4);">
-                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="square" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
-                </svg>
-            </div>
-            <p class="caption" style="color: var(--slate-400); margin-bottom: var(--space-1);">AKSI DIPERLUKAN</p>
-            <h3 class="h2" style="margin: 0; color: var(--feedback-error);">{{ $pendingOrgs + $pendingEvents }} Pending</h3>
-            <div style="display: flex; gap: var(--space-2); margin-top: var(--space-2);">
-                @if($pendingOrgs > 0)
-                    <a href="{{ route('admin.organizations.index', ['status' => 'pending']) }}" class="badge" style="background-color: var(--slate-800); color: var(--slate-200); text-decoration: none;">{{ $pendingOrgs }} Penyelenggara</a>
-                @endif
-                @if($pendingEvents > 0)
-                    <a href="{{ route('admin.event-approvals.index') }}" class="badge" style="background-color: var(--slate-800); color: var(--slate-200); text-decoration: none;">{{ $pendingEvents }} Event</a>
-                @endif
-            </div>
-        </div>
-
-        {{-- Review stats card --}}
-        <div class="card" style="padding: var(--space-6);">
-            <div style="width: 48px; height: 48px; background-color: #d97706; color: #ffffff; border: 1px solid var(--slate-700); display: flex; align-items: center; justify-content: center; margin-bottom: var(--space-4);">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="#ffffff" stroke="#ffffff" stroke-width="1.5">
-                    <path d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.562.562 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/>
-                </svg>
-            </div>
-            <p class="caption" style="color: var(--slate-400); margin-bottom: var(--space-1);">RATA-RATA RATING</p>
-            <h3 class="h2" style="margin: 0; color: #f59e0b;">{{ $avgRating > 0 ? '★ ' . number_format($avgRating, 1) : '—' }}</h3>
-            <p class="caption" style="color: var(--slate-400); margin: var(--space-1) 0 0 0;">
-                dari {{ number_format($totalReviews) }} ulasan
-                @if($pendingReviews > 0)
-                    · <span style="color: var(--feedback-error);">{{ $pendingReviews }} disembunyikan</span>
-                @endif
-            </p>
-        </div>
+    <!-- Loading Overlay -->
+    <div id="analyticsLoading" style="display: none; padding: var(--space-10); text-align: center; color: var(--purple-600); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 24px;">
+        Sedang memuat data...
     </div>
 
-    <!-- Latest Sales Table -->
-    <div class="card" style="padding: 0; overflow: hidden; margin-bottom: var(--space-6);">
-        <div style="padding: var(--space-6) var(--space-8); border-bottom: 2px solid var(--slate-600); display: flex; justify-content: space-between; align-items: center;">
-            <h3 class="h3" style="margin: 0;">TRANSAKSI TERAKHIR</h3>
-            <a href="{{ route('admin.transactions.index') }}" class="body" style="color: var(--purple-500); font-weight: 700; text-decoration: underline;">Lihat Semua</a>
+    <div id="analyticsContent">
+        <!-- Stats Grid -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-6); margin-bottom: var(--space-8);">
+            
+            <div class="card" style="padding: var(--space-6);">
+                <p class="caption" style="color: var(--slate-400); margin-bottom: var(--space-1);">GMV KESELURUHAN</p>
+                <h3 class="h2" style="margin: 0; color: var(--slate-0);" id="summaryGmv">Rp 0</h3>
+            </div>
+
+            <div class="card" style="padding: var(--space-6); border-color: var(--green-500);">
+                <p class="caption" style="color: var(--slate-400); margin-bottom: var(--space-1);">PENDAPATAN PLATFORM</p>
+                <h3 class="h2" style="margin: 0; color: var(--green-500);" id="summaryPlatformFee">Rp 0</h3>
+            </div>
+
+            <div class="card" style="padding: var(--space-6);">
+                <p class="caption" style="color: var(--slate-400); margin-bottom: var(--space-1);">TIKET TERJUAL</p>
+                <h3 class="h2" style="margin: 0; color: var(--slate-0);" id="summaryTickets">0</h3>
+            </div>
+
+            <div class="card" style="padding: var(--space-6);">
+                <p class="caption" style="color: var(--slate-400); margin-bottom: var(--space-1);">PENGGUNA BARU</p>
+                <h3 class="h2" style="margin: 0; color: var(--slate-0);" id="summaryUsers">0</h3>
+            </div>
+            
+            <div class="card" style="padding: var(--space-6);">
+                <p class="caption" style="color: var(--slate-400); margin-bottom: var(--space-1);">PENYELENGGARA BARU</p>
+                <h3 class="h2" style="margin: 0; color: var(--purple-600);" id="summaryOrgs">0</h3>
+            </div>
         </div>
-        <div style="overflow-x: auto;">
-            <table class="table" style="margin: 0; border: none; box-shadow: none;">
-                <thead>
-                    <tr>
-                        <th style="border-left: none;">Tgl Transaksi</th>
-                        <th>Pembeli</th>
-                        <th>Event</th>
-                        <th>Status</th>
-                        <th style="border-right: none; text-align: right;">Total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($recentOrders as $order)
-                        <tr>
-                            <td style="border-left: none;">
-                                <span style="display: block; font-weight: 600;">{{ $order->created_at->format('d M y - H:i') }}</span>
-                                <span class="caption" style="color: var(--slate-400);">{{ $order->order_number }}</span>
-                            </td>
-                            <td>
-                                <span style="display: block; font-weight: 700; text-transform: uppercase;">{{ $order->customer_name }}</span>
-                                <span class="caption" style="color: var(--slate-400);">{{ $order->customer_email }}</span>
-                            </td>
-                            <td style="font-weight: 500;">{{ $order->event->title ?? '-' }}</td>
-                            <td>
-                                @if($order->status === 'paid' || $order->status === 'completed')
-                                    <span class="badge" style="background-color: var(--feedback-success); color: var(--slate-0); border-color: var(--slate-0);">SUCCESS</span>
-                                @elseif($order->status === 'pending')
-                                    <span class="badge" style="background-color: var(--feedback-warning); color: #ffffff; border-color: #ffffff;">PENDING</span>
-                                @else
-                                    <span class="badge" style="background-color: var(--feedback-error); color: var(--slate-0); border-color: var(--slate-0);">{{ strtoupper($order->status) }}</span>
-                                @endif
-                            </td>
-                            <td style="border-right: none; text-align: right; font-weight: 700; color: var(--purple-500); font-size: 18px;">
-                                Rp {{ number_format($order->total_amount, 0, ',', '.') }}
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="5" style="text-align: center; padding: var(--space-10); border: none;">
-                                <p class="body-lg" style="color: var(--slate-400);">Belum ada transaksi berhasil</p>
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
+
+        <!-- Main Charts Area -->
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: var(--space-6); margin-bottom: var(--space-8);">
+            
+            <!-- Revenue Area Chart -->
+            <div class="card" style="padding: 0; overflow: hidden; display: flex; flex-direction: column;">
+                <div style="padding: var(--space-4) var(--space-6); border-bottom: 2px solid var(--slate-700);">
+                    <h3 class="h4" style="margin: 0;">Pendapatan & GMV</h3>
+                </div>
+                <div style="padding: var(--space-4); flex: 1;">
+                    <div id="revenueChart" style="min-height: 300px;"></div>
+                </div>
+            </div>
+
+            <!-- Category Donut Chart -->
+            <div class="card" style="padding: 0; overflow: hidden; display: flex; flex-direction: column;">
+                <div style="padding: var(--space-4) var(--space-6); border-bottom: 2px solid var(--slate-700);">
+                    <h3 class="h4" style="margin: 0;">Kategori Terpopuler</h3>
+                </div>
+                <div style="padding: var(--space-4); flex: 1; display: flex; align-items: center; justify-content: center;">
+                    <div id="categoryChart" style="width: 100%;"></div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Secondary Charts Area -->
+        <div style="display: grid; grid-template-columns: 1fr; gap: var(--space-6); margin-bottom: var(--space-8);">
+            <!-- Platform Growth Chart -->
+            <div class="card" style="padding: 0; overflow: hidden;">
+                <div style="padding: var(--space-4) var(--space-6); border-bottom: 2px solid var(--slate-700);">
+                    <h3 class="h4" style="margin: 0;">Pertumbuhan Platform</h3>
+                </div>
+                <div style="padding: var(--space-4);">
+                    <div id="growthChart" style="min-height: 250px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tables Area -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-6); margin-bottom: var(--space-8);">
+            
+            <!-- Top Organizers List -->
+            <div class="card" style="padding: 0; overflow: hidden;">
+                <div style="padding: var(--space-4) var(--space-6); border-bottom: 2px solid var(--slate-700);">
+                    <h3 class="h4" style="margin: 0;">Top Penyelenggara</h3>
+                </div>
+                <div style="padding: 0; overflow-x: auto;">
+                    <table class="table" style="margin: 0; border: none; box-shadow: none;">
+                        <thead>
+                            <tr>
+                                <th style="border-left: none; padding: var(--space-3) var(--space-6);">Nama</th>
+                                <th style="padding: var(--space-3) var(--space-6);">Penjualan</th>
+                                <th style="border-right: none; padding: var(--space-3) var(--space-6); text-align: right;">Pendapatan</th>
+                            </tr>
+                        </thead>
+                        <tbody id="topOrgsTableBody">
+                            <tr><td colspan="3" style="text-align:center; padding: 20px;">Memuat...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Top Events List -->
+            <div class="card" style="padding: 0; overflow: hidden;">
+                <div style="padding: var(--space-4) var(--space-6); border-bottom: 2px solid var(--slate-700);">
+                    <h3 class="h4" style="margin: 0;">Top Events</h3>
+                </div>
+                <div style="padding: 0; overflow-x: auto;">
+                    <table class="table" style="margin: 0; border: none; box-shadow: none;">
+                        <thead>
+                            <tr>
+                                <th style="border-left: none; padding: var(--space-3) var(--space-6);">Event</th>
+                                <th style="padding: var(--space-3) var(--space-6);">Tiket Terjual</th>
+                                <th style="border-right: none; padding: var(--space-3) var(--space-6); text-align: right;">Pendapatan</th>
+                            </tr>
+                        </thead>
+                        <tbody id="topEventsTableBody">
+                            <tr><td colspan="3" style="text-align:center; padding: 20px;">Memuat...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
         </div>
     </div>
-
-    {{-- Recent Reviews Table --}}
-    <div class="card" style="padding: 0; overflow: hidden;">
-        <div style="padding: var(--space-6) var(--space-8); border-bottom: 2px solid var(--slate-600); display: flex; justify-content: space-between; align-items: center;">
-            <h3 class="h3" style="margin: 0;">ULASAN TERBARU</h3>
-            <a href="{{ route('admin.reviews.index') }}" class="body" style="color: var(--purple-500); font-weight: 700; text-decoration: underline;">Lihat Semua</a>
-        </div>
-        <div style="overflow-x: auto;">
-            <table class="table" style="margin: 0; border: none; box-shadow: none;">
-                <thead>
-                    <tr>
-                        <th style="border-left: none;">Pengguna</th>
-                        <th>Event</th>
-                        <th>Rating</th>
-                        <th style="border-right: none;">Ulasan</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($recentReviews as $review)
-                        <tr>
-                            <td style="border-left: none;">
-                                <div style="display: flex; align-items: center; gap: var(--space-2);">
-                                    @if($review->user->avatar)
-                                        <img src="{{ $review->user->avatar }}" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 2px solid var(--purple-500); flex-shrink: 0;">
-                                    @else
-                                        <div style="width: 32px; height: 32px; border-radius: 50%; background-color: var(--purple-500); color: #fff; display: flex; align-items: center; justify-content: center; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 13px; flex-shrink: 0;">
-                                            {{ strtoupper(substr($review->user->name ?? 'U', 0, 1)) }}
-                                        </div>
-                                    @endif
-                                    <div>
-                                        <span style="display: block; font-weight: 700; font-size: 13px;">{{ $review->user->name ?? '—' }}</span>
-                                        <span class="caption" style="color: var(--slate-400);">{{ $review->created_at->format('d M Y') }}</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <td style="font-size: 13px; font-weight: 500; max-width: 160px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                                {{ $review->event->title ?? '—' }}
-                            </td>
-                            <td>
-                                <span style="font-family: 'IBM Plex Mono', monospace; font-weight: 700; color: #f59e0b; font-size: 14px;">
-                                    @for($s = 1; $s <= $review->rating; $s++)★@endfor
-                                </span>
-                                <span class="caption" style="color: var(--slate-400);"> {{ $review->rating }}/5</span>
-                            </td>
-                            <td style="border-right: none; max-width: 280px;">
-                                @if($review->title)
-                                    <p style="font-weight: 700; font-size: 13px; margin: 0 0 2px 0; color: var(--slate-0);">{{ $review->title }}</p>
-                                @endif
-                                <p class="caption" style="color: var(--slate-200); margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 260px;">{{ $review->body }}</p>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="4" style="text-align: center; padding: var(--space-8); border: none;">
-                                <p class="body" style="color: var(--slate-400); margin: 0;">Belum ada ulasan yang masuk.</p>
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
-    </div>
-
 @endsection
+
+@stack('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        let revenueChart, categoryChart, growthChart;
+
+        const formatCurrency = (val) => {
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(val);
+        };
+
+        const initCharts = () => {
+            // Options for Revenue Chart (Area)
+            const revenueOptions = {
+                chart: { type: 'area', height: 320, fontFamily: 'Space Grotesk, sans-serif', toolbar: { show: false } },
+                colors: ['#8b5cf6', '#22c55e'],
+                stroke: { curve: 'smooth', width: 2 },
+                fill: { type: 'gradient', gradient: { shadeIntensity: 1, opacityFrom: 0.7, opacityTo: 0.1, stops: [0, 90, 100] } },
+                dataLabels: { enabled: false },
+                series: [],
+                xaxis: { categories: [] },
+                yaxis: { labels: { formatter: (val) => formatCurrency(val) } },
+                tooltip: { y: { formatter: (val) => formatCurrency(val) } }
+            };
+            revenueChart = new ApexCharts(document.querySelector("#revenueChart"), revenueOptions);
+            revenueChart.render();
+
+            // Options for Category Chart (Donut)
+            const categoryOptions = {
+                chart: { type: 'donut', height: 320, fontFamily: 'Space Grotesk, sans-serif' },
+                colors: ['#8b5cf6', '#a855f7', '#d946ef', '#f43f5e', '#f97316'],
+                series: [],
+                labels: [],
+                plotOptions: { donut: { size: '65%' } },
+                dataLabels: { enabled: false },
+                legend: { position: 'bottom' }
+            };
+            categoryChart = new ApexCharts(document.querySelector("#categoryChart"), categoryOptions);
+            categoryChart.render();
+
+            // Options for Growth Chart (Line)
+            const growthOptions = {
+                chart: { type: 'line', height: 280, fontFamily: 'Space Grotesk, sans-serif', toolbar: { show: false } },
+                colors: ['#3b82f6', '#f59e0b'],
+                stroke: { curve: 'straight', width: 3 },
+                dataLabels: { enabled: false },
+                series: [],
+                xaxis: { categories: [] }
+            };
+            growthChart = new ApexCharts(document.querySelector("#growthChart"), growthOptions);
+            growthChart.render();
+        };
+
+        const loadAnalyticsData = (range) => {
+            document.getElementById('analyticsContent').style.opacity = '0.5';
+            
+            fetch(`/admin/analytics/data?range=${range}`)
+                .then(res => res.json())
+                .then(data => {
+                    // Update Summary Cards
+                    document.getElementById('summaryGmv').textContent = formatCurrency(data.summary.gmv);
+                    document.getElementById('summaryPlatformFee').textContent = formatCurrency(data.summary.platform_fee);
+                    document.getElementById('summaryTickets').textContent = data.summary.tickets_sold.toLocaleString('id-ID');
+                    document.getElementById('summaryUsers').textContent = data.summary.new_users.toLocaleString('id-ID');
+                    document.getElementById('summaryOrgs').textContent = data.summary.new_orgs.toLocaleString('id-ID');
+
+                    // Update Revenue Chart
+                    revenueChart.updateSeries(data.revenue_trend.series);
+                    revenueChart.updateOptions({ xaxis: { categories: data.revenue_trend.labels } });
+
+                    // Update Category Chart
+                    categoryChart.updateSeries(data.category_distribution.series);
+                    categoryChart.updateOptions({ labels: data.category_distribution.labels });
+
+                    // Update Growth Chart
+                    growthChart.updateSeries(data.platform_growth.series);
+                    growthChart.updateOptions({ xaxis: { categories: data.platform_growth.labels } });
+
+                    // Update Top Orgs Table
+                    const tbody = document.getElementById('topOrgsTableBody');
+                    tbody.innerHTML = '';
+                    if (data.top_organizers.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; padding: 20px; color: var(--slate-400);">Belum ada data</td></tr>';
+                    } else {
+                        data.top_organizers.forEach(org => {
+                            const tr = document.createElement('tr');
+                            tr.innerHTML = `
+                                <td style="border-left: none; padding: var(--space-3) var(--space-6); font-weight: 700;">${org.name}</td>
+                                <td style="padding: var(--space-3) var(--space-6);">${org.total_orders} Transaksi</td>
+                                <td style="border-right: none; padding: var(--space-3) var(--space-6); text-align: right; color: var(--purple-600); font-weight: 700;">${formatCurrency(org.total_revenue)}</td>
+                            `;
+                            tbody.appendChild(tr);
+                        });
+                    }
+
+                    // Update Top Events Table
+                    const tbodyEvents = document.getElementById('topEventsTableBody');
+                    tbodyEvents.innerHTML = '';
+                    if (data.top_events.length === 0) {
+                        tbodyEvents.innerHTML = '<tr><td colspan="3" style="text-align:center; padding: 20px; color: var(--slate-400);">Belum ada data</td></tr>';
+                    } else {
+                        data.top_events.forEach(event => {
+                            const tr = document.createElement('tr');
+                            tr.innerHTML = `
+                                <td style="border-left: none; padding: var(--space-3) var(--space-6); font-weight: 700; max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${event.title}">${event.title}</td>
+                                <td style="padding: var(--space-3) var(--space-6);">${event.total_orders} Tiket</td>
+                                <td style="border-right: none; padding: var(--space-3) var(--space-6); text-align: right; color: var(--purple-600); font-weight: 700;">${formatCurrency(event.total_revenue)}</td>
+                            `;
+                            tbodyEvents.appendChild(tr);
+                        });
+                    }
+
+                    document.getElementById('analyticsContent').style.opacity = '1';
+                })
+                .catch(err => {
+                    console.error('Error loading analytics:', err);
+                    document.getElementById('analyticsContent').style.opacity = '1';
+                });
+        };
+
+        // Initialize
+        initCharts();
+        loadAnalyticsData('30');
+
+        // Filter event listener
+        document.getElementById('dateRangeFilter').addEventListener('change', function(e) {
+            loadAnalyticsData(e.target.value);
+        });
+    });
+</script>

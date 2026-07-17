@@ -83,6 +83,11 @@ class Order extends Model
         return $this->hasOne(OrderCommission::class);
     }
 
+    public function notificationLogs(): HasMany
+    {
+        return $this->hasMany(NotificationLog::class);
+    }
+
     // =========================================================================
     // Status Helpers
     // =========================================================================

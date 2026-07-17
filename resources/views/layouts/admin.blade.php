@@ -288,11 +288,13 @@
         </div>
     </main>
 
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script>
         document.getElementById('notificationBtn').addEventListener('click', function() {
             var dropdown = document.getElementById('notificationDropdown');
             dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
         });
     </script>
+    @stack('scripts')
 </body>
 </html>

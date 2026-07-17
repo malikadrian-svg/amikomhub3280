@@ -165,6 +165,9 @@ class CheckoutController extends Controller
             $transaction->update(['snap_token' => $snapToken]);
 
             \Illuminate\Support\Facades\DB::commit();
+            
+            // Fire OrderCreated Event for Notifications
+            event(new \App\Events\OrderCreated($order));
 
             return redirect()->route('checkout.payment', $transaction->gateway_order_id);
 
@@ -261,14 +264,8 @@ class CheckoutController extends Controller
                                     }
                                 }
 
-                                // 5. Send Email
-                                try {
-                                    // Make sure customer info is coming from the Order now
-                                    \Illuminate\Support\Facades\Mail::to($order->customer_email)
-                                        ->send(new \App\Mail\EventTicketMail($order));
-                                } catch (\Exception $e) {
-                                    \Log::error('Gagal mengirim email ETicket secara manual: ' . $e->getMessage());
-                                }
+                                // 5. Fire OrderPaid Event (Handles Email & WhatsApp Notifications via Listeners)
+                                event(new \App\Events\OrderPaid($order));
                             }
                             \Illuminate\Support\Facades\DB::commit();
                         } catch (\Exception $e) {
