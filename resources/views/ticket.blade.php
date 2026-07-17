@@ -64,23 +64,9 @@
 
                         {{-- QR Code (inline SVG pattern, uniquely generated from order_id) --}}
                         <div style="width: 192px; height: 192px; background-color: #ffffff; padding: 12px; display: flex; align-items: center; justify-content: center; box-shadow: 3px 3px 0 var(--slate-700);">
-                            {{-- We generate a deterministic QR-like visual using the order_id seed --}}
-                            <div style="width: 100%; height: 100%; position: relative;">
-                                @php
-                                        // Generate a deterministic 8×8 grid pattern from the ticket_code hash
-                                        $hash  = md5($ticket->ticket_code);
-                                        $cells = [];
-                                        for ($i = 0; $i < 64; $i++) {
-                                            $cells[] = hexdec($hash[$i % strlen($hash)]) > 7;
-                                        }
-                                    @endphp
-                                    <div style="display: grid; grid-template-columns: repeat(8, 1fr); grid-template-rows: repeat(8, 1fr); width: 100%; height: 100%; gap: 1px;">
-                                        @foreach($cells as $filled)
-                                            <div style="background-color: {{ $filled ? '#0f172a' : '#ffffff' }};"></div>
-                                        @endforeach
-                                    </div>
-                                </div>
-                            </div>
+                            {{-- Real QR Code using secure token --}}
+                            <img src="data:image/svg+xml;base64,{{ base64_encode(\SimpleSoftwareIO\QrCode\Facades\QrCode::size(168)->margin(0)->generate($ticket->qr_code ?? $ticket->ticket_code)) }}" alt="QR Code">
+                        </div>
 
                             {{-- Ticket code --}}
                             <p style="margin-top: var(--space-4); font-family: 'IBM Plex Mono', monospace; font-weight: 700; color: var(--slate-0); font-size: 15px; letter-spacing: 0.08em;">
@@ -160,8 +146,6 @@
                         </a>
                     </div>
                 </div>
-
-            </div>
 
             {{-- Warning note --}}
             <p class="caption" style="text-align: center; color: var(--slate-400); margin-top: var(--space-4); line-height: 1.6;">

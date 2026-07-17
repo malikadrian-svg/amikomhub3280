@@ -11,6 +11,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     
+    <!-- PWA Manifest & Theme Color -->
+    <link rel="manifest" href="{{ asset('manifest.json') }}">
+    <meta name="theme-color" content="#7c3aed">
+
     <!-- Neo-Brutalism CSS -->
     <link rel="stylesheet" href="{{ asset('css/neo-brutalism.css') }}">
     
@@ -187,6 +191,16 @@
             </a>
             @endif
 
+            @if(auth()->user()->hasPermission('events.view'))
+            <a href="{{ route('organizer.checkin.index', request()->route('organization')) }}" class="admin-nav-link {{ request()->routeIs('organizer.checkin.*') ? 'active' : '' }}">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                    <path d="M3 7V5a2 2 0 012-2h2M17 3h2a2 2 0 012 2v2M21 17v2a2 2 0 01-2 2h-2M7 21H5a2 2 0 01-2-2v-2"></path>
+                    <rect x="7" y="7" width="10" height="10" rx="1"></rect>
+                </svg>
+                Check-in Tiket
+            </a>
+            @endif
+
             @if(auth()->user()->hasPermission('orders.view'))
             <a href="#" onclick="alert('Fitur Pesanan & Tiket akan segera hadir!'); return false;" class="admin-nav-link">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
@@ -229,5 +243,19 @@
         @yield('content')
     </main>
 
+    @stack('scripts')
+
+    <!-- PWA Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js').then(function(registration) {
+                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                }, function(err) {
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+            });
+        }
+    </script>
 </body>
 </html>

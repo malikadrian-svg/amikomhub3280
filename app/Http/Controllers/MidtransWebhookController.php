@@ -101,7 +101,7 @@ class MidtransWebhookController extends Controller
                             'event_id'       => $order->event_id,
                             'ticket_type_id' => $item->ticket_type_id,
                             'ticket_code'    => $ticketCode,
-                            'qr_code'        => $ticketCode, 
+                            'qr_code'        => \Illuminate\Support\Str::random(40), 
                             'status'         => 'active',
                         ]);
                     }

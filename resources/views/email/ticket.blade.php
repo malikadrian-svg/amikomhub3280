@@ -159,7 +159,7 @@
                     <div class="qr-section">
                         <p class="label" style="margin-bottom: 15px; background-color: #f43f5e; color: #fff;">SCAN QR UNTUK CHECK-IN</p><br>
                         <div class="qr-container">
-                            <img src="https://api.qrserver.com/v1/create-qrcode/?size=150x150&data={{ urlencode($ticket->ticket_code) }}" alt="QR Code" width="150" height="150" style="display: block;">
+                            <img src="https://api.qrserver.com/v1/create-qrcode/?size=150x150&data={{ urlencode($ticket->qr_code ?? $ticket->ticket_code) }}" alt="QR Code" width="150" height="150" style="display: block;">
                         </div>
                         <p style="margin: 0; font-family: monospace; font-size: 18px; font-weight: 900; color: #000000; text-transform: uppercase;">{{ $ticket->ticket_code }}</p>
                     </div>

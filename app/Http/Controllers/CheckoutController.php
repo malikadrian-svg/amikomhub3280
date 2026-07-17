@@ -49,7 +49,7 @@ class CheckoutController extends Controller
         }
 
         // Dummy platform fee calculation
-        $platformFee = 5000;
+        $platformFee = $subtotal > 0 ? 5000 : 0;
         $totalAmount = $subtotal + $platformFee;
 
         // Pass the authenticated user so the view can pre-fill the form
@@ -105,7 +105,7 @@ class CheckoutController extends Controller
         }
 
         // 2. Calculate Totals
-        $platformFee = 5000;
+        $platformFee = $subtotal > 0 ? 5000 : 0;
         $totalAmount = $subtotal + $platformFee;
         $orderNumber = 'ORD-' . strtoupper(Str::random(8)) . '-' . time();
 
@@ -124,13 +124,54 @@ class CheckoutController extends Controller
                 'subtotal'        => $subtotal,
                 'platform_fee'    => $platformFee,
                 'total_amount'    => $totalAmount,
-                'status'          => 'pending',
+                'status'          => $totalAmount == 0 ? 'paid' : 'pending',
+                'paid_at'         => $totalAmount == 0 ? now() : null,
                 'expired_at'      => now()->addHours(24),
             ]);
 
             // 4. Create Order Items
             foreach ($orderItemsData as $item) {
-                $order->items()->create($item);
+                $orderItem = $order->items()->create($item);
+
+                // If free event, generate tickets immediately
+                if ($totalAmount == 0) {
+                    $ticketType = \App\Models\TicketType::find($item['ticket_type_id']);
+                    if ($ticketType) {
+                        $ticketType->increment('quantity_sold', $item['quantity']);
+                    }
+
+                    for ($i = 0; $i < $item['quantity']; $i++) {
+                        $ticketCode = 'TIX-' . strtoupper(Str::random(10));
+                        \App\Models\Ticket::create([
+                            'order_item_id'  => $orderItem->id,
+                            'user_id'        => $order->user_id,
+                            'event_id'       => $order->event_id,
+                            'ticket_type_id' => $item['ticket_type_id'],
+                            'ticket_code'    => $ticketCode,
+                            'qr_code'        => Str::random(40), 
+                            'status'         => 'active',
+                        ]);
+                    }
+                }
+            }
+
+            if ($totalAmount == 0) {
+                // Free transaction
+                $trxId = 'FREE-' . time() . '-' . Str::random(5);
+                $transaction = Transaction::create([
+                    'order_id'         => $order->id,
+                    'gateway_order_id' => $trxId,
+                    'payment_gateway'  => 'free',
+                    'amount'           => 0,
+                    'status'           => 'success',
+                ]);
+
+                \Illuminate\Support\Facades\DB::commit();
+                
+                // Fire OrderPaid Event directly
+                event(new \App\Events\OrderPaid($order));
+                
+                return redirect()->route('checkout.success', $transaction->gateway_order_id);
             }
 
             // 5. Create Transaction (to bridge with Midtrans)
@@ -192,6 +233,10 @@ class CheckoutController extends Controller
         $transaction = Transaction::with(['order.event', 'order.items.ticketType'])
             ->where('gateway_order_id', $order_id)
             ->firstOrFail();
+
+        if ($transaction->payment_gateway === 'free' || $transaction->amount == 0) {
+            return view('checkout.success', compact('transaction', 'categories'));
+        }
 
         \Midtrans\Config::$serverKey = env('MIDTRANS_SERVER_KEY');
         \Midtrans\Config::$isProduction = false;
@@ -257,8 +302,8 @@ class CheckoutController extends Controller
                                             'event_id'       => $order->event_id,
                                             'ticket_type_id' => $item->ticket_type_id,
                                             'ticket_code'    => $ticketCode,
-                                            // Optional: Generate an actual QR string later
-                                            'qr_code'        => $ticketCode, 
+                                            // Secure QR Code validation token
+                                            'qr_code'        => Str::random(40), 
                                             'status'         => 'active',
                                         ]);
                                     }

@@ -109,6 +109,10 @@ Route::prefix('organizer/{organization:slug}')
         
         Route::resource('events.ticket-types', \App\Http\Controllers\Organizer\TicketTypeController::class)->only(['store', 'update', 'destroy']);
         
+        // QR Check-in System
+        Route::get('/checkin', [\App\Http\Controllers\TicketCheckInController::class, 'index'])->name('checkin.index');
+        Route::post('/api/checkin', [\App\Http\Controllers\TicketCheckInController::class, 'store'])->name('api.checkin');
+        
     });
 
 // =============================================================================

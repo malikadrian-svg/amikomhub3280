@@ -5,7 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AmikomEventHub - Temukan Event Seru!</title>
-    <!-- Ganti Tailwind dengan Neo-Brutalism CSS -->
+    <!-- PWA Manifest & Theme Color -->
+    <link rel="manifest" href="{{ asset('manifest.json') }}">
+    <meta name="theme-color" content="#7c3aed">
+
+    <!-- Neo-Brutalism CSS -->
     <link rel="stylesheet" href="{{ asset('css/neo-brutalism.css') }}">
     <style>
         /* Utility classes khusus untuk spacing layout jika diperlukan di tingkat atas */
@@ -225,7 +229,20 @@
             <p class="caption" style="color: var(--slate-400);">&copy; 2024 AMIKOMEVENTHUB. BUILT WITH NEO-BRUTALISM.</p>
         </div>
     </footer>
-
+    @stack('scripts')
+    
+    <!-- PWA Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js').then(function(registration) {
+                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                }, function(err) {
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+            });
+        }
+    </script>
 </body>
 
 </html>
