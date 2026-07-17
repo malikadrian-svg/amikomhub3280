@@ -2,12 +2,12 @@
 
 @section('content')
 <div style="margin-bottom: var(--space-8); display: flex; align-items: center; gap: var(--space-4);">
-    <a href="{{ route('organizer.events.index', request()->route('organization')) }}" style="width: 40px; height: 40px; border-radius: var(--radius-md); background: var(--slate-100); border: 1px solid var(--slate-200); display: flex; align-items: center; justify-content: center; color: var(--slate-500); text-decoration: none; transition: all 0.2s;" onmouseover="this.style.background='var(--purple-50)';this.style.color='var(--purple-600)'" onmouseout="this.style.background='var(--slate-100)';this.style.color='var(--slate-500)'">
+    <a href="{{ route('organizer.events.index', request()->route('organization')) }}" style="width: 40px; height: 40px; border-radius: var(--radius-md); background: #f1f5f9; border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: center; color: #6b7280; text-decoration: none; transition: all 0.2s;" onmouseover="this.style.background='var(--purple-50)';this.style.color='var(--purple-600)'" onmouseout="this.style.background='#f1f5f9';this.style.color='var(--slate-500)'">
         <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
     </a>
     <div>
-        <h1 class="display" style="margin-bottom: var(--space-1); color: var(--slate-900);">Buat Event Baru</h1>
-        <p class="body-sm" style="color: var(--slate-500); margin: 0;">Event akan disimpan sebagai draf terlebih dahulu dan perlu diajukan untuk ditayangkan.</p>
+        <h1 class="display" style="margin-bottom: var(--space-1); color: #1e293b;">Buat Event Baru</h1>
+        <p class="body-sm" style="color: #6b7280; margin: 0;">Event akan disimpan sebagai draf terlebih dahulu dan perlu diajukan untuk ditayangkan.</p>
     </div>
 </div>
 
@@ -94,7 +94,7 @@
             </div>
         </div>
 
-        <div style="border-top: 1px solid var(--slate-100); padding-top: var(--space-6); display: flex; justify-content: flex-end; gap: var(--space-3);">
+        <div style="border-top: 1px solid #f1f5f9; padding-top: var(--space-6); display: flex; justify-content: flex-end; gap: var(--space-3);">
             <a href="{{ route('organizer.events.index', request()->route('organization')) }}" class="btn btn-secondary">Batal</a>
             <button type="submit" class="btn btn-primary">
                 <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="margin-right: var(--space-2);"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>

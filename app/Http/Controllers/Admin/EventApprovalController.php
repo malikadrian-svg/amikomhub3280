@@ -12,8 +12,8 @@ class EventApprovalController extends Controller
     {
         $this->authorize('approve', Event::class);
 
-        // Allow filtering by status, default to pending
-        $status = $request->query('status', 'pending');
+        // Allow filtering by status, default to pending_review
+        $status = $request->query('status', 'pending_review');
         
         $events = Event::with('organization')
             ->where('status', $status)
@@ -27,17 +27,18 @@ class EventApprovalController extends Controller
     {
         $this->authorize('approve', $event);
 
-        if ($event->status !== 'pending') {
+        if ($event->status !== 'pending_review') {
             return back()->with('error', 'Hanya event berstatus pending yang dapat disetujui.');
         }
 
         $event->update(['status' => 'approved']);
 
         $event->approvalLogs()->create([
-            'reviewer_id' => auth()->id(),
-            'status_from' => 'pending',
-            'status_to'   => 'approved',
-            'notes'       => $request->input('notes', 'Disetujui oleh Admin.'),
+            'action'       => 'approved',
+            'performed_by' => auth()->id(),
+            'from_status'  => 'pending_review',
+            'to_status'    => 'approved',
+            'reason'       => $request->input('notes', 'Disetujui oleh Admin.'),
         ]);
 
         if ($event->organization && $event->organization->owner) {
@@ -55,17 +56,18 @@ class EventApprovalController extends Controller
             'notes' => 'required|string|min:10',
         ]);
 
-        if ($event->status !== 'pending') {
+        if ($event->status !== 'pending_review') {
             return back()->with('error', 'Hanya event berstatus pending yang dapat ditolak.');
         }
 
         $event->update(['status' => 'rejected']);
 
         $event->approvalLogs()->create([
-            'reviewer_id' => auth()->id(),
-            'status_from' => 'pending',
-            'status_to'   => 'rejected',
-            'notes'       => $request->notes,
+            'action'       => 'rejected',
+            'performed_by' => auth()->id(),
+            'from_status'  => 'pending_review',
+            'to_status'    => 'rejected',
+            'reason'       => $request->notes,
         ]);
 
         if ($event->organization && $event->organization->owner) {

@@ -36,8 +36,8 @@ class EnsureOrganization
             abort(Response::HTTP_FORBIDDEN, 'This organization is not active.');
         }
 
-        // Verify ownership (only the owner can access the organizer dashboard)
-        if (\Illuminate\Support\Facades\Auth::id() !== $organization->owner_id) {
+        // Verify ownership (only the owner or a super admin can access the organizer dashboard)
+        if (\Illuminate\Support\Facades\Auth::id() !== $organization->owner_id && !\Illuminate\Support\Facades\Auth::user()->hasRole('super_admin')) {
             abort(Response::HTTP_FORBIDDEN, 'You do not have permission to access this organization.');
         }
 

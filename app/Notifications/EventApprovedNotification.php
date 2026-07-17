@@ -38,12 +38,16 @@ class EventApprovedNotification extends Notification
      */
     public function toArray(object $notifiable): array
     {
+        // Load organization if not already loaded
+        $organization = $this->event->organization ?? $this->event->load('organization')->organization;
+        $orgSlug = $organization?->slug ?? 'unknown';
+
         return [
-            'title' => 'Event Disetujui',
-            'message' => 'Event "' . $this->event->title . '" Anda telah disetujui oleh admin dan sekarang aktif.',
-            'action_url' => route('organizer.events.show', $this->event->id),
-            'icon' => 'check-circle',
-            'event_id' => $this->event->id,
+            'title'      => 'Event Disetujui',
+            'message'    => 'Event "' . $this->event->title . '" Anda telah disetujui oleh admin dan sekarang aktif.',
+            'action_url' => route('organizer.events.show', [$orgSlug, $this->event]),
+            'icon'       => 'check-circle',
+            'event_id'   => $this->event->id,
         ];
     }
 }

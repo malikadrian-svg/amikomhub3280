@@ -38,12 +38,16 @@ class EventRejectedNotification extends Notification
      */
     public function toArray(object $notifiable): array
     {
+        // Load organization if not already loaded
+        $organization = $this->event->organization ?? $this->event->load('organization')->organization;
+        $orgSlug = $organization?->slug ?? 'unknown';
+
         return [
-            'title' => 'Event Ditolak',
-            'message' => 'Mohon maaf, event "' . $this->event->title . '" Anda ditolak oleh admin.',
-            'action_url' => route('organizer.events.edit', $this->event->id),
-            'icon' => 'x-circle',
-            'event_id' => $this->event->id,
+            'title'      => 'Event Ditolak',
+            'message'    => 'Mohon maaf, event "' . $this->event->title . '" Anda ditolak oleh admin.',
+            'action_url' => route('organizer.events.edit', [$orgSlug, $this->event]),
+            'icon'       => 'x-circle',
+            'event_id'   => $this->event->id,
         ];
     }
 }

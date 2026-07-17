@@ -48,14 +48,14 @@
                             </span>
                         </td>
                         <td>
-                            <p class="body" style="font-weight: 700; margin: 0; text-transform: uppercase; color: var(--slate-0);">{{ $trx->customer_name }}</p>
+                            <p class="body" style="font-weight: 700; margin: 0; text-transform: uppercase; color: var(--slate-0);">{{ $trx->order->customer_name ?? '-' }}</p>
                             <p class="caption" style="color: var(--slate-400); margin: var(--space-1) 0 0 0;">
-                                {{ $trx->customer_email }}<br>
-                                {{ $trx->customer_phone }}
+                                {{ $trx->order->customer_email ?? '-' }}<br>
+                                {{ $trx->order->customer_phone ?? '-' }}
                             </p>
                         </td>
                         <td>
-                            <p class="body" style="font-weight: 700; margin: 0;">{{ $trx->event->title ?? '-' }}</p>
+                            <p class="body" style="font-weight: 700; margin: 0;">{{ $trx->order->event->title ?? '-' }}</p>
                         </td>
                         <td>
                             <div style="display: flex; align-items: center; gap: var(--space-2); color: var(--slate-200); font-weight: 500; font-size: 14px;">
@@ -76,7 +76,7 @@
                         </td>
                         <td style="border-right: none; text-align: right;">
                             <p class="h4" style="margin: 0; color: {{ $trx->status == 'pending' ? 'var(--slate-400)' : 'var(--slate-0)' }};">
-                                RP {{ number_format($trx->total_price, 0, ',', '.') }}
+                                RP {{ number_format($trx->order->total_amount ?? 0, 0, ',', '.') }}
                             </p>
                         </td>
                     </tr>

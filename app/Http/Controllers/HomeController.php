@@ -16,7 +16,7 @@ class HomeController extends Controller
         $query = Event::with('category')
             ->withAvg('approvedReviews', 'rating')
             ->withCount('approvedReviews')
-            ->whereIn('status', ['approved', 'active'])
+            ->whereIn('status', ['approved', 'active', 'published'])
             ->where('start_date', '>=', now())
             ->orderBy('start_date', 'asc');
 

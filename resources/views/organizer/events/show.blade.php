@@ -4,12 +4,12 @@
 {{-- Page Header --}}
 <div style="margin-bottom: var(--space-8); display: flex; justify-content: space-between; align-items: flex-start;">
     <div style="display: flex; align-items: center; gap: var(--space-4);">
-        <a href="{{ route('organizer.events.index', request()->route('organization')) }}" style="width: 40px; height: 40px; border-radius: var(--radius-md); background: var(--slate-100); border: 1px solid var(--slate-200); display: flex; align-items: center; justify-content: center; color: var(--slate-500); text-decoration: none; transition: all 0.2s; flex-shrink: 0;" onmouseover="this.style.background='var(--purple-50)';this.style.color='var(--purple-600)'" onmouseout="this.style.background='var(--slate-100)';this.style.color='var(--slate-500)'">
+        <a href="{{ route('organizer.events.index', request()->route('organization')) }}" style="width: 40px; height: 40px; border-radius: var(--radius-md); background: #f1f5f9; border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: center; color: #6b7280; text-decoration: none; transition: all 0.2s; flex-shrink: 0;" onmouseover="this.style.background='var(--purple-50)';this.style.color='var(--purple-600)'" onmouseout="this.style.background='#f1f5f9';this.style.color='var(--slate-500)'">
             <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
         </a>
         <div>
             <div style="display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-1);">
-                <h1 class="h2" style="margin: 0; color: var(--slate-900);">{{ $event->title }}</h1>
+                <h1 class="h2" style="margin: 0; color: #1e293b;">{{ $event->title }}</h1>
                 @if ($event->status === 'draft')
                     <span class="badge">Draf</span>
                 @elseif ($event->status === 'pending')
@@ -20,7 +20,7 @@
                     <span class="badge" style="background: rgba(220,38,38,0.08); color: #991b1b; border-color: rgba(220,38,38,0.2);">Ditolak</span>
                 @endif
             </div>
-            <p class="body-sm" style="color: var(--slate-500); margin: 0;">{{ $event->location }} &bull; {{ \Carbon\Carbon::parse($event->start_date)->format('d M Y') }}</p>
+            <p class="body-sm" style="color: #6b7280; margin: 0;">{{ $event->location }} &bull; {{ \Carbon\Carbon::parse($event->start_date)->format('d M Y') }}</p>
         </div>
     </div>
 
@@ -63,23 +63,23 @@
                 </div>
             @endif
             <div style="padding: var(--space-5);">
-                <h3 class="h4" style="margin-bottom: var(--space-4); color: var(--slate-900);">Informasi Event</h3>
+                <h3 class="h4" style="margin-bottom: var(--space-4); color: #1e293b;">Informasi Event</h3>
                 <div style="display: flex; flex-direction: column; gap: var(--space-4);">
                     <div>
                         <p class="caption" style="font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--slate-400); margin-bottom: 4px;">Kategori</p>
-                        <p class="body-sm" style="color: var(--slate-800); margin: 0;">{{ $event->category->name }}</p>
+                        <p class="body-sm" style="color: #334155; margin: 0;">{{ $event->category->name }}</p>
                     </div>
                     <div>
                         <p class="caption" style="font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--slate-400); margin-bottom: 4px;">Mulai</p>
-                        <p class="body-sm" style="color: var(--slate-800); margin: 0;">{{ \Carbon\Carbon::parse($event->start_date)->format('d M Y, H:i') }}</p>
+                        <p class="body-sm" style="color: #334155; margin: 0;">{{ \Carbon\Carbon::parse($event->start_date)->format('d M Y, H:i') }}</p>
                     </div>
                     <div>
                         <p class="caption" style="font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--slate-400); margin-bottom: 4px;">Selesai</p>
-                        <p class="body-sm" style="color: var(--slate-800); margin: 0;">{{ \Carbon\Carbon::parse($event->end_date)->format('d M Y, H:i') }}</p>
+                        <p class="body-sm" style="color: #334155; margin: 0;">{{ \Carbon\Carbon::parse($event->end_date)->format('d M Y, H:i') }}</p>
                     </div>
                     <div>
                         <p class="caption" style="font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--slate-400); margin-bottom: 4px;">Lokasi</p>
-                        <p class="body-sm" style="color: var(--slate-800); margin: 0;">{{ $event->location }}</p>
+                        <p class="body-sm" style="color: #334155; margin: 0;">{{ $event->location }}</p>
                     </div>
                 </div>
             </div>
@@ -88,14 +88,14 @@
         {{-- Approval Logs --}}
         @if($event->approvalLogs->count() > 0)
         <div class="card" style="padding: var(--space-5);">
-            <h3 class="h4" style="margin-bottom: var(--space-4); color: var(--slate-900);">Riwayat Persetujuan</h3>
+            <h3 class="h4" style="margin-bottom: var(--space-4); color: #1e293b;">Riwayat Persetujuan</h3>
             <div style="display: flex; flex-direction: column; gap: var(--space-4);">
                 @foreach($event->approvalLogs as $log)
-                <div style="border-left: 3px solid {{ $log->status_to === 'approved' ? 'var(--feedback-success)' : ($log->status_to === 'rejected' ? 'var(--feedback-error)' : 'var(--feedback-warning)') }}; padding-left: var(--space-3);">
-                    <p style="font-size: 13px; font-weight: 600; color: var(--slate-800); margin: 0 0 2px 0;">{{ ucfirst($log->status_from) }} &rarr; {{ ucfirst($log->status_to) }}</p>
-                    <p class="caption" style="color: var(--slate-400); margin: 0 0 var(--space-2) 0;">{{ $log->created_at->format('d M Y, H:i') }}</p>
-                    @if($log->notes)
-                        <p style="font-size: 13px; color: var(--slate-600); background: var(--slate-50); padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); margin: 0;">{{ $log->notes }}</p>
+                <div style="border-left: 3px solid {{ $log->to_status === 'approved' ? 'var(--feedback-success)' : ($log->to_status === 'rejected' ? 'var(--feedback-error)' : 'var(--feedback-warning)') }}; padding-left: var(--space-3);">
+                    <p style="font-size: 13px; font-weight: 600; color: #334155; margin: 0 0 2px 0;">{{ ucfirst($log->from_status) }} &rarr; {{ ucfirst($log->to_status) }}</p>
+                    <p style="font-size: 11px; color: var(--slate-400); margin: 0 0 var(--space-2) 0;">{{ $log->created_at->format('d M Y, H:i') }}</p>
+                    @if($log->reason)
+                        <p style="font-size: 13px; color: var(--slate-600); background: var(--slate-50); padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); margin: 0;">{{ $log->reason }}</p>
                     @endif
                 </div>
                 @endforeach
@@ -107,8 +107,8 @@
     {{-- Right: Ticket Types --}}
     <div>
         <div class="card" style="padding: var(--space-6);">
-            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--slate-100); padding-bottom: var(--space-4); margin-bottom: var(--space-6);">
-                <h3 class="h4" style="margin: 0; color: var(--slate-900);">Jenis Tiket</h3>
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f1f5f9; padding-bottom: var(--space-4); margin-bottom: var(--space-6);">
+                <h3 class="h4" style="margin: 0; color: #1e293b;">Jenis Tiket</h3>
                 @if($event->status === 'draft')
                 <button onclick="document.getElementById('ticket-modal').classList.remove('hidden')" class="btn btn-secondary" style="padding: 6px var(--space-4); font-size: 13px;">
                     + Tambah Tiket
@@ -118,17 +118,17 @@
 
             <div style="display: flex; flex-direction: column; gap: var(--space-4);">
                 @forelse ($event->ticketTypes as $ticket)
-                    <div style="border: 1px solid var(--slate-200); border-radius: var(--radius-md); padding: var(--space-5); display: flex; justify-content: space-between; align-items: center; gap: var(--space-4); transition: box-shadow 0.2s;" onmouseover="this.style.boxShadow='0 2px 12px rgba(139,92,246,0.08)'" onmouseout="this.style.boxShadow='none'">
+                    <div style="border: 1px solid #e2e8f0; border-radius: var(--radius-md); padding: var(--space-5); display: flex; justify-content: space-between; align-items: center; gap: var(--space-4); transition: box-shadow 0.2s;" onmouseover="this.style.boxShadow='0 2px 12px rgba(139,92,246,0.08)'" onmouseout="this.style.boxShadow='none'">
                         <div>
                             <div style="display: flex; align-items: center; gap: var(--space-2); margin-bottom: var(--space-1);">
-                                <h4 style="font-size: 16px; font-weight: 700; color: var(--slate-900); margin: 0;">{{ $ticket->name }}</h4>
+                                <h4 style="font-size: 16px; font-weight: 700; color: #1e293b; margin: 0;">{{ $ticket->name }}</h4>
                                 @if(!$ticket->is_active)
                                     <span class="badge" style="background: rgba(220,38,38,0.08); color: #991b1b; border-color: rgba(220,38,38,0.2); font-size: 10px;">Nonaktif</span>
                                 @endif
                             </div>
                             <p style="font-size: 20px; font-weight: 700; color: var(--purple-600); margin: 0 0 var(--space-2) 0;">Rp {{ number_format($ticket->price, 0, ',', '.') }}</p>
                             <p class="caption" style="color: var(--slate-400); margin: 0;">
-                                Kapasitas: {{ $ticket->quantity_total - $ticket->quantity_available }} / {{ $ticket->quantity_total }} terjual
+                                Kapasitas: {{ $ticket->quantity_sold ?? 0 }} / {{ $ticket->quantity }} terjual
                             </p>
                             @if($ticket->start_sale_date)
                                 <p class="caption" style="color: var(--slate-400); margin: 4px 0 0 0;">Penjualan: {{ \Carbon\Carbon::parse($ticket->start_sale_date)->format('d M') }} – {{ \Carbon\Carbon::parse($ticket->end_sale_date)->format('d M Y') }}</p>
@@ -137,7 +137,7 @@
 
                         <div style="display: flex; gap: var(--space-2); flex-shrink: 0;">
                             <button onclick="editTicket({{ $ticket->toJson() }})" class="btn btn-secondary" style="padding: 6px var(--space-3); font-size: 13px;">Edit</button>
-                            @if($event->status === 'draft' && $ticket->quantity_available === $ticket->quantity_total)
+                            @if($event->status === 'draft' && ($ticket->quantity_sold ?? 0) === 0)
                             <form action="{{ route('organizer.events.ticket-types.destroy', [request()->route('organization'), $event, $ticket]) }}" method="POST">
                                 @csrf @method('DELETE')
                                 <button type="submit" onclick="return confirm('Hapus tiket ini?')" class="btn btn-destructive" style="padding: 6px var(--space-3); font-size: 13px;">Hapus</button>
@@ -150,7 +150,7 @@
                         <div style="width: 64px; height: 64px; border-radius: 50%; background: var(--purple-50); border: 1px solid var(--purple-100); display: flex; align-items: center; justify-content: center; margin: 0 auto var(--space-3); color: var(--purple-400);">
                             <svg width="28" height="28" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"></path></svg>
                         </div>
-                        <p class="body" style="color: var(--slate-500); margin: 0;">Belum ada jenis tiket. Silakan buat tiket untuk acara Anda.</p>
+                        <p class="body" style="color: #6b7280; margin: 0;">Belum ada jenis tiket. Silakan buat tiket untuk acara Anda.</p>
                     </div>
                 @endforelse
             </div>
@@ -161,8 +161,8 @@
 {{-- Ticket Modal --}}
 <div id="ticket-modal" class="hidden" style="position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 1000; display: none; align-items: center; justify-content: center; padding: var(--space-4);">
     <div style="background: #ffffff; border-radius: var(--radius-lg); box-shadow: 0 20px 60px rgba(0,0,0,0.15); width: 100%; max-width: 520px; overflow: hidden;">
-        <div style="padding: var(--space-5) var(--space-6); border-bottom: 1px solid var(--slate-100); display: flex; justify-content: space-between; align-items: center;">
-            <h3 id="modal-title" class="h4" style="margin: 0; color: var(--slate-900);">Tambah Tiket Baru</h3>
+        <div style="padding: var(--space-5) var(--space-6); border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center;">
+            <h3 id="modal-title" class="h4" style="margin: 0; color: #1e293b;">Tambah Tiket Baru</h3>
             <button onclick="closeModal()" style="background: none; border: none; color: var(--slate-400); cursor: pointer; padding: 4px; border-radius: var(--radius-sm); transition: color 0.2s;" onmouseover="this.style.color='var(--slate-700)'" onmouseout="this.style.color='var(--slate-400)'">
                 <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>

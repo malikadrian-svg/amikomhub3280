@@ -9,7 +9,10 @@ class UpdateTicketTypeRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        $event = Event::findOrFail($this->route('event'));
+        $event = $this->route('event');
+        if (!$event instanceof \App\Models\Event) {
+            $event = \App\Models\Event::findOrFail($event);
+        }
         return $this->user()->can('update', $event);
     }
 

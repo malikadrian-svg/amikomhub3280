@@ -75,7 +75,7 @@ class Organization extends Model
      */
     public function events(): HasMany
     {
-        return $this->hasMany(Event::class);
+        return $this->hasMany(Event::class, 'organization_id');
     }
 
     /**
@@ -83,8 +83,19 @@ class Organization extends Model
      */
     public function publishedEvents(): HasMany
     {
-        return $this->hasMany(Event::class)
+        return $this->hasMany(Event::class, 'organization_id')
             ->where('status', 'published')
+            ->orderBy('start_date', 'asc');
+    }
+
+    /**
+     * Upcoming events (published and in the future).
+     */
+    public function upcomingEvents(): HasMany
+    {
+        return $this->hasMany(Event::class, 'organization_id')
+            ->where('status', 'published')
+            ->where('start_date', '>', now())
             ->orderBy('start_date', 'asc');
     }
 
@@ -93,7 +104,7 @@ class Organization extends Model
      */
     public function completedEvents(): HasMany
     {
-        return $this->hasMany(Event::class)
+        return $this->hasMany(Event::class, 'organization_id')
             ->where('status', 'completed')
             ->orderBy('start_date', 'desc');
     }

@@ -49,7 +49,7 @@ class EventController extends Controller
 
         $event = Event::create($data);
 
-        return redirect()->route('organizer.events.show', $event)
+        return redirect()->route('organizer.events.show', [request()->route('organization'), $event])
             ->with('success', 'Event berhasil dibuat sebagai draf. Silakan tambahkan tiket sebelum mengajukan persetujuan.');
     }
 
@@ -57,7 +57,7 @@ class EventController extends Controller
     {
         $this->authorize('view', $event);
         
-        $event->load('ticketTypes', 'approvalLogs.reviewer');
+        $event->load('ticketTypes', 'approvalLogs.performer');
 
         return view('organizer.events.show', compact('event'));
     }
@@ -84,7 +84,7 @@ class EventController extends Controller
 
         $event->update($data);
 
-        return redirect()->route('organizer.events.show', $event)
+        return redirect()->route('organizer.events.show', [request()->route('organization'), $event])
             ->with('success', 'Detail event berhasil diperbarui.');
     }
 
@@ -102,7 +102,7 @@ class EventController extends Controller
 
         $event->delete();
 
-        return redirect()->route('organizer.events.index')
+        return redirect()->route('organizer.events.index', request()->route('organization'))
             ->with('success', 'Event berhasil dihapus.');
     }
 
@@ -121,12 +121,14 @@ class EventController extends Controller
             return back()->with('error', 'Event harus memiliki minimal 1 jenis tiket sebelum diajukan.');
         }
 
-        $event->update(['status' => 'pending']);
+        $event->update(['status' => 'pending_review']);
 
         $event->approvalLogs()->create([
-            'status_from' => 'draft',
-            'status_to'   => 'pending',
-            'notes'       => 'Event diajukan untuk persetujuan admin.',
+            'action'       => 'submitted',
+            'from_status'  => 'draft',
+            'to_status'    => 'pending_review',
+            'reason'       => 'Event diajukan untuk persetujuan admin.',
+            'performed_by' => auth()->id(),
         ]);
 
         return back()->with('success', 'Event berhasil diajukan! Menunggu persetujuan admin.');

@@ -2,11 +2,11 @@
 
 @section('content')
 <div style="margin-bottom: var(--space-8); display: flex; align-items: center; gap: var(--space-4);">
-    <a href="{{ route('organizer.events.show', [request()->route('organization'), $event]) }}" style="width: 40px; height: 40px; border-radius: var(--radius-md); background: var(--slate-100); border: 1px solid var(--slate-200); display: flex; align-items: center; justify-content: center; color: var(--slate-500); text-decoration: none; transition: all 0.2s;" onmouseover="this.style.background='var(--purple-50)';this.style.color='var(--purple-600)'" onmouseout="this.style.background='var(--slate-100)';this.style.color='var(--slate-500)'">
+    <a href="{{ route('organizer.events.show', [request()->route('organization'), $event]) }}" style="width: 40px; height: 40px; border-radius: var(--radius-md); background: #f1f5f9; border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: center; color: #6b7280; text-decoration: none; transition: all 0.2s;" onmouseover="this.style.background='var(--purple-50)';this.style.color='var(--purple-600)'" onmouseout="this.style.background='#f1f5f9';this.style.color='var(--slate-500)'">
         <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
     </a>
     <div>
-        <h1 class="display" style="margin-bottom: var(--space-1); color: var(--slate-900);">Edit Event</h1>
+        <h1 class="display" style="margin-bottom: var(--space-1); color: #1e293b;">Edit Event</h1>
         <p class="body-sm" style="color: var(--purple-600); font-weight: 600; margin: 0;">{{ $event->title }}</p>
     </div>
 </div>
@@ -78,7 +78,7 @@
                 <label style="display: block; font-size: 13px; font-weight: 600; color: var(--slate-700); margin-bottom: var(--space-2);">Banner / Poster Event</label>
                 @if($event->image)
                     <div style="margin-bottom: var(--space-3);">
-                        <img src="{{ Storage::url($event->image) }}" style="height: 120px; object-fit: cover; border-radius: var(--radius-sm); border: 1px solid var(--slate-200);">
+                        <img src="{{ Storage::url($event->image) }}" style="height: 120px; object-fit: cover; border-radius: var(--radius-sm); border: 1px solid #e2e8f0;">
                     </div>
                 @endif
                 <input type="file" name="image" accept="image/*"
@@ -97,7 +97,7 @@
             </div>
         </div>
 
-        <div style="border-top: 1px solid var(--slate-100); padding-top: var(--space-6); display: flex; justify-content: flex-end; gap: var(--space-3);">
+        <div style="border-top: 1px solid #f1f5f9; padding-top: var(--space-6); display: flex; justify-content: flex-end; gap: var(--space-3);">
             <a href="{{ route('organizer.events.show', [request()->route('organization'), $event]) }}" class="btn btn-secondary">Batal</a>
             <button type="submit" class="btn btn-primary">
                 <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="margin-right: var(--space-2);"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
