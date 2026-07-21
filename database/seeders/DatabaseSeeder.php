@@ -28,17 +28,19 @@ class DatabaseSeeder extends Seeder
         $categories = $this->seedCategories();
 
         // ─── 4. Admin User ─────────────────────────────────────────────────────
-        $admin = User::create([
-            'name'              => 'Administrator',
-            'email'             => 'admin@amikomhub.id',
-            'password'          => Hash::make('admin123'),
-            'email_verified_at' => now(),
-        ]);
+        $admin = User::firstOrCreate(
+            ['email' => 'admin@amikomhub.id'],
+            [
+                'name'              => 'Administrator',
+                'password'          => Hash::make('admin123'),
+                'email_verified_at' => now(),
+            ]
+        );
         
-        // Attach super_admin role
+        // Attach super_admin role (syncWithoutDetaching = safe to run multiple times)
         $superAdminRole = Role::where('slug', 'super_admin')->first();
         if ($superAdminRole) {
-            $admin->roles()->attach($superAdminRole->id);
+            $admin->roles()->syncWithoutDetaching([$superAdminRole->id]);
         }
 
         // ─── 5. Organizations ──────────────────────────────────────────────────
@@ -70,7 +72,7 @@ class DatabaseSeeder extends Seeder
         ];
 
         foreach ($settings as $setting) {
-            PlatformSetting::create($setting);
+            PlatformSetting::updateOrCreate(['key' => $setting['key']], $setting);
         }
     }
 
@@ -86,7 +88,7 @@ class DatabaseSeeder extends Seeder
         ];
 
         foreach ($roles as $roleData) {
-            Role::create([...$roleData, 'is_system' => true]);
+            Role::firstOrCreate(['slug' => $roleData['slug']], [...$roleData, 'is_system' => true]);
         }
 
         // --- Permissions ---
@@ -121,7 +123,7 @@ class DatabaseSeeder extends Seeder
 
         $permissionModels = [];
         foreach ($permissions as $permData) {
-            $permissionModels[$permData['slug']] = Permission::create($permData);
+            $permissionModels[$permData['slug']] = Permission::firstOrCreate(['slug' => $permData['slug']], $permData);
         }
 
         // --- Role-Permission Assignments ---
@@ -153,10 +155,13 @@ class DatabaseSeeder extends Seeder
 
         foreach ($rolePermMap as $roleSlug => $permSlugs) {
             $role = Role::where('slug', $roleSlug)->first();
+            if (!$role) continue;
             $permIds = collect($permSlugs)
+                ->filter(fn ($slug) => isset($permissionModels[$slug]))
                 ->map(fn ($slug) => $permissionModels[$slug]->id)
                 ->all();
-            $role->permissions()->attach($permIds);
+            // Sync instead of attach to avoid duplicate pivot entries
+            $role->permissions()->syncWithoutDetaching($permIds);
         }
     }
 
@@ -173,7 +178,7 @@ class DatabaseSeeder extends Seeder
             ['name' => 'Hiburan',           'slug' => 'hiburan',            'icon' => '🎭', 'description' => 'Stand-up comedy, teater, dan event hiburan keluarga.', 'sort_order' => 8],
         ];
 
-        return collect($categories)->map(fn ($data) => Category::create($data));
+        return collect($categories)->map(fn ($data) => Category::firstOrCreate(['slug' => $data['slug']], $data));
     }
 
     private function seedOrganizations(User $admin): \Illuminate\Support\Collection
@@ -215,11 +220,14 @@ class DatabaseSeeder extends Seeder
         ];
 
         return collect($orgs)->map(function ($data) use ($admin) {
-            return Organization::create([
-                ...$data,
-                'owner_id'    => $admin->id,
-                'approved_by' => $admin->id,
-            ]);
+            return Organization::firstOrCreate(
+                ['slug' => $data['slug']],
+                [
+                    ...$data,
+                    'owner_id'    => $admin->id,
+                    'approved_by' => $admin->id,
+                ]
+            );
         });
     }
 
@@ -364,18 +372,25 @@ class DatabaseSeeder extends Seeder
             unset($eventData['organization'], $eventData['category_slug']);
 
             $category = $catMap[$categorySlug];
+            $slug     = Str::slug($eventData['title']);
 
-            $event = Event::create([
-                ...$eventData,
-                'organization_id' => $org->id,
-                'category_id'     => $category->id,
-                'approved_by'     => $admin->id,
-                'approved_at'     => now(),
-                'slug'            => Str::slug($eventData['title']),
-            ]);
+            $event = Event::firstOrCreate(
+                ['slug' => $slug],
+                [
+                    ...$eventData,
+                    'organization_id' => $org->id,
+                    'category_id'     => $category->id,
+                    'approved_by'     => $admin->id,
+                    'approved_at'     => now(),
+                    'slug'            => $slug,
+                ]
+            );
 
-            foreach ($ticketTypesData as $ttData) {
-                $event->ticketTypes()->create($ttData);
+            // Only create ticket types if the event was just created
+            if ($event->wasRecentlyCreated) {
+                foreach ($ticketTypesData as $ttData) {
+                    $event->ticketTypes()->create($ttData);
+                }
             }
             $createdEvents[] = $event;
         }
@@ -385,52 +400,63 @@ class DatabaseSeeder extends Seeder
     
     private function seedOrdersAndReviews(\Illuminate\Support\Collection $events): void
     {
-        $customerUser = User::factory()->create([
-            'name' => 'John Customer',
-            'email' => 'customer@amikomhub.id',
-            'password' => Hash::make('password123'),
-        ]);
+        // Use firstOrCreate so re-running seeder won't create duplicate customer
+        $customerUser = User::firstOrCreate(
+            ['email' => 'customer@amikomhub.id'],
+            [
+                'name'              => 'John Customer',
+                'password'          => Hash::make('password123'),
+                'email_verified_at' => now(),
+            ]
+        );
         $customerRole = Role::where('slug', 'customer')->first();
         if ($customerRole) {
-            $customerUser->roles()->attach($customerRole->id);
+            $customerUser->roles()->syncWithoutDetaching([$customerRole->id]);
         }
         
         foreach ($events as $event) {
             $ticketType = $event->ticketTypes->first();
             if (!$ticketType) continue;
             
+            // Skip if order for this event already exists
+            $orderExists = \App\Models\Order::where('event_id', $event->id)
+                ->where('user_id', $customerUser->id)
+                ->exists();
+            if ($orderExists) continue;
+            
             // Create a pending order
             $order = \App\Models\Order::create([
                 'organization_id' => $event->organization_id,
-                'user_id' => $customerUser->id,
-                'event_id' => $event->id,
-                'order_number' => 'ORD-' . strtoupper(Str::random(8)),
-                'customer_name' => $customerUser->name,
-                'customer_email' => $customerUser->email,
-                'customer_phone' => '08123456789',
-                'subtotal' => $ticketType->price * 2,
-                'platform_fee' => 5000,
-                'total_amount' => ($ticketType->price * 2) + 5000,
-                'status' => 'pending',
-                'expired_at' => now()->addHours(24),
+                'user_id'         => $customerUser->id,
+                'event_id'        => $event->id,
+                'order_number'    => 'ORD-' . strtoupper(Str::random(8)),
+                'customer_name'   => $customerUser->name,
+                'customer_email'  => $customerUser->email,
+                'customer_phone'  => '08123456789',
+                'subtotal'        => $ticketType->price * 2,
+                'platform_fee'    => 5000,
+                'total_amount'    => ($ticketType->price * 2) + 5000,
+                'status'          => 'pending',
+                'expired_at'      => now()->addHours(24),
             ]);
             
             $order->items()->create([
                 'ticket_type_id' => $ticketType->id,
-                'quantity' => 2,
-                'unit_price' => $ticketType->price,
-                'subtotal' => $ticketType->price * 2,
+                'quantity'       => 2,
+                'unit_price'     => $ticketType->price,
+                'subtotal'       => $ticketType->price * 2,
             ]);
             
-            // Create a review
-            \App\Models\Review::create([
-                'event_id' => $event->id,
-                'user_id' => $customerUser->id,
-                'organization_id' => $event->organization_id,
-                'rating' => rand(4, 5),
-                'body' => 'Event yang luar biasa dan sangat bermanfaat! Sampai jumpa di event berikutnya.',
-                'is_approved' => true,
-            ]);
+            // Create a review only if it doesn't exist yet
+            \App\Models\Review::firstOrCreate(
+                ['event_id' => $event->id, 'user_id' => $customerUser->id],
+                [
+                    'organization_id' => $event->organization_id,
+                    'rating'          => rand(4, 5),
+                    'body'            => 'Event yang luar biasa dan sangat bermanfaat! Sampai jumpa di event berikutnya.',
+                    'is_approved'     => true,
+                ]
+            );
         }
     }
 }
